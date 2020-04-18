@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorDao">
+    <resultMap id="PlateformOperatorResult" type="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator">
+        <result column="id" property="id"/>
+        <result column="ope_type" property="opeType"/>
+        <result column="ope_code" property="opeCode"/>
+        <result column="ope_name" property="opeName"/>
+        <result column="ope_password" property="opePassword"/>
+        <result column="ope_mobile" property="opeMobile"/>
+        <result column="ope_state" property="opeState"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator">
+        insert into plateform_operator (ope_type ,ope_code ,ope_name ,ope_password ,ope_mobile ,ope_state ,create_time )
+        values (#{opeType} ,#{opeCode} ,#{opeName} ,#{opePassword} ,#{opeMobile} ,#{opeState} ,#{createTime} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformOperatorResult" parameterType="java.lang.Long">
+        select * from plateform_operator where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_operator where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator">
+        update plateform_operator
+        <set>
+        <if test="opeType!= null"><![CDATA[ope_type=#{opeType},]]></if>
+        <if test="opeCode!= null"><![CDATA[ope_code=#{opeCode},]]></if>
+        <if test="opeName!= null"><![CDATA[ope_name=#{opeName},]]></if>
+        <if test="opePassword!= null"><![CDATA[ope_password=#{opePassword},]]></if>
+        <if test="opeMobile!= null"><![CDATA[ope_mobile=#{opeMobile},]]></if>
+        <if test="opeState!= null"><![CDATA[ope_state=#{opeState},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformOperatorListSql">
+        select * from plateform_operator t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="opeType!= null"><![CDATA[and t.ope_type = #{opeType}]]></if>
+            <if test="opeCode!= null"><![CDATA[and t.ope_code = #{opeCode}]]></if>
+            <if test="opeName!= null"><![CDATA[and t.ope_name = #{opeName}]]></if>
+            <if test="opePassword!= null"><![CDATA[and t.ope_password = #{opePassword}]]></if>
+            <if test="opeMobile!= null"><![CDATA[and t.ope_mobile = #{opeMobile}]]></if>
+            <if test="opeState!= null"><![CDATA[and t.ope_state = #{opeState}]]></if>
+            <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformOperatorResult">
+        <include refid="findPlateformOperatorListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformOperatorListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformOperatorResult">
+        <include refid="findPlateformOperatorListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>
