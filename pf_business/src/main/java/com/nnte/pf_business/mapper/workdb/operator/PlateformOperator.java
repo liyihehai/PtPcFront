@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-18 20:07:12>
+ * 自动代码 请勿更改 <2020-04-22 11:07:53>
  */
 public class PlateformOperator extends BaseModel {
     @DBPKColum private Long id;
@@ -15,6 +15,7 @@ public class PlateformOperator extends BaseModel {
     private String opeMobile;
     private Integer opeState;
     private Date createTime;
+    private String tmpKey;
 
     public PlateformOperator(){}
 
@@ -34,4 +35,6 @@ public class PlateformOperator extends BaseModel {
     public void setOpeState(Integer  opeState){ this.opeState = opeState;}
     public Date  getCreateTime(){ return createTime;}
     public void setCreateTime(Date  createTime){ this.createTime = createTime;}
+    public String  getTmpKey(){ return tmpKey;}
+    public void setTmpKey(String  tmpKey){ this.tmpKey = tmpKey;}
 }

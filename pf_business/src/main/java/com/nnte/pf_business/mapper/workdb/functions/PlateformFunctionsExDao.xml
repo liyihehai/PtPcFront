@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsDao">
+    <select id="queryAllPlateformFunctions" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where 1=1 <if test="funState!=null">and fun_state=#{funState}</if>
+        order by fun_code ASC
+    </select>
+</mapper>

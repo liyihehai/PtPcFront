@@ -11,10 +11,11 @@
         <result column="ope_mobile" property="opeMobile"/>
         <result column="ope_state" property="opeState"/>
         <result column="create_time" property="createTime"/>
+        <result column="tmp_key" property="tmpKey"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator">
-        insert into plateform_operator (ope_type ,ope_code ,ope_name ,ope_password ,ope_mobile ,ope_state ,create_time )
-        values (#{opeType} ,#{opeCode} ,#{opeName} ,#{opePassword} ,#{opeMobile} ,#{opeState} ,#{createTime} )
+        insert into plateform_operator (ope_type ,ope_code ,ope_name ,ope_password ,ope_mobile ,ope_state ,create_time ,tmp_key )
+        values (#{opeType} ,#{opeCode} ,#{opeName} ,#{opePassword} ,#{opeMobile} ,#{opeState} ,#{createTime} ,#{tmpKey} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformOperatorResult" parameterType="java.lang.Long">
         select * from plateform_operator where id=#{id}
@@ -32,6 +33,7 @@
         <if test="opeMobile!= null"><![CDATA[ope_mobile=#{opeMobile},]]></if>
         <if test="opeState!= null"><![CDATA[ope_state=#{opeState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="tmpKey!= null"><![CDATA[tmp_key=#{tmpKey},]]></if>
         </set>
         where id=#{id}
     </update>
@@ -46,6 +48,7 @@
             <if test="opeMobile!= null"><![CDATA[and t.ope_mobile = #{opeMobile}]]></if>
             <if test="opeState!= null"><![CDATA[and t.ope_state = #{opeState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="tmpKey!= null"><![CDATA[and t.tmp_key = #{tmpKey}]]></if>
         </where>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
     </sql>

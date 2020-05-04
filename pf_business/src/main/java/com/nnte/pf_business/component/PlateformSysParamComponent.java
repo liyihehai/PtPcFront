@@ -17,7 +17,13 @@ import java.util.*;
  * */
 public class PlateformSysParamComponent implements WatchInterface{
 
-    private static String preprocessParams = "'SYS_REPAIRING'";
+    private static StringBuffer preprocessParamsBuffer = new StringBuffer();
+    static {
+        preprocessParamsBuffer.append("'SYS_REPAIRING'").append(",");           //系统维修参数
+        preprocessParamsBuffer.append("'SYS_SECRETKEY'").append(",");           //用于Token生成的secretKey
+        preprocessParamsBuffer.append("'SYS_SIGNATUREALGORITHM'").append(",");  //用于Token生成的signatureAlgorithm加密方式
+        preprocessParamsBuffer.append("'SYS_TOKENEXPIRETIME'");                 //生成的Token的超时时间
+    }
     /**
      * 系统参数MAP，定时刷新保存preprocessParams定义的单值参数，程序可优先从MAP中获取
      * 参数定义，避免每次都通过数据库操作取得参数
@@ -30,7 +36,7 @@ public class PlateformSysParamComponent implements WatchInterface{
      * */
     @Override
     public void runWatch() {
-        List<PalteformSysparam> list=palteformSysparamService.queryPlateformParamsByKeys(preprocessParams);
+        List<PalteformSysparam> list=palteformSysparamService.queryPlateformParamsByKeys(preprocessParamsBuffer.toString());
         if (list!=null && list.size()>0){
             for(PalteformSysparam param:list){
                 paramsMap.put(param.getParamKey(),param);
@@ -119,6 +125,18 @@ public class PlateformSysParamComponent implements WatchInterface{
                 return bsp.getValueText();
         }
         return bsp.getValue1();
+    }
+    /**
+     * 一下为直接取出单值参数的值
+     * */
+    public String getSingleParamV100(String key){
+        return getSingleParams(key,SysparamValCol.VAL_100);
+    }
+    public String getSingleParamV200(String key){
+        return getSingleParams(key,SysparamValCol.VAL_200);
+    }
+    public String getSingleParamVText(String key){
+        return getSingleParams(key,SysparamValCol.VAL_TXT);
     }
     /**
      * 保存商户单值参数（返回为0表示操作成功，失败返回非0）

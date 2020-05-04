@@ -21,7 +21,7 @@ public class PfPcFrontConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(pfPcFrontNormalInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/","/**/sysRepairing",
-                        "/**/login","/**/loginCheck",
+                        "/**/login","/**/loginCheck","/**/priCheck",
                         "/**/error","/**/resources/**");//添加不拦截路径
     }
 }

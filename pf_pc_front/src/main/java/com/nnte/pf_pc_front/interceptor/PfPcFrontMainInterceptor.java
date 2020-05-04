@@ -30,6 +30,7 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
         }
         //请求中添加系统数据环境
         Map<String, Object> envData = new HashMap<>();
+        envData.put("contextPath",request.getContextPath());
         envData.put("debug", appconfig.getConfig("debug").toUpperCase());
         envData.put("staticRoot", appconfig.getConfig("staticRoot"));
         envData.put("localHostName", appconfig.getConfig("localHostName"));

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsDao">
+    <resultMap id="PlateformFunctionsResult" type="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
+        <result column="id" property="id"/>
+        <result column="menu_code" property="menuCode"/>
+        <result column="fun_code" property="funCode"/>
+        <result column="fun_name" property="funName"/>
+        <result column="fun_path" property="funPath"/>
+        <result column="fun_param" property="funParam"/>
+        <result column="fun_state" property="funState"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
+        insert into plateform_functions (menu_code ,fun_code ,fun_name ,fun_path ,fun_param ,fun_state ,create_time )
+        values (#{menuCode} ,#{funCode} ,#{funName} ,#{funPath} ,#{funParam} ,#{funState} ,#{createTime} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Long">
+        select * from plateform_functions where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_functions where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
+        update plateform_functions
+        <set>
+        <if test="menuCode!= null"><![CDATA[menu_code=#{menuCode},]]></if>
+        <if test="funCode!= null"><![CDATA[fun_code=#{funCode},]]></if>
+        <if test="funName!= null"><![CDATA[fun_name=#{funName},]]></if>
+        <if test="funPath!= null"><![CDATA[fun_path=#{funPath},]]></if>
+        <if test="funParam!= null"><![CDATA[fun_param=#{funParam},]]></if>
+        <if test="funState!= null"><![CDATA[fun_state=#{funState},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformFunctionsListSql">
+        select * from plateform_functions t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="menuCode!= null"><![CDATA[and t.menu_code = #{menuCode}]]></if>
+            <if test="funCode!= null"><![CDATA[and t.fun_code = #{funCode}]]></if>
+            <if test="funName!= null"><![CDATA[and t.fun_name = #{funName}]]></if>
+            <if test="funPath!= null"><![CDATA[and t.fun_path = #{funPath}]]></if>
+            <if test="funParam!= null"><![CDATA[and t.fun_param = #{funParam}]]></if>
+            <if test="funState!= null"><![CDATA[and t.fun_state = #{funState}]]></if>
+            <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultMap="PlateformFunctionsResult">
+        <include refid="findPlateformFunctionsListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformFunctionsListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultMap="PlateformFunctionsResult">
+        <include refid="findPlateformFunctionsListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>

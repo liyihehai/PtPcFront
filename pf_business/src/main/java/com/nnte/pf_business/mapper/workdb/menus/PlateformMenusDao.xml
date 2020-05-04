@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.menus.PlateformMenusDao">
+    <resultMap id="PlateformMenusResult" type="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus">
+        <result column="id" property="id"/>
+        <result column="menu_code" property="menuCode"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_class" property="menuClass"/>
+        <result column="parent_menu_code" property="parentMenuCode"/>
+        <result column="menu_state" property="menuState"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus">
+        insert into plateform_menus (menu_code ,menu_name ,menu_class ,parent_menu_code ,menu_state ,create_time )
+        values (#{menuCode} ,#{menuName} ,#{menuClass} ,#{parentMenuCode} ,#{menuState} ,#{createTime} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformMenusResult" parameterType="java.lang.Long">
+        select * from plateform_menus where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_menus where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus">
+        update plateform_menus
+        <set>
+        <if test="menuCode!= null"><![CDATA[menu_code=#{menuCode},]]></if>
+        <if test="menuName!= null"><![CDATA[menu_name=#{menuName},]]></if>
+        <if test="menuClass!= null"><![CDATA[menu_class=#{menuClass},]]></if>
+        <if test="parentMenuCode!= null"><![CDATA[parent_menu_code=#{parentMenuCode},]]></if>
+        <if test="menuState!= null"><![CDATA[menu_state=#{menuState},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformMenusListSql">
+        select * from plateform_menus t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="menuCode!= null"><![CDATA[and t.menu_code = #{menuCode}]]></if>
+            <if test="menuName!= null"><![CDATA[and t.menu_name = #{menuName}]]></if>
+            <if test="menuClass!= null"><![CDATA[and t.menu_class = #{menuClass}]]></if>
+            <if test="parentMenuCode!= null"><![CDATA[and t.parent_menu_code = #{parentMenuCode}]]></if>
+            <if test="menuState!= null"><![CDATA[and t.menu_state = #{menuState}]]></if>
+            <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus" resultMap="PlateformMenusResult">
+        <include refid="findPlateformMenusListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformMenusListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus" resultMap="PlateformMenusResult">
+        <include refid="findPlateformMenusListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>

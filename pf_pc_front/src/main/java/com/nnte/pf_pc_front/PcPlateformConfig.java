@@ -1,6 +1,7 @@
 package com.nnte.pf_pc_front;
 
 import com.nnte.basebusi.annotation.DBSrcTranc;
+import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
@@ -74,9 +75,9 @@ public class PcPlateformConfig implements ApplicationRunner, ConfigInterface {
         mappers.add("com.nnte.pf_business.mapper.workdb");
         BaseNnte.outConsoleLog("初始化工作数据库连接数据源......");
         ddh.initDataBaseSource(DBSrcTranc.Work_DBSrc_Name,config,mappers, PfBusinessComponent.class,true);
-        BaseNnte.outConsoleLog("KingReport Backend main......end");
 
         //------------------------
+        BaseBusiComponent.loadComponentBusiLogAttr();
         PlateformSysParamComponent pfsp=SpringContextHolder.getBean("plateformSysParamComponent");
         PlateformWatchComponent pfw= SpringContextHolder.getBean("plateformWatchComponent");
         if (pfw!=null){
@@ -90,5 +91,6 @@ public class PcPlateformConfig implements ApplicationRunner, ConfigInterface {
             BaseNnte.outConsoleLog("PlateformWatchComponent......"+(pfw==null?"null":"suc"));
             pfw.startWatch();
         }
+        BaseBusiComponent.loadSystemFuntionEnters();
     }
 }
