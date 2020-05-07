@@ -5,7 +5,9 @@
     <!-- Font Awesome-->
     <link rel="stylesheet" href="${envData.staticRoot!''}/resources/bootstrap/css/font-awesome.min.css">
     <!-- Ionicons -->
+    <#--
     <link rel="stylesheet" href="${envData.staticRoot!''}/resources/bootstrap/css/ionicons.min.css">
+    -->
      <!-- DataTables -->
     <link rel="stylesheet" href="${envData.staticRoot!''}/resources/plugins/datatables/dataTables.bootstrap.css">
     <!-- Theme style -->
@@ -91,10 +93,8 @@
 	<link rel="stylesheet" href="${envData.staticRoot!''}/css/qjbCustom/global.css">
 	<!--自定义JS引入-->
 	<script src="${envData.staticRoot!''}/css/qjbCustom/qjbGlobal.js"></script>
-	<script src="${envData.staticRoot!''}/js/common.js?v=1.1.10"></script>
+	<script src="${envData.staticRoot!''}/js/common.js?v=1.1.2"></script>
     <link rel="stylesheet" href="${envData.staticRoot!''}/css/main-content.css">
-
-
 
     <script>
         var glob_JS_Static_Host = "${envData.staticRoot!''}";

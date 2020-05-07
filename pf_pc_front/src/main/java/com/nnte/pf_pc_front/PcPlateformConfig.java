@@ -91,6 +91,6 @@ public class PcPlateformConfig implements ApplicationRunner, ConfigInterface {
             BaseNnte.outConsoleLog("PlateformWatchComponent......"+(pfw==null?"null":"suc"));
             pfw.startWatch();
         }
-        BaseBusiComponent.loadSystemFuntionEnters();
+        BaseBusiComponent.loadSystemFuntionEnters(PfBusinessComponent.getSystemRoleMap());
     }
 }

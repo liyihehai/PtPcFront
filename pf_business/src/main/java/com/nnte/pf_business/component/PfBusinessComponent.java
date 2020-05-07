@@ -1,9 +1,12 @@
 package com.nnte.pf_business.component;
 
+import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.entity.FException;
+import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.entertity.PFMenu;
@@ -43,6 +46,30 @@ public class PfBusinessComponent {
         return jwt;
     }
     public PlateformMenusService getPlateformMenusService(){return plateformMenusService;}
+    /***
+     * 系统角色定义
+     * */
+    public static final String SYS_MANAGER="SYS_MANAGER";
+    public static final String MERCHANT_OPERATOR="MERCHANT_OPERATOR";
+    public static final String MERCHANT_MANAGER="MERCHANT_MANAGER";
+
+    private static Map<String, Object> SystemRoleMap =new HashMap<>();
+    private static List<KeyValue> SystemRoleList =new ArrayList<>();
+    static {
+        SystemRoleList.add(new KeyValue(SYS_MANAGER,"系统管理员"));
+        SystemRoleList.add(new KeyValue(MERCHANT_OPERATOR,"商家业务操作员"));
+        SystemRoleList.add(new KeyValue(MERCHANT_MANAGER,"商家业务管理员"));
+        //--------------------------------------
+        for(KeyValue kv:SystemRoleList){
+            SystemRoleMap.put(kv.getKey(),kv.getValue().toString());
+        }
+    }
+    public static Map<String, Object> getSystemRoleMap(){
+        return SystemRoleMap;
+    }
+    public static List<KeyValue> getSystemRoleList(){
+        return SystemRoleList;
+    }
     /**
      * 取得状态可用的单一操作员信息
      * */
@@ -160,6 +187,33 @@ public class PfBusinessComponent {
             throw new BusiException(fe);
         }
         return ret;
+    }
+
+    /**
+     * 校验操作员是否具备请求的模块的权限,拦截器调用
+     * */
+    public void checkRequestModule(OperatorInfo opeInfo,String path) throws BusiException{
+        try {
+            MEnter me = BaseBusiComponent.getSystemMEnter(path);
+            if (me != null) {
+                PlateformOperator pfo = plateformOperatorComponent.getOperatorByCode(opeInfo.getOperatorCode());
+                if (!pfo.getOpeState().equals(PlateformOperatorComponent.OperatorState.VALID.getValue())){
+                    throw new Exception("操作员状态不合法");
+                }
+                //如果模块或权限没有定义，只能是超级系统管理员才能进入
+                if (StringUtils.isEmpty(me.getSysRole())||StringUtils.isEmpty(me.getRoleRuler())){
+                    if (pfo.getOpeType().equals(1))
+                        return;//如果操作员是超级管理员，直接放行
+                    throw new Exception("只有超级管理员才能进入模块["+me.getName()+"]");
+                }else{
+                    //如果模块有权限限制，当前操作员不是超级管理员，则需要校验权限，否则不需要校验
+                    if (!pfo.getOpeType().equals(1)){
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw new BusiException(1003,"模块权限校验失败("+e.getMessage()+")", BusiException.ExpLevel.ERROR);
+        }
     }
     /**
      * 装载菜单定义

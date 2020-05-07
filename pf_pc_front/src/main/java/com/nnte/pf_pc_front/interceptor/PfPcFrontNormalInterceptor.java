@@ -7,6 +7,7 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
+import com.nnte.pf_business.entertity.OperatorInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -35,7 +36,10 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
                 token=request.getHeader("Postman-Token");
             try {
                 Map checkMap=pfBusinessComponent.checkRequestToken(token, loginIp);
-                request.setAttribute("OperatorInfo",checkMap.get("OperatorInfo"));
+                OperatorInfo oi=(OperatorInfo)checkMap.get("OperatorInfo");
+                request.setAttribute("OperatorInfo",oi);
+                //如果是进入模块，还需要验证操作员模块权限
+                pfBusinessComponent.checkRequestModule(oi,request.getServletPath());
                 return true;
             }catch (BusiException be){
                 BaseNnte.setRetFalse(retMap,1001,be.getMessage());

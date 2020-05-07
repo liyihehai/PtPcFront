@@ -156,29 +156,6 @@
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
                 ${map.MenuFunctions!''}
-                <#--
-                <#if (menuFuncList?? && menuFuncList?size>0)>
-                    <#list menuFuncList as menu>
-                        <li class="treeview">
-                        <a href="javascript:void(0);">
-                            <i class="fa fa-link"></i>
-                            <span>${menu.functionName!''}</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                        <#if (menu.childMenuList?? && menu.childMenuList?size>0)>
-                            <#list menu.childMenuList as submenu>
-                                <li>
-                                    <a href="javascript:void(0);" data-menuName="${submenu.functionName!''}" data-menukey="${submenu.id!''}" data-link="${submenu.functionUrl!''}" class="u_a"><i class="fa fa-c fa-circle-o"></i> ${submenu.functionName!''}
-                                </a>
-                                </li>
-                            </#list>
-                        </#if>
-                        </ul>
-                        </li>
-                    </#list>
-                </#if>
-                -->
             </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->
@@ -186,14 +163,14 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Main content -->
-        <section class="content" id="myContent">
-            <div class="nav-tabs-custom"> <!-- nav-tabs-custom -->
+        <section class="content" id="myContent" style="height: calc(100vh - 98px);background-color: burlywood;">
+            <div class="nav-tabs-custom" style="margin-bottom:0px;height: calc(100vh - 120px);"> <!-- nav-tabs-custom -->
                 <ul class="nav nav-tabs" id="menu_title">
                     <li class="active"><a href="#HOME0" data-toggle="tab" aria-expanded="true" id="HOME">首页</a></li>
                 </ul>
-                <div class="tab-content" id="menu_content">
+                <div class="tab-content" id="menu_content" style="height: calc(100vh - 165px);">
                     <div class="tab-pane active" id="HOME0">
-                        <iframe id="homeIframe" src="#" frameborder=0 width="100%" height="700px" scrolling=no>
+                        <iframe id="homeIframe" src="#" frameborder=0 width="100%" height="100%;" scrolling=no>
                         </iframe>
                     </div><!-- /.tab-pane -->
                 </div><!-- /.tab-content -->

@@ -1,10 +1,10 @@
 package com.nnte.pf_pc_front.controller.sysset;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nnte.basebusi.annotation.FunctionEnter;
+import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.base.BaseController;
-import com.nnte.basebusi.entity.FEnter;
+import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.BeanUtils;
@@ -43,7 +43,7 @@ public class SyssetController extends BaseController {
     /**
      * 显示菜单设置页面
      * */
-    @FunctionEnter(path = "/sysset/menuset",name="菜单设置页面",desc = "平台系统菜单设置，系统管理员功能")
+    @ModuleEnter(path = "/sysset/menuset", name="菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能")
     @RequestMapping(value = "/menuset")
     public ModelAndView menuset(HttpServletRequest request,ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();
@@ -53,7 +53,7 @@ public class SyssetController extends BaseController {
         opeInfo.setOperatorCode("admin");
         //-------------------------------------
         List<PFMenu> pFMenuList=pfBusinessComponent.loadOperatorMenuFunctions(opeInfo,null);//显示所有状态的菜单
-        List<FEnter> FEnterList=BaseBusiComponent.getSystemFuntionEnters();
+        List<MEnter> FEnterList=BaseBusiComponent.getSystemModuleEnters();
         Map<String,Object> envData=(Map)map.get("envData");
         String menuTreeRows=applyMenuTable(request,pFMenuList,
                 StringUtils.defaultString(envData.get("staticRoot")),
