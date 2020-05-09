@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleDao">
+    <resultMap id="PlateformOpeRoleResultEx" type="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleEx" extends="PlateformOpeRoleResult">
+        <result column="ope_name" property="opeName"/>
+        <result column="role_name" property="roleName"/>
+    </resultMap>
+    <select id="findRoleListByOpeCode" parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole" resultMap="PlateformOpeRoleResultEx">
+        select a.ope_code,null as ope_name,b.role_code,b.role_name
+        from( select * from plateform_ope_role
+              where ope_code = #{opeCode}) a
+        left join plateform_role b
+        on a.role_code=b.role_code
+    </select>
+    <delete id="deleteRoleListByOpeCode" parameterType="java.lang.String">
+        delete from plateform_ope_role where ope_code=#{_parameter}
+    </delete>
+    <insert id="insertRoleListByOpeCode" parameterType="java.util.Map">
+        insert into plateform_ope_role (ope_code ,role_code )
+        select #{opeCode} as ope_code,role_code from plateform_role where role_code in(${userRoles});
+    </insert>
+</mapper>

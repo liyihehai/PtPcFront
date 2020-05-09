@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleDao">
+    <resultMap id="PlateformOpeRoleResult" type="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole">
+        <result column="id" property="id"/>
+        <result column="ope_code" property="opeCode"/>
+        <result column="role_code" property="roleCode"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole">
+        insert into plateform_ope_role (ope_code ,role_code )
+        values (#{opeCode} ,#{roleCode} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformOpeRoleResult" parameterType="java.lang.Long">
+        select * from plateform_ope_role where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_ope_role where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole">
+        update plateform_ope_role
+        <set>
+        <if test="opeCode!= null"><![CDATA[ope_code=#{opeCode},]]></if>
+        <if test="roleCode!= null"><![CDATA[role_code=#{roleCode},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformOpeRoleListSql">
+        select * from plateform_ope_role t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="opeCode!= null"><![CDATA[and t.ope_code = #{opeCode}]]></if>
+            <if test="roleCode!= null"><![CDATA[and t.role_code = #{roleCode}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole" resultMap="PlateformOpeRoleResult">
+        <include refid="findPlateformOpeRoleListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformOpeRoleListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole" resultMap="PlateformOpeRoleResult">
+        <include refid="findPlateformOpeRoleListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>

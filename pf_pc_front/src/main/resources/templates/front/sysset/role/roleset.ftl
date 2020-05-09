@@ -1,16 +1,5 @@
 <#include "../../taglib.ftl">
-<link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.css"/>
-<link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.theme.default.css" />
 <style>
-	td{
-		vertical-align: middle!important;
-	}
-	.btn-in-row{
-		padding-top:3px;
-		padding-bottom:3px;
-		font-size:12px;
-		margin-right:4px;
-	}
     .role-code{
         width: 80px;
     }
@@ -56,20 +45,6 @@
                 <div style="overflow-y:scroll;height:calc(100vh - 62px);width:100%">
                 <table id="roleTreeTable" class="table table-bordered table-hover" style="width: 100%;margin:0;">
 					<tbody>
-                    <#--
-                        <#list map.roleList as roleRow>
-                            <tr data-tt-id='${roleRow.roleCode!''}'>
-                            <td class="role-code"><img src='${map.envData.staticRoot}/images${map.envData.contextPath}/role.png'><t>${roleRow.roleCode!''}</t></td>
-                            <td class="role-name">${roleRow.roleName!''}</td>
-                            <td><input type="text" value="${roleRow.sysroleNameList!''}" readonly=true style="width: 100%"></td>
-                            <td class="role-state"><#if (roleRow.roleState==1)>可用<#else >不可用</#if></td>
-                            <td class="role-ope-scrol">
-                                <button class='btn bg-green btn-in-row roleEdit' data-toggle='button' bData='${roleRow.roleCode!''}'>编辑</button>
-                                <button class='btn bg-maroon btn-in-row roleDel' data-toggle='button' bData='${roleRow.roleCode!''}'>删除</button>
-                            </td>
-                            </tr>
-                        </#list>
-                        -->
                     ${map.roleRows!''}
 					</tbody>
 				</table>
@@ -78,16 +53,9 @@
 		</div><!-- /.box -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
-<script src="${envData.staticRoot}/resources/plugins/jquery-treetable/jquery.treetable.js"></script>
 <#include "./roleModify.ftl">
 <script>
-
     function mountActions() {
-        // Highlight selected row
-        $("#roleTreeTable tbody").off("mousedown").on("mousedown", "tr", function () {
-            $(".selected").not(this).removeClass("selected");
-            $(this).toggleClass("selected");
-        });
         $(".roleEdit").off("click").on("click", function () {
             var data = $(event.target).attr("bData");
             roleEdit(data);
@@ -115,7 +83,7 @@
     }
     function getItemFromTable(roleCode){
         var code=$("[data-tt-id='"+roleCode+"'] td:eq(0) t").html();
-        if (code!=undefined && code!=null && code==menuCode){
+        if (code!=undefined && code!=null && code==roleCode){
             var roleItem = new Object();
             roleItem.roleCode=roleCode;
             roleItem.roleName=$("[data-tt-id='"+menuCode+"'] td:eq(1)").html();
@@ -138,7 +106,7 @@
         var roleHtml="<tr data-tt-id='"+roleItem.roleCode+"'>"+
             "<td class=\"role-code\"><img src='${map.envData.staticRoot}/images${map.envData.contextPath}/role.png'><t>"+roleItem.roleCode+"</t></td>\n" +
             "<td class=\"role-name\">"+roleItem.roleName+"</td>\n" +
-            "<td><input type=\"text\" value=\""+roleItem.sysroleNameList+"\" readonly=true style=\"width: 100%\"></td>\n" +
+            "<td class=\"td-control\"><input type=\"text\" class=\"form-control\" value=\""+roleItem.sysroleNameList+"\" readonly=true style=\"width: 100%;\"></td>\n" +
             "<td class=\"role-state\">"+getStateNameByVal(roleItem.roleState)+"</td>\n" +
             "<td class=\"role-ope-scrol\">\n" +
             "<button class='btn bg-green btn-in-row roleEdit' data-toggle='button' bData='"+roleItem.roleCode+"'>编辑</button>\n" +

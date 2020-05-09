@@ -105,6 +105,7 @@
             this.mountActions();
         }
         this.setSysRoleCheck=function(sysRoleList){
+            $(".Role_rowCheck").prop("checked",false);
             var roles=sysRoleList.split(',');
             if (roles.length>0){
                 for(var i=0;i<roles.length;i++){

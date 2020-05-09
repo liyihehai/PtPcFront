@@ -5,7 +5,6 @@ import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.NumberUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRoleService;
 import com.nnte.pf_business.request.RequestRole;

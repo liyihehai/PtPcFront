@@ -67,7 +67,7 @@ public class RoleController extends BaseController {
         return ret;
     }
     /**
-     * 保存菜单信息更改，含新增和更改
+     * 保存角色信息更改，含新增和更改
      * */
     @RequestMapping(value = "/saveRoleModify")
     @ResponseBody
@@ -86,7 +86,7 @@ public class RoleController extends BaseController {
     }
 
     /**
-     * 删除菜单定义（物理删除）
+     * 删除角色定义（物理删除）
      * */
     @RequestMapping(value = "/deleteRoleByCode")
     @ResponseBody

@@ -1,0 +1,348 @@
+package com.nnte.pf_business.component.operator;
+
+import com.nnte.basebusi.annotation.BusiLogAttr;
+import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.excption.BusiException;
+import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.entity.KeyValue;
+import com.nnte.framework.utils.*;
+import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
+import com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorService;
+import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole;
+import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleEx;
+import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleService;
+import com.nnte.pf_business.request.RequestOpe;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+@Component
+/**
+ * 操作员管理组件
+ * 日志打印位置：SystemManager 系统管理
+ * */
+@BusiLogAttr(value = "SystemManager")
+public class PlateformOperatorComponent extends BaseBusiComponent {
+    @Autowired
+    private PlateformOperatorService plateformOperatorService;
+    @Autowired
+    private PlateformOpeRoleService plateformOpeRoleService;
+    /**
+     * 操作员状态
+     * */
+    public enum OperatorState{
+        UNVALID(0), //无效
+        VALID(1),   //有效
+        PAUSE(2),   //暂停
+        DELED(3);   //已删除
+        private int value;
+        OperatorState(int val){
+            value = val;
+        }
+        public int getValue(){return value;}
+        public static OperatorState fromInt(int val) throws BusiException{
+            switch (val){
+                case 0:return UNVALID;
+                case 1:return VALID;
+                case 2:return PAUSE;
+                case 3:return DELED;
+            }
+            throw new BusiException("无效的操作员状态值");
+        }
+        public String getName(){
+            switch (value){
+                case 0:return "无效";
+                case 1:return "有效";
+                case 2:return "暂停";
+                case 3:return "已删除";
+            }
+            return "未知";
+        }
+    }
+    /**
+     * 操作员类型
+     * */
+    public enum OperatorType{
+        SupperMgr(1),
+        CommonOpe(2),
+        AutoOpe(3);
+        private int value;
+        OperatorType(int val){
+            value = val;
+        }
+        public int getValue(){return value;}
+        public static OperatorType fromInt(int val) throws BusiException{
+            switch (val){
+                case 1:return SupperMgr;
+                case 2:return CommonOpe;
+                case 3:return AutoOpe;
+            }
+            throw new BusiException("无效的操作员类型");
+        }
+        public String getName(){
+            switch (value){
+                case 1:return "超级管理员";
+                case 2:return "普通操作员";
+                case 3:return "自动操作员";
+            }
+            return "未知";
+        }
+    }
+    /**
+     * 通过操作员编码查询操作员信息
+     * */
+    public PlateformOperator getOperatorByCode(String code){
+        PlateformOperator dto=new PlateformOperator();
+        dto.setOpeCode(code);
+        List<PlateformOperator> list=plateformOperatorService.findModelList(dto);
+        if (list==null || list.size()!=1)
+            return null;
+        return list.get(0);
+    }
+    /**
+     * 按条件查询操作员列表
+     * */
+    public List<PlateformOperator> queryOperatorList(RequestOpe reqOpe){
+        PlateformOperator dto = new PlateformOperator();
+        if (StringUtils.isNotEmpty(reqOpe.getOpeCode()))
+            dto.setOpeCode(reqOpe.getOpeCode());
+        if (StringUtils.isNotEmpty(reqOpe.getOpeName()))
+            dto.setOpeName(reqOpe.getOpeName());
+        if (reqOpe.getOpeType()!=null && reqOpe.getOpeType()>=0)
+            dto.setOpeType(reqOpe.getOpeType());
+        if (StringUtils.isNotEmpty(reqOpe.getOpeMobile()))
+            dto.setOpeMobile(reqOpe.getOpeMobile());
+        if (reqOpe.getOpeState()!=null && reqOpe.getOpeState()>=0)
+            dto.setOpeState(reqOpe.getOpeState());
+        return plateformOperatorService.queryPlateformOperators(dto);
+    }
+
+    /**
+     * 按条件查询操作员列表
+     * */
+    public Map<String,Object> queryRequestOpeList(RequestOpe reqOpe){
+        Map ret = BaseNnte.newMapRetObj();
+        List<PlateformOperator> list=queryOperatorList(reqOpe);
+        List<RequestOpe> retList = new ArrayList<>();
+        if (list!=null && list.size()>0){
+            for (PlateformOperator ope : list) {
+                RequestOpe ro = getRequestOpeByPO(ope);
+                retList.add(ro);
+            }
+            ret.put("opeList",retList);
+            BaseNnte.setRetTrue(ret,"查询操作员列表成功");
+        }else
+            BaseNnte.setRetFalse(ret,1001,"查询操作员列表成功,无操作员信息");
+        return ret;
+    }
+    /**
+     * 通过编码查询特定的操作员
+     * */
+    public PlateformOperator queryOperatorByCode(String code){
+        PlateformOperator dto = new PlateformOperator();
+        dto.setOpeCode(code);
+        List<PlateformOperator> list = plateformOperatorService.findModelList(dto);
+        if (list!=null && list.size()==1)
+            return list.get(0);
+        return null;
+    }
+    /**
+     * 通过电话号码查询特定的操作员
+     * */
+    public PlateformOperator queryOperatorByMobile(String mobile){
+        PlateformOperator dto = new PlateformOperator();
+        dto.setOpeMobile(mobile);
+        List<PlateformOperator> list = plateformOperatorService.findModelList(dto);
+        if (list!=null && list.size()>0)
+            return list.get(0);
+        return null;
+    }
+
+    private RequestOpe getRequestOpeByPO(PlateformOperator pfo){
+        RequestOpe retOpe = new RequestOpe();
+        BeanUtils.copyFromSrc(pfo,retOpe);
+        try {
+            retOpe.setOpeStateName(OperatorState.fromInt(retOpe.getOpeState()).getName());
+            retOpe.setOpeTypeName(OperatorType.fromInt(retOpe.getOpeType()).getName());
+        }catch (BusiException be){
+            be.printException(this);
+        }
+        return retOpe;
+    }
+    /**
+     * 通过编码查询特定的角色
+     * */
+    public RequestOpe queryRequestOperatorByCode(String code){
+        PlateformOperator pfo = queryOperatorByCode(code);
+        if (pfo==null)
+            return null;
+        return getRequestOpeByPO(pfo);
+    }
+    /**
+     * 保存操作员更改,包括新增及更改
+     * */
+    public Map<String,Object> saveOperatorModify(PlateformOperator operator, int actionType) {
+        Map<String, Object> retMap = BaseNnte.newMapRetObj();
+        PlateformOperator srcOpe = queryOperatorByCode(operator.getOpeCode());
+        PlateformOperator srcMobileOpe = queryOperatorByMobile(operator.getOpeMobile());
+        if (actionType==1){
+            //如果是新增操作
+            if (srcOpe!=null){
+                BaseNnte.setRetFalse(retMap,1002,"操作员编号已存在，不能新增");
+                return retMap;
+            }
+            if (srcMobileOpe!=null){
+                BaseNnte.setRetFalse(retMap,1002,"操作员电话号码已存在，不能新增");
+                return retMap;
+            }
+            PlateformOperator newOpe = new PlateformOperator();
+            newOpe.setOpeCode(operator.getOpeCode());
+            newOpe.setOpeName(operator.getOpeName());
+            newOpe.setOpeType(operator.getOpeType());
+            newOpe.setOpeMobile(operator.getOpeMobile());
+            newOpe.setOpeState(operator.getOpeState());
+            newOpe.setCreateTime(new Date());
+            int count = NumberUtil.getDefaultInteger(plateformOperatorService.addModel(newOpe));
+            if (count!=1){
+                BaseNnte.setRetFalse(retMap,1002,"新增操作员失败");
+                return retMap;
+            }
+            BaseNnte.setRetTrue(retMap,"新增操作员操作成功");
+        }else if(actionType==2){
+            if (srcOpe==null){
+                BaseNnte.setRetFalse(retMap,1002,"编号["+operator.getOpeCode()+"]操作员不存在，不能更改");
+                return retMap;
+            }
+            if (srcMobileOpe!=null && !srcMobileOpe.getId().equals(srcOpe.getId())){
+                BaseNnte.setRetFalse(retMap,1002,"操作员不能设置手机号["+operator.getOpeMobile()+"]，不能更改");
+                return retMap;
+            }
+            PlateformOperator updateOpe = new PlateformOperator();
+            updateOpe.setId(srcOpe.getId());
+            updateOpe.setOpeName(operator.getOpeName());
+            updateOpe.setOpeType(operator.getOpeType());
+            updateOpe.setOpeMobile(operator.getOpeMobile());
+            updateOpe.setOpeState(operator.getOpeState());
+            int count = NumberUtil.getDefaultInteger(plateformOperatorService.updateModel(updateOpe));
+            if (count!=1){
+                BaseNnte.setRetFalse(retMap,1002,"更改操作员失败");
+                return retMap;
+            }
+            BaseNnte.setRetTrue(retMap,"更改操作员成功");
+        }
+        return retMap;
+    }
+    /**
+     * 按编号删除操作员(逻辑删除)
+     * */
+    public Map<String,Object> deleteOpeByCode(String opeCode,PlateformOperator curOpe){
+        Map<String,Object> retMap = BaseNnte.newMapRetObj();
+        try {
+            PlateformOperator ope = getAndCheckOperator(opeCode, curOpe);
+            if (ope.getOpeState().equals(OperatorState.DELED.getValue())) {
+                BaseNnte.setRetTrue(retMap, "删除操作员成功，无需删除");
+                return retMap;
+            }
+            PlateformOperator updateDto = new PlateformOperator();
+            updateDto.setId(ope.getId());
+            updateDto.setOpeState(OperatorState.DELED.getValue());
+            Integer count = plateformOperatorService.updateModel(updateDto);
+            if (count != 1) {
+                throw new BusiException("删除操作失败");
+            }
+            retMap.put("opeCode", opeCode);
+            BaseNnte.setRetTrue(retMap, "操作员删除成功");
+        }catch (BusiException be){
+            BaseNnte.setRetFalse(retMap, 1002, "操作员删除失败："+be.getMessage());
+        }
+        return retMap;
+    }
+    //取得并检测当前操作员能否操作目标操作员信息
+    private PlateformOperator getAndCheckOperator(String opeCode,PlateformOperator curOpe) throws BusiException{
+        PlateformOperator ope = queryOperatorByCode(opeCode);
+        if (ope == null) {
+            throw new BusiException(1002,"没找到指定编号的操作员", BusiException.ExpLevel.ERROR);
+        }
+        if (ope.getOpeType().equals(OperatorType.SupperMgr.getValue())) {
+            if (curOpe == null || !curOpe.getOpeType().equals(OperatorType.SupperMgr.getValue())) {
+                throw new BusiException(1002,"当前操作员不是超级管理员，不能操作", BusiException.ExpLevel.ERROR);
+            }
+        }
+        return ope;
+    }
+    /**
+     * 设置操作员密码
+     * */
+    public Map<String,Object> setPws(String opeCode,String aimPws,PlateformOperator curOpe){
+        Map<String,Object> retMap = BaseNnte.newMapRetObj();
+        try {
+            PlateformOperator ope = getAndCheckOperator(opeCode,curOpe);
+            String tmpKey = ope.getTmpKey();
+            if (StringUtils.isEmpty(tmpKey)) {
+                BaseNnte.setRetFalse(retMap, 1002, "秘钥校验错误");
+                return retMap;
+            }
+            PlateformOperator updateOpe = new PlateformOperator();
+            updateOpe.setId(ope.getId());
+            updateOpe.setTmpKey("");
+            String decPassword = AESUtils.decryptECB(aimPws, tmpKey);
+            String md5Password = MD5Util.md5For32UpperCase(decPassword);
+            updateOpe.setOpePassword(md5Password);
+            if (!NumberUtil.getDefaultInteger(plateformOperatorService.updateModel(updateOpe)).equals(1)) {
+                BaseNnte.setRetFalse(retMap, 1002, "更改操作员密码失败");
+                return retMap;
+            }
+            BaseNnte.setRetTrue(retMap, "更改操作员密码成功");
+        }
+        catch (UnsupportedEncodingException uee){
+            BusiException be = new BusiException(uee);
+            BaseNnte.setRetFalse(retMap, 1002, "设置操作员密码错误："+be.getMessage());
+            be.printException(this);
+        }
+        catch (BusiException be){
+            BaseNnte.setRetFalse(retMap, 1002, "设置操作员密码错误："+be.getMessage());
+            be.printException(this);
+        }
+        return retMap;
+    }
+    /**
+     * 查询操作员关联的用户角色列表(KEY-VALUE形式)
+     * */
+    public List<KeyValue> findRoleListOfOpe(String opeCode){
+        PlateformOpeRole ope = new PlateformOpeRole();
+        ope.setOpeCode(opeCode);
+        List<PlateformOpeRoleEx> list=plateformOpeRoleService.findRoleListByOpeCode(ope);
+        if (list!=null && list.size()>0){
+            List<KeyValue> roleList = new ArrayList<>();
+            for(PlateformOpeRoleEx role:list){
+                roleList.add(new KeyValue(role.getRoleCode(),role.getRoleName()));
+            }
+            return roleList;
+        }
+        return null;
+    }
+    /**
+     * 设置操作员角色
+     * */
+    public Map<String,Object> saveOperatorRoles(String opeCode,String userRoles,PlateformOperator curOpe){
+        Map<String,Object> retMap = BaseNnte.newMapRetObj();
+        try {
+            PlateformOperator ope = getAndCheckOperator(opeCode, curOpe);
+            plateformOpeRoleService.deleteRoleListByOpeCode(ope.getOpeCode());
+            if (StringUtils.isNotEmpty(userRoles)){
+                plateformOpeRoleService.insertRoleListByOpeCode(ope.getOpeCode(),userRoles);
+            }
+            BaseNnte.setRetTrue(retMap,"设置操作员角色成功");
+        }catch (BusiException be){
+            BaseNnte.setRetFalse(retMap, 1002, "设置操作员角色错误："+be.getMessage());
+            be.printException(this);
+        }
+        return retMap;
+    }
+
+}

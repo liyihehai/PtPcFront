@@ -65,7 +65,7 @@
 <script src="${envData.staticRoot}/js/utils/crypto-js-4.0.0/crypto-js.js"></script>
 <script src="${envData.staticRoot}/js/utils/crypto-js-4.0.0/aes.js"></script>
 <script src="${envData.staticRoot}/js/secret.js"></script>
-<script src="${envData.staticRoot}/js/login.s.js"></script>
+<script src="${envData.staticRoot}/js/login.s.js?v=1.18"></script>
 <script type="text/javascript">
     function submit_me(){
         loginModle.submitLoginInfo($("#userName").val(),$("#password").val());

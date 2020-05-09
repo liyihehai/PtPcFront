@@ -2,15 +2,6 @@
 <link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.css"/>
 <link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.theme.default.css" />
 <style>
-	td{
-		vertical-align: middle!important;
-	}
-	.btn-in-row{
-		padding-top:3px;
-		padding-bottom:3px;
-		font-size:12px;
-		margin-right:4px;
-	}
     .menu-code{
         width: 80px;
     }
