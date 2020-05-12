@@ -1,28 +1,36 @@
 package com.nnte.pf_business.component.roles;
 
+import com.nnte.basebusi.annotation.BusiLogAttr;
+import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.NumberUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
+import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleService;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRoleService;
+import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 /**
  * 平台角色组件
  * */
-public class PlateformRoleComponent {
+@BusiLogAttr(value = "SystemManager")
+public class PlateformRoleComponent extends BaseBusiComponent {
     @Autowired
     private PlateformRoleService plateformRoleService;
+    @Autowired
+    private PlateformOpeRoleService plateformOpeRoleService;
+    @Autowired
+    private PlateformFunctionsService plateformFunctionsService;
     /**
      * 查询用户角色列表
      * */
@@ -83,6 +91,11 @@ public class PlateformRoleComponent {
      * */
     public RequestRole queryRequestRoleByCode(String code){
         PlateformRole pr=queryRoleByCode(code);
+        if (pr!=null)
+            return queryRequestRoleByCode(pr);
+        return null;
+    }
+    public RequestRole queryRequestRoleByCode(PlateformRole pr){
         if (pr!=null)
             return getRequestRoleByPR(pr);
         return null;
@@ -151,8 +164,74 @@ public class PlateformRoleComponent {
             BaseNnte.setRetFalse(retMap,1002,"角色删除失败");
             return retMap;
         }
+        plateformOpeRoleService.deleteRoleListByRoleCode(role.getRoleCode());
         retMap.put("roleCode",roleCode);
         BaseNnte.setRetTrue(retMap,"角色删除成功");
         return retMap;
+    }
+    /**
+     * 查询角色关联的功能列表
+     * */
+    public List<PlateformFunctions> findFunctionListOfRole(String roleCode){
+        PlateformRole role = new PlateformRole();
+        role.setRoleCode(roleCode);
+        return plateformFunctionsService.findFunctionsByRoleCode(role);
+    }
+    /**
+     * 查询角色关联的功能列表，含系统角色功能标志
+     * */
+    public List<RequestFunc> getRoleFunctions(PlateformRole pr){
+        if (pr==null)
+            return null;
+        List<PlateformFunctions> pfList=plateformFunctionsService.findFunctionsByRoleCode(pr);
+        Map<String,RequestFunc> map=new HashMap<>();
+        for(PlateformFunctions func:pfList){
+            RequestFunc rf = new RequestFunc();
+            BeanUtils.copyFromSrc(func,rf);
+            rf.setRoleFunction(1);
+            rf.setSysRoleFunction(0);
+            map.put(rf.getFunCode(),rf);
+        }
+        List<PlateformFunctions> sysPfList=findFunctionListOfSysRole(pr);
+        for(PlateformFunctions func:sysPfList){
+            RequestFunc rf=map.get(func.getFunCode());
+            if (rf!=null){
+                rf.setSysRoleFunction(1);
+            }else{
+                rf = new RequestFunc();
+                BeanUtils.copyFromSrc(func,rf);
+                rf.setRoleFunction(0);
+                rf.setSysRoleFunction(1);
+                map.put(rf.getFunCode(),rf);
+            }
+        }
+        if (map.size()<=0)
+            return null;
+        List<RequestFunc> retList = new ArrayList<>();
+        for(String key:map.keySet()){
+            retList.add(map.get(key));
+        }
+        return retList;
+    }
+    /**
+     * 设置角色功能
+     * */
+    public Map<String,Object> saveRoleFunctions(String roleCode,String functions){
+        Map<String,Object> retMap = BaseNnte.newMapRetObj();
+        plateformFunctionsService.deleteFunctionsByRoleCode(roleCode);
+        if (StringUtils.isNotEmpty(functions)){
+            plateformFunctionsService.insertFunctionsByRoleCode(roleCode,functions);
+        }
+        BaseNnte.setRetTrue(retMap,"设置角色功能成功");
+        return retMap;
+    }
+    /**
+     * 查询角色关联的系统角色关联的功能列表
+     * */
+    public List<PlateformFunctions> findFunctionListOfSysRole(PlateformRole role){
+        if (role==null || role.getSysroleList()==null || StringUtils.isEmpty(role.getSysroleList()))
+            return null;
+        String sysRoleCodeList=role.getSysroleList().replaceAll("\\[","'").replaceAll("\\]","'");
+        return plateformFunctionsService.findFunctionsBySysRoleCode(sysRoleCodeList);
     }
 }

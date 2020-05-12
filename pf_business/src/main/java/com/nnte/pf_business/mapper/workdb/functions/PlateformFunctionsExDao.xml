@@ -7,4 +7,46 @@
         where 1=1 <if test="funState!=null">and fun_state=#{funState}</if>
         order by fun_code ASC
     </select>
+    <delete id="deleteFunctionsByOpeCode" parameterType="java.lang.String">
+        delete from plateform_ope_function where ope_code=#{_parameter}
+    </delete>
+
+    <insert id="insertFunctionsByOpeCode" parameterType="java.util.Map">
+        insert into plateform_ope_function (ope_code ,fun_code )
+        select #{opeCode} as ope_code,fun_code from plateform_functions where fun_code in(${functions});
+    </insert>
+
+    <select id="findFunctionsByOpeCode" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where fun_code in (select fun_code from plateform_ope_function
+                           where ope_code = #{opeCode})
+    </select>
+
+    <select id="findFunctionsByRoleCode" parameterType="com.nnte.pf_business.mapper.workdb.role.PlateformRole" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where fun_code in (select fun_code from plateform_role_function
+                           where role_code = #{roleCode})
+    </select>
+    <delete id="deleteFunctionsByRoleCode" parameterType="java.lang.String">
+        delete from plateform_role_function where role_code=#{_parameter}
+    </delete>
+
+    <insert id="insertFunctionsByRoleCode" parameterType="java.util.Map">
+        insert into plateform_role_function (role_code ,fun_code )
+        select #{roleCode} as role_code,fun_code from plateform_functions where fun_code in(${functions});
+    </insert>
+
+    <select id="findFunctionsBySysRoleCode" parameterType="java.lang.String" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where fun_path in (select fun_path from plateform_function_rec
+                           where sys_role_code in (${_parameter}))
+    </select>
+
+    <select id="findFunctionsByOpeRoles" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where fun_code in (
+          select fun_code from plateform_role_function
+          where role_code in (select role_code from plateform_ope_role
+                              where ope_code = #{opeCode}))
+    </select>
 </mapper>

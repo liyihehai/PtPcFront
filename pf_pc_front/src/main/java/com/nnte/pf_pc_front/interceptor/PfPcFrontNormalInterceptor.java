@@ -5,6 +5,7 @@ import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.ConfigLoad;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
+import com.nnte.framework.utils.FreeMarkertUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
@@ -28,12 +29,15 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
         //请求进入这个拦截器
         Map<String, Object> envData = (Map)request.getAttribute("envData");
         BaseNnte.outConsoleLog(request.getServletPath());
+        int enterType = 0; //页面进入
         if (envData!=null) {
             Map<String,Object> retMap=BaseNnte.newMapRetObj();
             String loginIp=BaseController.getIpAddr(request);
             String token= StringUtils.defaultString(BaseController.getRequestParam(request,null,"token"));
-            if (StringUtils.isEmpty(token))
-                token=request.getHeader("Postman-Token");
+            if (StringUtils.isEmpty(token)) {
+                token = request.getHeader("Postman-Token");
+                enterType = 1; //Ajax进入
+            }
             try {
                 Map checkMap=pfBusinessComponent.checkRequestToken(token, loginIp);
                 OperatorInfo oi=(OperatorInfo)checkMap.get("OperatorInfo");
@@ -42,13 +46,26 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
                 pfBusinessComponent.checkRequestModule(oi,request.getServletPath());
                 return true;
             }catch (BusiException be){
+                if (be.getExpCode().equals(1010)) {
+                    BaseNnte.setRetFalse(retMap, 1010, be.getMessage());
+                    retMap.put("message", be.getMessage());
+                    if (enterType==0)
+                        BaseController.ResponsByFtl(request, response, retMap, "/templates/front/moduleFailed.ftl");
+                        //    BaseController.ResponsByFtl(request, response, retMap, "/templates/front/jumplogin.ftl");
+                    else
+                        BaseController.printJsonObject(response,retMap);
+                    return false;
+                }
                 BaseNnte.setRetFalse(retMap,1001,be.getMessage());
             }catch (Exception e){
                 BaseNnte.setRetFalse(retMap,1001,"身份验证错误");
             }
             retMap.put("message",retMap.get("msg"));
             request.setAttribute("map",retMap);
-            response.sendRedirect(envData.get("contextPath")+"/main/login");
+            if (enterType==0)
+                BaseController.ResponsByFtl(request, response, retMap, "/templates/front/jumplogin.ftl");
+            else
+                BaseController.printJsonObject(response,retMap);
             return false;
         }
         return false;        //有的话就继续操作

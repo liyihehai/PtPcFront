@@ -8,8 +8,9 @@
         <#if (opeRow?? && opeRow.opeState?? && opeRow.opeState!=3)>
             <button class='btn bg-green btn-in-row opeEdit' data-toggle='button' bData='${opeRow.opeCode!''}'>编辑</button>
             <button class='btn bg-maroon btn-in-row opeDel' data-toggle='button' bData='${opeRow.opeCode!''}'>删除</button>
-            <button class='btn bg-maroon btn-in-row opePws' data-toggle='button' bData='${opeRow.opeCode!''}'>密码</button>
-            <button class='btn bg-maroon btn-in-row opeRole' data-toggle='button' bData='${opeRow.opeCode!''}'>角色</button>
+            <button class='btn bg-info btn-in-row opePws' data-toggle='button' bData='${opeRow.opeCode!''}'>密码</button>
+            <button class='btn bg-info btn-in-row opeRole' data-toggle='button' bData='${opeRow.opeCode!''}'>角色</button>
+            <button class='btn bg-info btn-in-row opeFunction' data-toggle='button' bData='${opeRow.opeCode!''}'>功能</button>
         </#if>
     </td>
 </tr></@compress>

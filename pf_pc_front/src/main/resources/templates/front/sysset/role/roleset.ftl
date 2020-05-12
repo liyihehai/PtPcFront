@@ -10,10 +10,10 @@
         width: 80px;
     }
     .role-ope{
-        width: 200px;
+        width: 210px;
     }
     .role-ope-scrol{
-        width: 184px;
+        width: 194px;
     }
 </style>
 <div class="row level0">
@@ -54,6 +54,7 @@
 	</div><!-- /.col -->
 </div><!-- /.row -->
 <#include "./roleModify.ftl">
+<#include "./roleFunction.ftl">
 <script>
     function mountActions() {
         $(".roleEdit").off("click").on("click", function () {
@@ -63,6 +64,10 @@
         $(".roleDel").off("click").on("click", function () {
             var data = $(event.target).attr("bData");
             roleDelete(data);
+        });
+        $(".roleFunction").off("click").on("click", function () {
+            var data = $(event.target).attr("bData");
+            roleFunction(data);
         });
     }
     function roleEdit(roleCode){
@@ -77,6 +82,21 @@
                 roleModifyInstance.onRoleChanged = onRoleChanged;
                 roleModifyInstance.initModal(role,2);
                 $('#roleModify').modal({backdrop: 'static', keyboard: false});
+            }else
+                msgbox.showMsgBox(content.msg);
+        });
+    }
+    function roleFunction(roleCode){
+        var ajga=new AppJSGlobAjax();
+        var url="/role/queryRoleFunctions";
+        var collect_data = {roleCode: roleCode};
+        var data = JSON.stringify(collect_data);
+        ajga.AjaxApplicationJson(url,data,function (content){
+            if (content.code==0){
+                var role = content.role;
+                var roleFunctions = content.roleFunctions;
+                roleFunctionInstance.initModal(role,roleFunctions);
+                $('#roleFunction').modal({backdrop: 'static', keyboard: false});
             }else
                 msgbox.showMsgBox(content.msg);
         });
@@ -111,6 +131,7 @@
             "<td class=\"role-ope-scrol\">\n" +
             "<button class='btn bg-green btn-in-row roleEdit' data-toggle='button' bData='"+roleItem.roleCode+"'>编辑</button>\n" +
             "<button class='btn bg-maroon btn-in-row roleDel' data-toggle='button' bData='"+roleItem.roleCode+"'>删除</button>\n" +
+            "<button class='btn bg-info btn-in-row roleFunction' data-toggle='button' bData='"+roleItem.roleCode+"'>功能</button>\n" +
             "</td>\n" +
             "</tr>";
         $("#roleTreeTable tbody").append(roleHtml);

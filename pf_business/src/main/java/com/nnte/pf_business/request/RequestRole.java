@@ -18,4 +18,5 @@ public class RequestRole {
     private Integer roleState;
     @IntegerCheck(colName = "操作类型",inVals = {1,2},nullValid = false)
     private Integer actionType;
+    private String functions;   //角色功能序列
 }

@@ -16,10 +16,10 @@
         width: 80px;
     }
     .operator-ope{
-        width: 260px;
+        width: 331px;
     }
     .operator-ope-scrol{
-        width: 244px;
+        width: 315px;
     }
 </style>
 <div class="row level0">
@@ -95,6 +95,7 @@
 <#include "./operatorModify.ftl">
 <#include "./operatorPws.ftl">
 <#include "./operatorRole.ftl">
+<#include "./operatorFunction.ftl">
 <script>
     function mountActions() {
         $(".opeEdit").off("click").on("click", function () {
@@ -112,6 +113,10 @@
         $(".opeRole").off("click").on("click", function () {
             var data = $(event.target).attr("bData");
             opeRole(data);
+        });
+        $(".opeFunction").off("click").on("click", function () {
+            var data = $(event.target).attr("bData");
+            opeFunction(data);
         });
     }
     function getItemFromTable(opeCode){
@@ -185,6 +190,21 @@
                 var opeRoles = content.opeRoles;
                 operatorRoleInstance.initModal(operator,opeRoles);
                 $('#operatorRole').modal({backdrop: 'static', keyboard: false});
+            }else
+                msgbox.showMsgBox(content.msg);
+        });
+    }
+    function opeFunction(opeCode){
+        var ajga=new AppJSGlobAjax();
+        var url="/operator/queryOperatorFunctions";
+        var collect_data = {opeCode: opeCode};
+        var data = JSON.stringify(collect_data);
+        ajga.AjaxApplicationJson(url,data,function (content){
+            if (content.code==0){
+                var operator = content.operator;
+                var opeFunctions = content.opeFunctions;
+                operatorFunctionInstance.initModal(operator,opeFunctions);
+                $('#operatorFunction').modal({backdrop: 'static', keyboard: false});
             }else
                 msgbox.showMsgBox(content.msg);
         });

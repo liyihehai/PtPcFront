@@ -35,6 +35,17 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
         }
     }
     /**
+     * 按操作员编码删除操作员角色
+     * */
+    public Integer deleteRoleListByRoleCode(String roleCode){
+        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+            return cds.getSqlSession().delete("deleteRoleListByRoleCode",roleCode);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
      * 按操作员编码批量增加角色
      * */
     public Integer insertRoleListByOpeCode(String opeCode,String userRoles){

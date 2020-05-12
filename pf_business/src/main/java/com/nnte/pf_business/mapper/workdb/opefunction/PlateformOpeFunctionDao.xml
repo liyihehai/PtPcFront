@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunctionDao">
+    <resultMap id="PlateformOpeFunctionResult" type="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction">
+        <result column="id" property="id"/>
+        <result column="ope_code" property="opeCode"/>
+        <result column="fun_code" property="funCode"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="false" parameterType="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction">
+        insert into plateform_ope_function (id ,ope_code ,fun_code )
+        values (#{id} ,#{opeCode} ,#{funCode} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformOpeFunctionResult" parameterType="java.lang.Long">
+        select * from plateform_ope_function where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_ope_function where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction">
+        update plateform_ope_function
+        <set>
+        <if test="id!= null"><![CDATA[id=#{id},]]></if>
+        <if test="opeCode!= null"><![CDATA[ope_code=#{opeCode},]]></if>
+        <if test="funCode!= null"><![CDATA[fun_code=#{funCode},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformOpeFunctionListSql">
+        select * from plateform_ope_function t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="opeCode!= null"><![CDATA[and t.ope_code = #{opeCode}]]></if>
+            <if test="funCode!= null"><![CDATA[and t.fun_code = #{funCode}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction" resultMap="PlateformOpeFunctionResult">
+        <include refid="findPlateformOpeFunctionListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformOpeFunctionListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.opefunction.PlateformOpeFunction" resultMap="PlateformOpeFunctionResult">
+        <include refid="findPlateformOpeFunctionListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>

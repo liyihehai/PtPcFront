@@ -20,4 +20,7 @@ public class RequestFunc {
     private String funParam;
     @IntegerCheck(colName = "功能状态")
     private Integer funState;
+    private Integer opeFunction;        //0或null表示非操作员功能，1表示操作员功能
+    private Integer roleFunction;       //0或null表示非角色功能，1表示角色功能
+    private Integer sysRoleFunction;    //0或null表示非系统角色功能，1表示系统角色功能
 }

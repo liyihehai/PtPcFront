@@ -16,6 +16,9 @@
     <delete id="deleteRoleListByOpeCode" parameterType="java.lang.String">
         delete from plateform_ope_role where ope_code=#{_parameter}
     </delete>
+    <delete id="deleteRoleListByRoleCode" parameterType="java.lang.String">
+        delete from plateform_ope_role where role_code=#{_parameter}
+    </delete>
     <insert id="insertRoleListByOpeCode" parameterType="java.util.Map">
         insert into plateform_ope_role (ope_code ,role_code )
         select #{opeCode} as ope_code,role_code from plateform_role where role_code in(${userRoles});

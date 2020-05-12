@@ -12,9 +12,13 @@ import com.nnte.framework.utils.FreeMarkertUtil;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
+import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
+import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
+import com.nnte.pf_pc_front.PcPlateformApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,14 +37,18 @@ import java.util.Map;
 public class RoleController extends BaseController {
     @Autowired
     private PlateformRoleComponent plateformRoleComponent;
+    @Autowired
+    private PlateformFunctionComponent plateformFunctionComponent;
     /**
      * 显示用户角色设置页面
      * */
     @ModuleEnter(path = "/role/roleset", name="角色设置页面", desc = "平台系统角色设置，系统管理员功能",
-            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "roleset")
+            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "roleset",
+            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
     @RequestMapping(value = "/roleset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map=refreshRoles(request);
+        map.put("functionList",plateformFunctionComponent.queryPlateformFunctionList(null));
         modelAndView.addObject("map", map);
         modelAndView.setViewName("front/sysset/role/roleset");
         return modelAndView;
@@ -122,5 +130,44 @@ public class RoleController extends BaseController {
         map.put("roleRows", roleRows);
         BaseNnte.setRetTrue(map,"刷新角色列表成功");
         return map;
+    }
+    /**
+     * 通过角色编码查询角色功能信息
+     * */
+    @RequestMapping(value = "/queryRoleFunctions")
+    @ResponseBody
+    public Map<String,Object> queryRoleFunctions(HttpServletRequest request, @RequestBody JsonNode json){
+        Map<String,Object> ret=BaseNnte.newMapRetObj();
+        RequestRole rRole= JsonUtil.jsonToBean(json.toString(),RequestRole.class);
+        PlateformRole pf=plateformRoleComponent.queryRoleByCode(rRole.getRoleCode());
+        RequestRole retRole=plateformRoleComponent.queryRequestRoleByCode(pf);
+        if (retRole==null){
+            BaseNnte.setRetFalse(ret,1002,"没找到指定角色信息");
+            return ret;
+        }
+        ret.put("role",retRole);
+       // List<PlateformFunctions> roleFunctions=plateformRoleComponent.findFunctionListOfRole(retRole.getRoleCode());
+        List<RequestFunc> roleFunctions=plateformRoleComponent.getRoleFunctions(pf);
+        ret.put("roleFunctions",roleFunctions);
+        BaseNnte.setRetTrue(ret,"查询角色功能信息成功");
+        return ret;
+    }
+    /**
+     * 设置角色的功能
+     * */
+    @RequestMapping(value = "/saveRoleFunctions")
+    @ResponseBody
+    public Map<String,Object> saveRoleFunctions(HttpServletRequest request, @RequestBody JsonNode json){
+        Map<String,Object> ret=BaseNnte.newMapRetObj();
+        RequestRole rRole= JsonUtil.jsonToBean(json.toString(),RequestRole.class);
+        if (rRole==null){
+            BaseNnte.setRetFalse(ret,1002,"角色代码不合法");
+            return ret;
+        }
+        if (StringUtils.isEmpty(rRole.getRoleCode())){
+            BaseNnte.setRetFalse(ret,1002,"角色代码不合法");
+            return ret;
+        }
+        return plateformRoleComponent.saveRoleFunctions(rRole.getRoleCode(),rRole.getFunctions());
     }
 }

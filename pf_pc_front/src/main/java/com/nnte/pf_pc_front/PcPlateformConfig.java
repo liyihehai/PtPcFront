@@ -2,6 +2,7 @@ package com.nnte.pf_pc_front;
 
 import com.nnte.basebusi.annotation.DBSrcTranc;
 import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
@@ -92,5 +93,11 @@ public class PcPlateformConfig implements ApplicationRunner, ConfigInterface {
             pfw.startWatch();
         }
         BaseBusiComponent.loadSystemFuntionEnters(PfBusinessComponent.getSystemRoleMap());
+        PfBusinessComponent pfbusiness= SpringContextHolder.getBean("pfBusinessComponent");
+        if (pfbusiness!=null){
+            List<MEnter> funcList=BaseBusiComponent.getSystemModuleEnters();
+            pfbusiness.registerFunctions(PcPlateformApplication.App_Code,PcPlateformApplication.App_Name,
+                    PcPlateformApplication.getModuleMap(),funcList);
+        }
     }
 }

@@ -334,4 +334,12 @@ public class PlateformFunctionComponent {
         }
         return retMap;
     }
+    /**
+     * 查询指定状态的功能列表，如果状态为null,查询所有状态的功能列表
+     * */
+    public List<PlateformFunctions> queryPlateformFunctionList(Integer funState){
+        PlateformFunctions func = new PlateformFunctions();
+        func.setFunState(funState);
+        return plateformFunctionsService.queryAllPlateformFunctions(func);
+    }
 }

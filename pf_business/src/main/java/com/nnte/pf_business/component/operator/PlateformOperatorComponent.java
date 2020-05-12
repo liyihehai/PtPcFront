@@ -6,20 +6,22 @@ import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorService;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleEx;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleService;
+import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
+import com.nnte.pf_business.mapper.workdb.role.PlateformRoleService;
+import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestOpe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 /**
@@ -32,6 +34,10 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
     private PlateformOperatorService plateformOperatorService;
     @Autowired
     private PlateformOpeRoleService plateformOpeRoleService;
+    @Autowired
+    private PlateformFunctionsService plateformFunctionsService;
+    @Autowired
+    private PlateformRoleService plateformRoleService;
     /**
      * 操作员状态
      * */
@@ -255,6 +261,7 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
             if (count != 1) {
                 throw new BusiException("删除操作失败");
             }
+            plateformOpeRoleService.deleteRoleListByOpeCode(updateDto.getOpeCode());
             retMap.put("opeCode", opeCode);
             BaseNnte.setRetTrue(retMap, "操作员删除成功");
         }catch (BusiException be){
@@ -344,5 +351,161 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
         }
         return retMap;
     }
-
+    /**
+     * 查询操作员关联的功能列表
+     * */
+    public List<PlateformFunctions> findFunctionListOfOpe(String opeCode){
+        PlateformOperator ope = new PlateformOperator();
+        ope.setOpeCode(opeCode);
+        return plateformFunctionsService.findFunctionsByOpeCode(ope);
+    }
+    private String getOpeSysRoles(PlateformOperator ope){
+        if (ope==null)
+            return null;
+        List<PlateformRole> roleList=plateformRoleService.findOpeRoleList(ope.getOpeCode());
+        if (roleList!=null && roleList.size()>0){
+            StringBuffer sysRoleBuf = new StringBuffer();
+            Map<String,String> sysRoleMap = new HashMap<>();
+            for(PlateformRole role:roleList){
+                String sysRoleList=role.getSysroleList();
+                if (StringUtils.isNotEmpty(sysRoleList)){
+                    String[] sysRoles=sysRoleList.split(",");
+                    for(String sr:sysRoles){
+                        sysRoleMap.put(sr,sr);
+                    }
+                }
+            }
+            if (sysRoleMap.size()>0){
+                for(String key:sysRoleMap.keySet()){
+                    if (sysRoleBuf.length()>0)
+                        sysRoleBuf.append(",");
+                    sysRoleBuf.append(key);
+                }
+            }
+            String sRet=sysRoleBuf.toString();
+            return sRet.replaceAll("\\[","'").replaceAll("\\]","'");
+        }
+        return null;
+    }
+    private void loadValidFunctionsListToMap(List<PlateformFunctions> pfList,Map<String,PlateformFunctions> map,
+                                             int keyType){
+        if (pfList!=null && pfList.size()>0){
+            for(PlateformFunctions fun:pfList)
+                if (fun.getFunState().equals(1)) {
+                    if (keyType==0)
+                        map.put(fun.getFunCode(), fun);
+                    else if (keyType==1)
+                        map.put(fun.getFunPath(), fun);
+                }
+        }
+    }
+    /**
+     * 查询操作员关联的有效的功能列表，含系统角色功能标志，用户角色功能标志
+     * 本函数主要用于检查操作员权限
+     * keyType=0，返回的Map采用funCode作为KEY，keyType=1采用funPath作为KEY
+     * */
+    public Map<String,PlateformFunctions> getOpeValidFunctionsMap(PlateformOperator ope,int keyType){
+        if (ope==null)
+            return null;
+        Map<String,PlateformFunctions> map=new HashMap<>();
+        //操作员功能
+        loadValidFunctionsListToMap(findFunctionListOfOpe(ope.getOpeCode()),map,keyType);
+        //操作员角色功能
+        loadValidFunctionsListToMap(plateformFunctionsService.findFunctionsByOpeRoles(ope),map,keyType);
+        //操作员角色的系统角色功能
+        String sysRoleCodeList = getOpeSysRoles(ope);
+        if (StringUtils.isNotEmpty(sysRoleCodeList)) {
+            loadValidFunctionsListToMap(plateformFunctionsService.findFunctionsBySysRoleCode(sysRoleCodeList),map,keyType);
+        }
+        return map;
+    }
+    /**
+     * 查询操作员关联的功能列表，含系统角色功能标志，用户角色功能标志
+     * */
+    public Map<String,RequestFunc> getOpeFunctionsMap(PlateformOperator ope){
+        if (ope==null)
+            return null;
+        //操作员功能
+        List<PlateformFunctions> pfList=findFunctionListOfOpe(ope.getOpeCode());
+        Map<String,RequestFunc> map=new HashMap<>();
+        if (pfList!=null && pfList.size()>0) {
+            for (PlateformFunctions func : pfList) {
+                RequestFunc rf = new RequestFunc();
+                BeanUtils.copyFromSrc(func, rf);
+                rf.setOpeFunction(1);
+                rf.setRoleFunction(0);
+                rf.setSysRoleFunction(0);
+                map.put(rf.getFunCode(), rf);
+            }
+        }
+        //操作员角色功能
+        List<PlateformFunctions> opeRolesPfList=plateformFunctionsService.findFunctionsByOpeRoles(ope);
+        if (opeRolesPfList!=null && opeRolesPfList.size()>0) {
+            for (PlateformFunctions func : opeRolesPfList) {
+                RequestFunc rf = map.get(func.getFunCode());
+                if (rf != null) {
+                    rf.setRoleFunction(1);
+                } else {
+                    rf = new RequestFunc();
+                    BeanUtils.copyFromSrc(func, rf);
+                    rf.setOpeFunction(0);
+                    rf.setRoleFunction(1);
+                    rf.setSysRoleFunction(0);
+                    map.put(rf.getFunCode(), rf);
+                }
+            }
+        }
+        //操作员角色的系统角色功能
+        String sysRoleCodeList = getOpeSysRoles(ope);
+        if (StringUtils.isNotEmpty(sysRoleCodeList)){
+            List<PlateformFunctions> sysRolesPfList=plateformFunctionsService.findFunctionsBySysRoleCode(sysRoleCodeList);
+            if (sysRolesPfList!=null && sysRolesPfList.size()>0){
+                for (PlateformFunctions func : sysRolesPfList) {
+                    RequestFunc rf = map.get(func.getFunCode());
+                    if (rf != null) {
+                        rf.setSysRoleFunction(1);
+                    } else {
+                        rf = new RequestFunc();
+                        BeanUtils.copyFromSrc(func, rf);
+                        rf.setOpeFunction(0);
+                        rf.setRoleFunction(0);
+                        rf.setSysRoleFunction(1);
+                        map.put(rf.getFunCode(), rf);
+                    }
+                }
+            }
+        }
+        return map;
+    }
+    /**
+     * 查询操作员关联的功能列表，含系统角色功能标志，用户角色功能标志
+     * */
+    public List<RequestFunc> getOpeFunctionsList(PlateformOperator ope){
+        Map<String,RequestFunc> map = getOpeFunctionsMap(ope);
+        if (map.size()<=0)
+            return null;
+        List<RequestFunc> retList = new ArrayList<>();
+        for(String key:map.keySet()){
+            retList.add(map.get(key));
+        }
+        return retList;
+    }
+    /**
+     * 设置操作员功能
+     * */
+    public Map<String,Object> saveOperatorFunctions(String opeCode,String functions,PlateformOperator curOpe){
+        Map<String,Object> retMap = BaseNnte.newMapRetObj();
+        try {
+            PlateformOperator ope = getAndCheckOperator(opeCode, curOpe);
+            plateformFunctionsService.deleteFunctionsByOpeCode(ope.getOpeCode());
+            if (StringUtils.isNotEmpty(functions)){
+                plateformFunctionsService.insertFunctionsByOpeCode(ope.getOpeCode(),functions);
+            }
+            BaseNnte.setRetTrue(retMap,"设置操作员功能成功");
+        }catch (BusiException be){
+            BaseNnte.setRetFalse(retMap, 1002, "设置操作员功能错误："+be.getMessage());
+            be.printException(this);
+        }
+        return retMap;
+    }
 }

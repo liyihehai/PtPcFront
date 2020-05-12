@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRecDao">
+    <resultMap id="PlateformFunctionRecResult" type="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec">
+        <result column="id" property="id"/>
+        <result column="fun_path" property="funPath"/>
+        <result column="fun_name" property="funName"/>
+        <result column="sys_role_code" property="sysRoleCode"/>
+        <result column="sys_role_name" property="sysRoleName"/>
+        <result column="auth_code" property="authCode"/>
+        <result column="app_code" property="appCode"/>
+        <result column="app_name" property="appName"/>
+        <result column="module_code" property="moduleCode"/>
+        <result column="module_name" property="moduleName"/>
+        <result column="module_version" property="moduleVersion"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec">
+        insert into plateform_function_rec (fun_path ,fun_name ,sys_role_code ,sys_role_name ,auth_code ,app_code ,app_name ,module_code ,module_name ,module_version )
+        values (#{funPath} ,#{funName} ,#{sysRoleCode} ,#{sysRoleName} ,#{authCode} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} ,#{moduleVersion} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformFunctionRecResult" parameterType="java.lang.Long">
+        select * from plateform_function_rec where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Long">
+        delete from plateform_function_rec where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec">
+        update plateform_function_rec
+        <set>
+        <if test="funPath!= null"><![CDATA[fun_path=#{funPath},]]></if>
+        <if test="funName!= null"><![CDATA[fun_name=#{funName},]]></if>
+        <if test="sysRoleCode!= null"><![CDATA[sys_role_code=#{sysRoleCode},]]></if>
+        <if test="sysRoleName!= null"><![CDATA[sys_role_name=#{sysRoleName},]]></if>
+        <if test="authCode!= null"><![CDATA[auth_code=#{authCode},]]></if>
+        <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
+        <if test="appName!= null"><![CDATA[app_name=#{appName},]]></if>
+        <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
+        <if test="moduleName!= null"><![CDATA[module_name=#{moduleName},]]></if>
+        <if test="moduleVersion!= null"><![CDATA[module_version=#{moduleVersion},]]></if>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="findPlateformFunctionRecListSql">
+        select * from plateform_function_rec t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="funPath!= null"><![CDATA[and t.fun_path = #{funPath}]]></if>
+            <if test="funName!= null"><![CDATA[and t.fun_name = #{funName}]]></if>
+            <if test="sysRoleCode!= null"><![CDATA[and t.sys_role_code = #{sysRoleCode}]]></if>
+            <if test="sysRoleName!= null"><![CDATA[and t.sys_role_name = #{sysRoleName}]]></if>
+            <if test="authCode!= null"><![CDATA[and t.auth_code = #{authCode}]]></if>
+            <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
+            <if test="appName!= null"><![CDATA[and t.app_name = #{appName}]]></if>
+            <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
+            <if test="moduleName!= null"><![CDATA[and t.module_name = #{moduleName}]]></if>
+            <if test="moduleVersion!= null"><![CDATA[and t.module_version = #{moduleVersion}]]></if>
+        </where>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec" resultMap="PlateformFunctionRecResult">
+        <include refid="findPlateformFunctionRecListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformFunctionRecListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec" resultMap="PlateformFunctionRecResult">
+        <include refid="findPlateformFunctionRecListSql" />
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+</mapper>

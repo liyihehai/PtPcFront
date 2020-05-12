@@ -24,4 +24,5 @@ public class RequestOpe {
     private Integer actionType;
     private String setAimPwd;   //设置目标密码
     private String userRoles;   //用户角色序列,","分割的角色Code
+    private String functions;   //操作员功能序列,","分割的function id
 }

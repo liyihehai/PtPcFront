@@ -19,6 +19,7 @@ import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestMenu;
+import com.nnte.pf_pc_front.PcPlateformApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,7 +44,8 @@ public class SyssetController extends BaseController {
     /**
      * 显示菜单设置页面
      * */
-    @ModuleEnter(path = "/sysset/menuset", name="菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能")
+    @ModuleEnter(path = "/sysset/menuset", name="菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能",
+            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
     @RequestMapping(value = "/menuset")
     public ModelAndView menuset(HttpServletRequest request,ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();

@@ -8,6 +8,7 @@
     <td class="role-ope-scrol">
 <button class='btn bg-green btn-in-row roleEdit' data-toggle='button' bData='${roleRow.roleCode!''}'>编辑</button>
 <button class='btn bg-maroon btn-in-row roleDel' data-toggle='button' bData='${roleRow.roleCode!''}'>删除</button>
+<button class='btn bg-info btn-in-row roleFunction' data-toggle='button' bData='${roleRow.roleCode!''}'>功能</button>
     </td>
     </tr>
 </#list>

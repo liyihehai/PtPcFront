@@ -12,12 +12,17 @@ import com.nnte.framework.utils.FreeMarkertUtil;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
+import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
+import com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec;
+import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
+import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestOpe;
 import com.nnte.pf_business.request.RequestRole;
+import com.nnte.pf_pc_front.PcPlateformApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,11 +43,14 @@ public class OperatorController extends BaseController {
     private PlateformOperatorComponent plateformOperatorComponent;
     @Autowired
     private PlateformRoleComponent plateformRoleComponent;
+    @Autowired
+    private PlateformFunctionComponent plateformFunctionComponent;
     /**
      * 显示操作员设置页面
      * */
     @ModuleEnter(path = "/operator/operatorset", name="操作员设置", desc = "平台系统操作员设置，系统管理员功能",
-            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "operatorset")
+            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "operatorset",
+            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
     @RequestMapping(value = "/operatorset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();
@@ -58,6 +66,7 @@ public class OperatorController extends BaseController {
         modelAndView.addObject("opeRow", opeRow);
         List<RequestRole> roleList=plateformRoleComponent.queryRequestRoleList();
         map.put("roleList",roleList);
+        map.put("functionList",plateformFunctionComponent.queryPlateformFunctionList(null));
         modelAndView.setViewName("front/sysset/operator/operatorset");
         return modelAndView;
     }
@@ -208,5 +217,41 @@ public class OperatorController extends BaseController {
         OperatorInfo oi=(OperatorInfo)request.getAttribute("OperatorInfo");
         PlateformOperator curOpe=plateformOperatorComponent.getOperatorByCode(oi.getOperatorCode());
         return plateformOperatorComponent.saveOperatorRoles(rOpe.getOpeCode(),rOpe.getUserRoles(),curOpe);
+    }
+    /**
+     * 通过操作员编码查询操作员功能信息
+     * */
+    @RequestMapping(value = "/queryOperatorFunctions")
+    @ResponseBody
+    public Map<String,Object> queryOperatorFunctions(HttpServletRequest request, @RequestBody JsonNode json){
+        Map<String,Object> ret=queryOperator(json);
+        if (BaseNnte.getRetSuc(ret)){
+            RequestOpe retOpe=(RequestOpe)ret.get("operator");
+            PlateformOperator ope = new PlateformOperator();
+            ope.setOpeCode(retOpe.getOpeCode());
+            List<RequestFunc> opeFunctions=plateformOperatorComponent.getOpeFunctionsList(ope);
+            ret.put("opeFunctions",opeFunctions);
+        }
+        return ret;
+    }
+    /**
+     * 设置操作员的功能
+     * */
+    @RequestMapping(value = "/saveOperatorFunctions")
+    @ResponseBody
+    public Map<String,Object> saveOperatorFunctions(HttpServletRequest request, @RequestBody JsonNode json){
+        Map<String,Object> ret=BaseNnte.newMapRetObj();
+        RequestOpe rOpe= JsonUtil.jsonToBean(json.toString(),RequestOpe.class);
+        if (rOpe==null){
+            BaseNnte.setRetFalse(ret,1002,"操作员代码不合法");
+            return ret;
+        }
+        if (StringUtils.isEmpty(rOpe.getOpeCode())){
+            BaseNnte.setRetFalse(ret,1002,"操作员代码不合法");
+            return ret;
+        }
+        OperatorInfo oi=(OperatorInfo)request.getAttribute("OperatorInfo");
+        PlateformOperator curOpe=plateformOperatorComponent.getOperatorByCode(oi.getOperatorCode());
+        return plateformOperatorComponent.saveOperatorFunctions(rOpe.getOpeCode(),rOpe.getFunctions(),curOpe);
     }
 }
