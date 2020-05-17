@@ -268,7 +268,7 @@
         var menuKey=$(this).children('a').attr('data-menukey');
         var menuName=$(this).children('a').attr('data-menuName');
         var nav='<i class="fa fa-dashboard"></i>首页>>'+menuName;
-        jumpPage(link,menuName,menuKey,nav);
+        globalTabFrame.jumpPage(link,menuName,menuKey,nav);
     });
 
     $(function () {

@@ -8,9 +8,7 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.base.DynamicDatabaseSourceHolder;
 import com.nnte.framework.base.SpringContextHolder;
-import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.component.PlateformSysParamComponent;
-import com.nnte.pf_business.component.PlateformWatchComponent;
+import com.nnte.pf_business.component.*;
 import com.zaxxer.hikari.HikariConfig;
 import lombok.Getter;
 import lombok.Setter;
@@ -98,6 +96,24 @@ public class PcPlateformConfig implements ApplicationRunner, ConfigInterface {
             List<MEnter> funcList=BaseBusiComponent.getSystemModuleEnters();
             pfbusiness.registerFunctions(PcPlateformApplication.App_Code,PcPlateformApplication.App_Name,
                     PcPlateformApplication.getModuleMap(),funcList);
+        }
+        RocketmqConsumerComponent rcc=SpringContextHolder.getBean("rocketmqConsumerComponent");
+        if (rcc!=null){
+            try {
+                rcc.initConsumer();
+                BaseNnte.outConsoleLog("RocketmqConsumerComponent initConsumer suc");
+            }catch (BusiException be){
+                BaseNnte.outConsoleLog("RocketmqConsumerComponent initConsumer err:"+be.getMessage());
+            }
+        }
+        RocketmqProducerComponent rpc=SpringContextHolder.getBean("rocketmqProducerComponent");
+        if (rpc!=null){
+            try {
+                rpc.initProducer();
+                BaseNnte.outConsoleLog("RocketmqProducerComponent initProducer suc");
+            }catch (BusiException be){
+                BaseNnte.outConsoleLog("RocketmqProducerComponent initProducer err:"+be.getMessage());
+            }
         }
     }
 }

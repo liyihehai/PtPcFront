@@ -17,7 +17,7 @@
           apply the skin class to the body tag so the changes take effect.
     -->
     <link rel="stylesheet" href="${envData.staticRoot!''}/resources/dist/css/skins/skin-blue.min.css">
-    
+
     <link href="${envData.staticRoot!''}/resources/local/css/cropper.min.css" rel="stylesheet"/>
     <link href="${envData.staticRoot!''}/resources/local/css/main.css" rel="stylesheet"/>
     <link href="${envData.staticRoot!''}/resources/local/css/bootstrap-multiselect.css" rel="stylesheet"/>
@@ -93,7 +93,7 @@
 	<link rel="stylesheet" href="${envData.staticRoot!''}/css/qjbCustom/global.css">
 	<!--自定义JS引入-->
 	<script src="${envData.staticRoot!''}/css/qjbCustom/qjbGlobal.js"></script>
-	<script src="${envData.staticRoot!''}/js/common.js?v=1.1.2"></script>
+	<script src="${envData.staticRoot!''}/js/common.js?v=1.1.7"></script>
     <link rel="stylesheet" href="${envData.staticRoot!''}/css/main-content.css?v=1.1.7">
 
     <script>

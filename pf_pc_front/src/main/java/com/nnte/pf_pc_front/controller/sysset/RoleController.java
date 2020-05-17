@@ -14,7 +14,6 @@ import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
-import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
@@ -121,7 +120,7 @@ public class RoleController extends BaseController {
     @ResponseBody
     public Map<String,Object> refreshRoles(HttpServletRequest request){
         Map<String,Object> map=BaseNnte.newMapRetObj();
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         List<RequestRole> roleList=plateformRoleComponent.queryRequestRoleList();
         map.put("roleList",roleList);
         List<KeyValue> sysRoleList=PfBusinessComponent.getSystemRoleList();

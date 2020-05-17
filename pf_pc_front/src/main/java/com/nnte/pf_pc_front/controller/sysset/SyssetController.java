@@ -49,7 +49,7 @@ public class SyssetController extends BaseController {
     @RequestMapping(value = "/menuset")
     public ModelAndView menuset(HttpServletRequest request,ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         //-------默认超级管理员,取得所有功能----
         OperatorInfo opeInfo = new OperatorInfo();
         opeInfo.setOperatorCode("admin");
@@ -71,7 +71,7 @@ public class SyssetController extends BaseController {
     public Map<String,Object> refreshMenus(HttpServletRequest request){
         Map<String,Object> ret=BaseNnte.newMapRetObj();
         Map<String,Object> map=new HashMap<>();
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         //-------默认超级管理员,取得所有功能----
         OperatorInfo opeInfo = new OperatorInfo();
         opeInfo.setOperatorCode("admin");

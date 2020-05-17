@@ -54,7 +54,7 @@ public class OperatorController extends BaseController {
     @RequestMapping(value = "/operatorset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         modelAndView.addObject("map", map);
         RequestOpe opeRow = new RequestOpe();
         opeRow.setOpeCode("\"+rowItem.opeCode+\"");
@@ -78,7 +78,7 @@ public class OperatorController extends BaseController {
     public Map<String,Object> refreshOpes(HttpServletRequest request,@RequestBody JsonNode json){
         RequestOpe queryOpe = JsonUtil.jsonToBean(json.toString(),RequestOpe.class);
         Map<String,Object> ret=plateformOperatorComponent.queryRequestOpeList(queryOpe);
-        BaseNnte.setParamMapDataEnv(request,ret);
+        setParamMapDataEnv(request,ret);
         String opeRows=applyOpeRows(request,ret);
         ret.put("opeRows",opeRows);
         return ret;

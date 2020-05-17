@@ -57,7 +57,7 @@
 					</tr>
 					</thead>
                 </table>
-                <div style="overflow-y:scroll;height:calc(100vh - 62px);width:100%">
+                <div style="overflow-y:scroll;height:calc(100vh - 72px);width:100%">
                 <table id="menuTreeTable" class="table table-striped table-bordered table-hover" style="margin:0;">
 					<tbody>
 					${map.menuTreeRows!''}

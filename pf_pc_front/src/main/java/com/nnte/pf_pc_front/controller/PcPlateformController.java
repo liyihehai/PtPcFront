@@ -2,11 +2,12 @@ package com.nnte.pf_pc_front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.base.BaseController;
-import com.nnte.framework.base.BaseModel;
+import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
+import com.nnte.pf_business.component.RocketmqProducerComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.entertity.PFMenu;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,8 @@ public class PcPlateformController extends BaseController {
 
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
+    @Autowired
+    private RocketmqProducerComponent rocketmqProducerComponent;
 
     /**
      * 显示登陆页面
@@ -38,7 +41,7 @@ public class PcPlateformController extends BaseController {
     @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         modelAndView.addObject("map", map);
         modelAndView.setViewName("front/login");
         return modelAndView;
@@ -94,7 +97,7 @@ public class PcPlateformController extends BaseController {
         Map<String,Object> map=new HashMap<>();
         String userCode= StringUtils.defaultString(getRequestParam(request,null,"userName"));
         String password= StringUtils.defaultString(getRequestParam(request,null,"aimPwd"));
-        BaseNnte.setParamMapDataEnv(request,map);
+        setParamMapDataEnv(request,map);
         Map<String,Object> checkMap=pfBusinessComponent.checkUserPassword(userCode,password,
                 BaseController.getIpAddr(request));
         if (BaseNnte.getRetSuc(checkMap)) {
@@ -125,5 +128,18 @@ public class PcPlateformController extends BaseController {
     public ModelAndView homeIndex(ModelAndView modelAndView){
         modelAndView.setViewName("front/homeIndex");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/mqtest")
+    public Map<String,Object> mqtest(HttpServletResponse response){
+        Map<String,Object> ret = BaseNnte.newMapRetObj();
+        try {
+            rocketmqProducerComponent.startTestProducer();
+            BaseNnte.setRetTrue(ret,"发送消息成功！");
+            BaseController.printJsonObject(response,ret);
+        } catch (BusiException e) {
+            BaseNnte.setRetFalse(ret,1002,e.getMessage());
+        }
+        return ret;
     }
 }
