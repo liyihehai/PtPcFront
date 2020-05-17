@@ -32,7 +32,7 @@
                         <td style="width: 420px"><strong>系统角色名称：</strong></td>
                     </tr>
                 </table>
-                <div style="overflow-y:scroll;height:calc(100vh - 320px);width:100%;margin-bottom: 10px;">
+                <div style="overflow-y:scroll;height:calc(100% - 140px);width:100%;margin-bottom: 5px;">
                 <table class="table table-bordered table-hover" style="width: 100%;margin:0;">
                     <tbody>
                     <#if map.sysRoleList??>
@@ -83,9 +83,9 @@
         this.role;
         this.actionType;<#-- 操作类型：1新增，2编辑 -->
         this.collect_data;
-        this.onRoleChanged=function(updateRole){}
-        this.onRoleAdded=function(role){}
-        this.getItemFromTable=function(code){}
+        this.onRoleChanged=function(updateRole){};
+        this.onRoleAdded=function(role){};
+        this.getItemFromTable=function(code){};
         this.initModal=function(role,type){
             this.role=role;
             this.actionType=type;
@@ -103,7 +103,7 @@
                 $(".Role_rowCheck").prop("checked",false);
             }
             this.mountActions();
-        }
+        };
         this.setSysRoleCheck=function(sysRoleList){
             $(".Role_rowCheck").prop("checked",false);
             var roles=sysRoleList.split(',');
@@ -116,10 +116,10 @@
                     }
                 }
             }
-        }
+        };
         this.getSysRoleCheck=function(){
             var rows=$(".Role_rowCheck");
-            var retObj = new Object();
+            var retObj = {};
             if (rows!=undefined && rows!=null && rows.length>0){
                 retObj.sysroleList="";
                 retObj.sysroleNameList="";
@@ -138,7 +138,7 @@
                 return retObj;
             }
             return "";
-        }
+        };
         this.saveRoleModify=function(){
             var ajga=new AppJSGlobAjax();
             var url="/role/saveRoleModify";
@@ -175,7 +175,7 @@
                 }
                 msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.mountActions=function(){
             $("#roleModify_sysRoleAll").off("change").on("change",function(){
                 var all_check = $("#roleModify_sysRoleAll").prop("checked");

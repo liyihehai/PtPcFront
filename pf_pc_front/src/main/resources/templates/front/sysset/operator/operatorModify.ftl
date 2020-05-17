@@ -78,9 +78,9 @@
         this.operator;
         this.actionType;<#-- 操作类型：1新增，2编辑 -->
         this.collect_data;
-        this.onOpeChanged=function(updateRole){}
-        this.onOpeAdded=function(role){}
-        this.getItemFromTable=function(code){return null;}
+        this.onOpeChanged=function(updateRole){};
+        this.onOpeAdded=function(role){};
+        this.getItemFromTable=function(code){return null;};
         this.initModal=function(operator,type){
             this.operator=operator;
             this.actionType=type;
@@ -99,7 +99,7 @@
                 $("#operatorModify_opeMobile").val("");
                 $(":radio[name='operatorModify_opeState'][value='0']").prop('checked',true);
             }
-        }
+        };
         this.saveOperatorModify=function(){
             var ajga=new AppJSGlobAjax();
             var url="/operator/saveOperatorModify";
@@ -138,7 +138,7 @@
                 }
                 msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.getStateName=function (state) {
             if (state==0) return "无效";
             if (state==1) return "有效";

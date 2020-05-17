@@ -61,12 +61,12 @@
             $("#operatorPws_opeCode").val(operator.opeCode);
             $("#operatorPws_opeName").val(operator.opeName);
             $("#operatorPws_opePassword").val("");
-        }
+        };
         this.saveOperatorPws=function(){
             var usercode=$("#operatorPws_opeCode").val();
             var password=$("#operatorPws_opePassword").val();
             loginModle.submitSetPws(usercode,password,this.onSetPwsFinished);
-        }
+        };
         this.onSetPwsFinished=function(code,msg,username){
             msgbox.showMsgBox(msg);
             if (code==0)

@@ -122,7 +122,7 @@
     function getItemFromTable(opeCode){
         var code=$("[data-tt-id='"+opeCode+"'] td:eq(0) t").html();
         if (code!=undefined && code!=null && code==opeCode){
-            var opeItem = new Object();
+            var opeItem = {};
             opeItem.opeCode=roleCode;
             opeItem.opeName=$("[data-tt-id='"+opeCode+"'] td:eq(1)").html();
             return opeItem;

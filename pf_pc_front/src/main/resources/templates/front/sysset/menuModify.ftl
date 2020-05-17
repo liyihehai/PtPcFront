@@ -84,9 +84,9 @@
         this.parMenu;
         this.actionType;<#-- 操作类型：1新增菜单，2编辑菜单 -->
         this.collect_data;
-        this.onMenuChanged=function(updateMenu){}
-        this.getMenuItem=function (menuCode) {}
-        this.onMenuAdded=function(menu){}
+        this.onMenuChanged=function(updateMenu){};
+        this.getMenuItem=function (menuCode) {};
+        this.onMenuAdded=function(menu){};
         this.initModal=function(menu,parMenu,type){
             this.menu=menu;
             this.parMenu=parMenu;
@@ -118,7 +118,7 @@
                 $("#menuModify_menuCode").attr("readonly",true);
             else
                 $("#menuModify_menuCode").attr("readonly",false);
-        }
+        };
         this.saveMenuModify=function(){
             var ajga=new AppJSGlobAjax();
             var url="/sysset/saveMenuModify";

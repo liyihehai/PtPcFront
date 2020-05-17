@@ -12,16 +12,16 @@
         width: 300px;
     }
     .par-menu-code{
-        width: 60px;
+        width: 70px;
     }
     .menu-state{
         width: 80px;
     }
     .menu-ope{
-        width: 312px;
+        width: 320px;
     }
     .menu-ope-scrol{
-        width: 295px;
+        width: 304px;
     }
 </style>
 <div class="row level0">
@@ -79,7 +79,7 @@
         column:1,
         initialState:"expanded"
 	});
-    var functionEnters= new Array();
+    var functionEnters= [];
 
     function mountActions(){
         // Highlight selected row
@@ -111,7 +111,7 @@
             var data=$(event.target).attr("bData");
             menuFunctionDel(data);
         });
-	};
+    }
     function getStateValByName(stateName){
         return (stateName=="可用")?1:0;
     }
@@ -121,7 +121,7 @@
     function getMenuItem(menuCode){
         var code=$("[data-tt-id='"+menuCode+"'] td:eq(0)").html();
         if (code!=undefined && code!=null && code==menuCode){
-            var menuItem = new Object();
+            var menuItem = {};
             menuItem.menuCode=menuCode;
             menuItem.menuName=$("[data-tt-id='"+menuCode+"'] td:eq(1) t").html();
             menuItem.menuClass=$("[data-tt-id='"+menuCode+"'] td:eq(2)").html();
@@ -240,7 +240,7 @@
 
     function getFuncItem(funCode){
         var menu=getMenuItem(funCode);
-        var func=new Object();
+        var func={};
         func.funCode = menu.menuCode;
         func.funName = menu.menuName;
         func.funPath = menu.menuClass;

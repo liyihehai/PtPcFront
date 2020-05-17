@@ -34,7 +34,7 @@
                         <td style="width: 320px"><strong>功能名称</strong></td>
                     </tr>
                 </table>
-                <div style="overflow-y:scroll;height:calc(100vh - 248px);width:100%;margin-bottom: 10px;">
+                <div style="overflow-y:scroll;height:calc(100% - 90px);width:100%;">
                     <table class="table table-bordered table-hover" style="width: 100%;margin:0;">
                         <tbody>
                         <#if map.functionList??>
@@ -75,7 +75,7 @@
             $("#operatorFunction_opeName").val(operator.opeName);
             this.setSelectFunctions(opeFunctions);
             this.mountActions();
-        }
+        };
         this.saveOperatorFunctions=function(){
             var ajga=new AppJSGlobAjax();
             var url="/operator/saveOperatorFunctions";
@@ -89,7 +89,7 @@
                 if (content)
                     msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.getSelectFunctions=function(){
             var rows=$(".operatorFunction_rowCheck");
             if (rows!=undefined && rows!=null && rows.length>0){
@@ -107,7 +107,7 @@
                 return functionList;
             }
             return "";
-        }
+        };
         this.setSelectFunctions=function(opeFunctions){
             $(".operatorFunction_rowCheck").prop("checked",false);
             $(".roleFunction_rowCheck").prop("checked",false);
@@ -122,7 +122,7 @@
                         $("[sysFunCode='"+opeFunctions[i].funCode+"']").prop("checked",true);
                 }
             }
-        }
+        };
         this.mountActions=function(){
             $("#operatorFunction_functionAll").prop("checked",false);
             $("#operatorFunction_functionAll").off("change").on("change",function(){

@@ -99,9 +99,9 @@
         this.actionType;//操作类型：1新增功能，2编辑功能
         this.collect_data;
         this.srcFuncArray;
-        this.onFuncChanged=function(updateFunc){}
-        this.getMenuItem=function (menuCode) {}
-        this.onFuncAdded=function(func){}
+        this.onFuncChanged=function(updateFunc){};
+        this.getMenuItem=function (menuCode) {};
+        this.onFuncAdded=function(func){};
         this.initModal=function(func,parMenu,type,srcFuncArray){
             this.func=func;
             this.parMenu=parMenu;
@@ -137,7 +137,7 @@
             else
                 $("#functionModify_funcCode").attr("readonly",false);
             this.onPathSelChanged();
-        }
+        };
         this.saveFunctionModify=function(){
             var ajga=new AppJSGlobAjax();
             var url="/sysset/saveFunctionModify";
@@ -173,7 +173,7 @@
                 }
                 msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.onPathSelChanged=function () {
             var checkIndex=$("#functionModify_funcPath").get(0).selectedIndex;
             if (checkIndex!=undefined && checkIndex!=null && checkIndex>=0

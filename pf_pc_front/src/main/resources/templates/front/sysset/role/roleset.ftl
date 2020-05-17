@@ -104,7 +104,7 @@
     function getItemFromTable(roleCode){
         var code=$("[data-tt-id='"+roleCode+"'] td:eq(0) t").html();
         if (code!=undefined && code!=null && code==roleCode){
-            var roleItem = new Object();
+            var roleItem = {};
             roleItem.roleCode=roleCode;
             roleItem.roleName=$("[data-tt-id='"+menuCode+"'] td:eq(1)").html();
             return roleItem;

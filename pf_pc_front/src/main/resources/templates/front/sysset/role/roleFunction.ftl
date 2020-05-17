@@ -33,7 +33,7 @@
                         <td style="width: 290px"><strong>功能名称</strong></td>
                     </tr>
                 </table>
-                <div style="overflow-y:scroll;height:calc(100vh - 248px);width:100%;margin-bottom: 10px;">
+                <div style="overflow-y:scroll;height:calc(100% - 90px);width:100%;">
                     <table class="table table-bordered table-hover" style="width: 100%;margin:0;">
                         <tbody>
                         <#if map.functionList??>
@@ -73,7 +73,7 @@
             $("#roleFunction_roleName").val(role.roleName);
             this.setSelectFunctions(roleFunctions);
             this.mountActions();
-        }
+        };
         this.saveRoleFunctions=function(){
             var ajga=new AppJSGlobAjax();
             var url="/role/saveRoleFunctions";
@@ -87,7 +87,7 @@
                 if (content)
                     msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.getSelectFunctions=function(){
             var rows=$(".roleFunction_rowCheck");
             if (rows!=undefined && rows!=null && rows.length>0){
@@ -105,7 +105,7 @@
                 return functionList;
             }
             return "";
-        }
+        };
         this.setSelectFunctions=function(roleFunctions){
             $(".roleFunction_rowCheck").prop("checked",false);
             $(".sysRoleFunction_rowCheck").prop("checked",false);
@@ -117,7 +117,7 @@
                         $("[sysFunCode='"+roleFunctions[i].funCode+"']").prop("checked",true);
                 }
             }
-        }
+        };
         this.mountActions=function(){
             $("#roleFunction_functionAll").prop("checked",false);
             $("#roleFunction_functionAll").off("change").on("change",function(){

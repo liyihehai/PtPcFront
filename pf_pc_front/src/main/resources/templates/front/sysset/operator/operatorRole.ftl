@@ -32,7 +32,7 @@
                         <td style="width: 420px"><strong>用户角色名称：</strong></td>
                     </tr>
                 </table>
-                <div style="overflow-y:scroll;height:calc(100vh - 248px);width:100%;margin-bottom: 10px;">
+                <div style="overflow-y:scroll;height:calc(100% - 90px);width:100%;">
                     <table class="table table-bordered table-hover" style="width: 100%;margin:0;">
                         <tbody>
                         <#if map.roleList??>
@@ -71,7 +71,7 @@
             $("#operatorRole_opeName").val(operator.opeName);
             this.setSelectRoles(opeRoles);
             this.mountActions();
-        }
+        };
         this.saveOperatorRoles=function(){
             var ajga=new AppJSGlobAjax();
             var url="/operator/saveOperatorRoles";
@@ -85,7 +85,7 @@
                 if (content)
                     msgbox.showMsgBox(content.msg);
             });
-        }
+        };
         this.getSelectRoles=function(){
             var rows=$(".operatorRole_rowCheck");
             if (rows!=undefined && rows!=null && rows.length>0){
@@ -103,7 +103,7 @@
                 return roleList;
             }
             return "";
-        }
+        };
         this.setSelectRoles=function(opeRoles){
             $(".operatorRole_rowCheck").prop("checked",false);
             if (opeRoles!=undefined && opeRoles!=null && opeRoles.length>0){
@@ -111,7 +111,7 @@
                     $("[roleCode='"+opeRoles[i].key+"']").prop("checked",true);
                 }
             }
-        }
+        };
         this.mountActions=function(){
             $("#operatorRole_userRoleAll").prop("checked",false);
             $("#operatorRole_userRoleAll").off("change").on("change",function(){
