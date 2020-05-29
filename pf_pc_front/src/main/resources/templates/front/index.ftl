@@ -130,7 +130,7 @@
                                 <div class="pull-left">
                                 </div>
                                 <div class="pull-right">
-                                    <a href="/backend/logout.action" class="btn btn-default btn-flat btn-loginout">退出</a>
+                                    <a href="${envData.contextPath}/main/login" class="btn btn-default btn-flat btn-loginout">退出</a>
                                 </div>
                             </li>
                         </ul>

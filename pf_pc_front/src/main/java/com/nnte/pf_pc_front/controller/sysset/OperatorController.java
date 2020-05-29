@@ -16,8 +16,6 @@ import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
-import com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec;
-import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestOpe;

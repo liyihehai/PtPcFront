@@ -6,7 +6,6 @@ import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
-import com.nnte.framework.entity.FException;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
@@ -61,6 +60,8 @@ public class PfBusinessComponent extends BaseBusiComponent{
      * 系统角色定义
      * */
     public static final String SYS_MANAGER = "SYS_MANAGER";
+    public static final String PLATEFORM_MERCAHNT_MANAGER = "PLATEFORM_MERCAHNT_MANAGER";
+    public static final String PLATEFORM_MERCAHNT_WORKER = "PLATEFORM_MERCAHNT_WORKER";
     public static final String MERCHANT_OPERATOR = "MERCHANT_OPERATOR";
     public static final String MERCHANT_MANAGER = "MERCHANT_MANAGER";
 
@@ -69,6 +70,8 @@ public class PfBusinessComponent extends BaseBusiComponent{
 
     static {
         SystemRoleList.add(new KeyValue(SYS_MANAGER, "系统管理员"));
+        SystemRoleList.add(new KeyValue(PLATEFORM_MERCAHNT_MANAGER, "平台商户管理员"));
+        SystemRoleList.add(new KeyValue(PLATEFORM_MERCAHNT_WORKER, "平台商户业务员"));
         SystemRoleList.add(new KeyValue(MERCHANT_OPERATOR, "商家业务操作员"));
         SystemRoleList.add(new KeyValue(MERCHANT_MANAGER, "商家业务管理员"));
         //--------------------------------------
@@ -394,7 +397,7 @@ public class PfBusinessComponent extends BaseBusiComponent{
                 }
             }
         }catch (BusiException be){
-            be.printException(this);
+            logException(be);
         }
     }
 }

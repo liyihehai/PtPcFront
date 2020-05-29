@@ -15,12 +15,12 @@ public class PfPcFrontConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(pfPcFrontMainInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/","/**/mqtest","/**/sysRepairing","/**/error",
+                .excludePathPatterns("/","/**/applyVerify","/**/sysRepairing","/**/error",
                         "/**/resources/**");//添加不拦截路径
         //登录拦截的管理器
         registry.addInterceptor(pfPcFrontNormalInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/","/**/mqtest","/**/sysRepairing",
+                .excludePathPatterns("/","/**/applyVerify","/**/sysRepairing",
                         "/**/login","/**/loginCheck","/**/priCheck",
                         "/**/error","/**/resources/**");//添加不拦截路径
     }

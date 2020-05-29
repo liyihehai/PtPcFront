@@ -87,7 +87,7 @@ public class PlateformWatchComponent extends BaseBusiComponent implements Runnab
             }
         } catch (Exception e) {
             BusiException be=new BusiException(e,3999,BusiException.ExpLevel.ERROR);
-            be.printException(this);
+            logException(be);
         }
     }
 }

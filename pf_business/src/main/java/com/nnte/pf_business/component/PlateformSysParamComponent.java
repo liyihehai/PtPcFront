@@ -17,6 +17,11 @@ import java.util.*;
  * */
 public class PlateformSysParamComponent implements WatchInterface{
 
+    /**
+     * 系统参数
+     * */
+    public static final String SYS_SMTP_ACCOUNT_JSON = "SYS_SMTP_ACCOUNT_JSON";
+
     private static StringBuffer preprocessParamsBuffer = new StringBuffer();
     static {
         preprocessParamsBuffer.append("'SYS_REPAIRING'").append(",");           //系统维修参数

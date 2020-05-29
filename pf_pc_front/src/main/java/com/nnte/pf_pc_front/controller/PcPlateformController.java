@@ -2,12 +2,10 @@ package com.nnte.pf_pc_front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.base.BaseController;
-import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.component.RocketmqProducerComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.entertity.PFMenu;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +29,6 @@ public class PcPlateformController extends BaseController {
 
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
-    @Autowired
-    private RocketmqProducerComponent rocketmqProducerComponent;
 
     /**
      * 显示登陆页面
@@ -128,18 +123,5 @@ public class PcPlateformController extends BaseController {
     public ModelAndView homeIndex(ModelAndView modelAndView){
         modelAndView.setViewName("front/homeIndex");
         return modelAndView;
-    }
-
-    @RequestMapping(value = "/mqtest")
-    public Map<String,Object> mqtest(HttpServletResponse response){
-        Map<String,Object> ret = BaseNnte.newMapRetObj();
-        try {
-            rocketmqProducerComponent.startTestProducer();
-            BaseNnte.setRetTrue(ret,"发送消息成功！");
-            BaseController.printJsonObject(response,ret);
-        } catch (BusiException e) {
-            BaseNnte.setRetFalse(ret,1002,e.getMessage());
-        }
-        return ret;
     }
 }
