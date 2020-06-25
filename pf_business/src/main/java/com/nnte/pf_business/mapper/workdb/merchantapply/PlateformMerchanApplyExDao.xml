@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.merchantapply.PlateformMerchanApplyDao">
+    <sql id="findPlateformMerchanApplysCustmerSql">
+        select * from plateform_merchan_apply t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="pmName!= null and pmName!=''"><![CDATA[and t.pm_name like '%${pmName}%']]></if>
+            <if test="confirmType!= null"><![CDATA[and t.confirm_type = #{confirmType}]]></if>
+            <if test="applyPhone!= null"><![CDATA[and t.apply_phone = #{applyPhone}]]></if>
+            <if test="applyEmail!= null"><![CDATA[and t.apply_email = #{applyEmail}]]></if>
+            <if test="pmCompanyPerson!= null"><![CDATA[and t.pm_company_person = #{pmCompanyPerson}]]></if>
+            <if test="applyWays!= null"><![CDATA[and t.apply_ways = #{applyWays}]]></if>
+            <if test="applyerName!= null and applyerName!=''"><![CDATA[and t.applyer_name like '%${applyerName}%']]></if>
+            <if test="applyContent!= null"><![CDATA[and t.apply_content = #{applyContent}]]></if>
+            <if test="applyMemo!= null"><![CDATA[and t.apply_memo = #{applyMemo}]]></if>
+            <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="applyState!= null"><![CDATA[and t.apply_state = #{applyState}]]></if>
+            <if test="smSendState!= null"><![CDATA[and t.sm_send_state = #{smSendState}]]></if>
+            <if test="smRandomCode!= null"><![CDATA[and t.sm_random_code = #{smRandomCode}]]></if>
+            <if test="smSendTime!= null"><![CDATA[and t.sm_send_time = #{smSendTime}]]></if>
+            <if test="smConfirmState!= null"><![CDATA[and t.sm_confirm_state = #{smConfirmState}]]></if>
+            <if test="emailSendState!= null"><![CDATA[and t.email_send_state = #{emailSendState}]]></if>
+            <if test="emailRandomCode!= null"><![CDATA[and t.email_random_code = #{emailRandomCode}]]></if>
+            <if test="emailSendTime!= null"><![CDATA[and t.email_send_time = #{emailSendTime}]]></if>
+            <if test="emailConfirmState!= null"><![CDATA[and t.email_confirm_state = #{emailConfirmState}]]></if>
+            <if test="opeCode!= null"><![CDATA[and t.ope_code = #{opeCode}]]></if>
+            <if test="opeName!= null"><![CDATA[and t.ope_name = #{opeName}]]></if>
+            <if test="lockTime!= null"><![CDATA[and t.lock_time = #{lockTime}]]></if>
+            <if test="checkerCode!= null"><![CDATA[and t.checker_code = #{checkerCode}]]></if>
+            <if test="checkerName!= null"><![CDATA[and t.checker_name = #{checkerName}]]></if>
+            <if test="checkTime!= null"><![CDATA[and t.check_time = #{checkTime}]]></if>
+            <if test="createTimeStart!= null"><![CDATA[and t.create_time >= #{createTimeStart}]]></if>
+            <if test="createTimeEnd!= null"><![CDATA[and t.create_time <= #{createTimeEnd}]]></if>
+        </where>
+    </sql>
+    <select id="findPlateformMerchanApplysCustmerList" parameterType="java.util.Map" resultMap="PlateformMerchanApplyResult">
+        <include refid="findPlateformMerchanApplysCustmerSql"/>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+        <if test="start!= null">  limit #{start},#{limit} </if>
+    </select>
+    <select id="findPlateformMerchanApplysCustmerCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformMerchanApplysCustmerSql" />
+        ) m
+    </select>
+</mapper>

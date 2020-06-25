@@ -8,5 +8,16 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
     public PlateformMerchantService(){
         super(PlateformMerchantDao.class);
     }
+    /**
+     * 取得系统中最大商户编号
+     * */
+    public String findMaxMerchantCode(){
+        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+            return cds.getSqlSession().selectOne("findMaxMerchantCode");
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 

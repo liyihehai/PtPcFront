@@ -34,6 +34,7 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
         envData.put("debug", appconfig.getConfig("debug").toUpperCase());
         envData.put("staticRoot", appconfig.getConfig("staticRoot"));
         envData.put("localHostName", appconfig.getConfig("localHostName"));
+        envData.put("uploadStaticRoot", appconfig.getConfig("uploadStaticRoot"));
         request.setAttribute("envData",envData);
         return true;
     }

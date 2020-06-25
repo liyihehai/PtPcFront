@@ -47,10 +47,10 @@ public class OperatorController extends BaseController {
      * 显示操作员设置页面
      * */
     @ModuleEnter(path = "/operator/operatorset", name="操作员设置", desc = "平台系统操作员设置，系统管理员功能",
-            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "operatorset",
+            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "pf-operatorset",
             appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
     @RequestMapping(value = "/operatorset")
-    public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
+    public ModelAndView operatorset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();
         setParamMapDataEnv(request,map);
         modelAndView.addObject("map", map);

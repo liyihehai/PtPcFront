@@ -44,8 +44,8 @@
                 <p class="well st-well">
                 <table style="width: 100%;">
                     <tr class="st-tr apply-by-email">
-                        <td class="st3_td_label"><strong>申请邮箱：</strong></td>
-                        <td style="width: 400px;">
+                        <td class="st3_td_label"><strong>验证Email：</strong></td>
+                        <td colspan="3">
                             <input type="text" id="applyModify_applyEmail" class="form-control" value="">
                         </td>
                         <td>
@@ -53,7 +53,7 @@
                         </td>
                     </tr>
                     <tr class="st-tr apply-by-sm">
-                        <td class="st3_td_label"><strong>申请电话：</strong></td>
+                        <td class="st3_td_label"><strong>验证电话：</strong></td>
                         <td style="width: 200px;">
                             <input type="text" id="applyModify_applyPhone" class="form-control" value="">
                         </td>
@@ -63,6 +63,20 @@
                         <td class="st3_td_label"><strong>验证号码：</strong></td>
                         <td>
                             <input type="text" id="applyModify_smRandomCode" class="form-control" value="">
+                        </td>
+                    </tr>
+                </table>
+                </p>
+                <p class="well st-well">
+                <table style="width: 100%;">
+                    <tr class="st-tr">
+                        <td class="st3_td_label"><strong>联系Email：</strong></td>
+                        <td colspan="3">
+                            <input type="text" id="applyModify_pmEmail" class="form-control" value=""/>
+                            <input type="hidden" id="applyModify_applyContent" class="form-control" value=""/>
+                        </td>
+                        <td>
+                            <button class="btn bg-maroon" data-toggle="button" onclick="applyModifyInstance.showApplyContent();">设置详情</button>
                         </td>
                     </tr>
                 </table>
@@ -139,6 +153,7 @@
         </div>
     </div>
 </div>
+<#include "./applyModifyExpand.ftl">
 <script>
     var ApplyModify=function (){
         this.apply;
@@ -147,6 +162,8 @@
         this.refreshList=function(){};
         this.initModal=function(apply,type){
             this.apply=apply;
+            if (this.apply==null)
+                this.apply=new Object();
             this.actionType=type;
             if (type==2){
                 $("#applyModify_applyPhone").val(apply.applyPhone);
@@ -164,6 +181,8 @@
                 $("#applyModify_checkTime").val(apply.checkTime);
                 $(":radio[name='applyModify_confirmType'][value='"+apply.confirmType+"']").prop('checked',true);
                 this.setVerifyInput(apply.confirmType);
+                this.apply.applyContent=JSON.parse(apply.applyContent);
+                $("#applyModify_pmEmail").val(this.apply.applyContent.pmEmail);
             }else{
                 $("#applyModify_applyPhone").val("");
                 $("#applyModify_smRandomCode").val("");
@@ -181,6 +200,8 @@
                 $("#applyModify_checkTime").val("");
                 $(":radio[name='applyModify_confirmType'][value='1']").prop('checked',true);
                 this.setVerifyInput(1);
+                this.apply.applyContent={};
+                $("#applyModify_pmEmail").val("");
             }
             if ($("#applyModify_applyWays").val()==4)
                 $("#applyModify_applyerName").attr("readonly",false);
@@ -207,6 +228,7 @@
             var ajgx=new AppJSGlobAjax();
             var url="/merchant/merchantApply/saveApplyModify";
             var confirmType = $(':radio[name=applyModify_confirmType]:checked').val();
+            this.apply.applyContent.pmEmail=$("#applyModify_pmEmail").val();
             this.collect_data = {
                 confirmType:confirmType,
                 applyEmail: $("#applyModify_applyEmail").val(),
@@ -216,15 +238,17 @@
                 pmCompanyPerson:$("#applyModify_pmCompanyPerson").val(),
                 applyWays:$("#applyModify_applyWays").val(),
                 applyerName:$("#applyModify_applyerName").val(),
+                applyContent:JSON.stringify((this.apply && this.apply.applyContent)?this.apply.applyContent:""),
                 applyMemo:$("#applyModify_applyMemo").val(),
                 applyState:$("#applyModify_applyState").val(),
                 actionType:this.actionType
             };
             if (this.actionType==2)
-                this.collect_data.put("id",this.apply.id);
+                this.collect_data.id=this.apply.id;
             var data = JSON.stringify(this.collect_data);
             ajgx.AjaxApplicationJson(url,data,function (content){
                 if (content.code==0){
+                    applyModifyInstance.initModal(content.apply,2);
                     if (applyModifyInstance.refreshList!=null){
                         applyModifyInstance.refreshList();
                     }
@@ -253,6 +277,11 @@
             ajga.AjaxApplicationJson(url,data,function (content){
                 msgbox.showMsgBox(content.msg);
             });
+        }
+        this.showApplyContent=function(){
+            this.apply.pmCompanyPerson=$("#applyModify_pmCompanyPerson").val();
+            applyModifyExpandInstance.initModal(this.apply);
+            $('#applyModifyExpand').modal({backdrop: 'static', keyboard: false});
         }
     };
     var applyModifyInstance = new ApplyModify();

@@ -1,7 +1,11 @@
 package com.nnte.pf_business.component.menus;
 
+import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.entity.MEnter;
 import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_business.entertity.PFFunction;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
 import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
@@ -9,6 +13,7 @@ import com.nnte.pf_business.mapper.workdb.menus.PlateformMenusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -270,7 +275,7 @@ public class PlateformFunctionComponent {
     /**
      * 保存功能更改,包括新增及更改
      * */
-    public Map<String,Object> saveFunctionModify(PlateformFunctions func){
+    public Map<String,Object> saveFunctionModify(PlateformFunctions func,String funcPath){
         Map<String,Object> retMap = BaseNnte.newMapRetObj();
         if (func==null)
             return retMap;
@@ -290,6 +295,11 @@ public class PlateformFunctionComponent {
                 return retMap;
             }
         }
+        MEnter menter=BaseBusiComponent.getSystemMEnter(funcPath);
+        if (menter==null){
+            BaseNnte.setRetFalse(retMap,1002,"功能路径不合法:"+funcPath);
+            return retMap;
+        }
         int codeCount=getFuncCountByCode(func.getFunCode());
         if (codeCount<=0){
             //需要新增功能菜单
@@ -303,7 +313,7 @@ public class PlateformFunctionComponent {
             newFunc.setMenuCode(parenMenu.getMenuCode());
             newFunc.setFunCode(func.getFunCode());
             newFunc.setFunName(func.getFunName());
-            newFunc.setFunPath(func.getFunPath());
+            newFunc.setAuthCode(menter.getRoleRuler());
             newFunc.setFunParam(func.getFunParam());
             newFunc.setCreateTime(new Date());
             newFunc.setFunState(func.getFunState());
@@ -322,7 +332,7 @@ public class PlateformFunctionComponent {
             PlateformFunctions updateFunc= new PlateformFunctions();
             updateFunc.setId(srcFunc.getId());
             updateFunc.setFunName(func.getFunName());
-            updateFunc.setFunPath(func.getFunPath());
+            updateFunc.setAuthCode(menter.getRoleRuler());
             updateFunc.setFunParam(func.getFunParam());
             updateFunc.setFunState(func.getFunState());
             Integer count=plateformFunctionsService.updateModel(updateFunc);
@@ -337,9 +347,19 @@ public class PlateformFunctionComponent {
     /**
      * 查询指定状态的功能列表，如果状态为null,查询所有状态的功能列表
      * */
-    public List<PlateformFunctions> queryPlateformFunctionList(Integer funState){
+    public List<PFFunction> queryPlateformFunctionList(Integer funState){
         PlateformFunctions func = new PlateformFunctions();
         func.setFunState(funState);
-        return plateformFunctionsService.queryAllPlateformFunctions(func);
+        List<PlateformFunctions> list= plateformFunctionsService.queryAllPlateformFunctions(func);
+        if (list==null || list.size()<=0)
+            return null;
+        List<PFFunction> retList = new ArrayList<>();
+        list.stream().forEach(e->{
+            PFFunction pff = new PFFunction();
+            BeanUtils.copyFromSrc(e,pff);
+            pff.setFunPath(BaseBusiComponent.getPathByRuler(e.getAuthCode()));
+            retList.add(pff);
+        });
+        return retList;
     }
 }

@@ -21,7 +21,9 @@ public class RequestApply {
     private Integer pmCompanyPerson;
     @IntegerCheck(colName = "申请方式",inVals = {1,2,3,4},nullValid = false)
     private Integer applyWays;
-    @StringCheck(colName = "申请人",maxLen = 50)
+    @StringCheck(colName = "申请人代码",maxLen = 20)
+    private String applyerCode;
+    @StringCheck(colName = "申请人姓名",maxLen = 50)
     private String applyerName;
     private String applyContent;
     @StringCheck(colName = "申请备注",maxLen = 200)
@@ -34,7 +36,10 @@ public class RequestApply {
 
     private String opeCode;
     private String opeName;
+    private String pmCode;
+    private String checkDesc;
     private String checkerCode;
+    private String pmShortName;
     private String checkerName;
     private String createTimeRange;
     private String lockTimeRange;

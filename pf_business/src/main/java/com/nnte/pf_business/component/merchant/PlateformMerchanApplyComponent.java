@@ -1,6 +1,5 @@
 package com.nnte.pf_business.component.merchant;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseBusiComponent;
@@ -44,23 +43,69 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
     private EmailMQComponent emailMQComponent;
     @Autowired
     private PlateformOperatorComponent plateformOperatorComponent;
+    @Autowired
+    private PlateformMerchanComponent plateformMerchanComponent;
 
     private static final String MERCHANT_APPLY_SM_KEY = "MERCHANT_APPLY_SM_KEY_";
     private static final String MERCHANT_APPLY_VERIFY_AESKEY = "merchant$Apply%AesKey@2020#05*28";
+
     /**
-     * 查询申请列表(超级管理员查询所有数据,其他的角色查询权限范围内的申请数据)
-     */
-    public Map<String, Object> queryApplyList(PlateformMerchanApply dto, OperatorInfo oi) throws BusiException {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
-        if (!dto.getApplyState().equals(4)||!dto.getApplyState().equals(0)){
+     * 申请状态定义 ： 申请状态:-1，删除，0：申请编辑,1:申请通过，2，待审核,3，申请未通过，4，待分配
+     * */
+    public static final Integer apply_state_del         = -1;   //申请状态 - 删除
+    public static final Integer apply_state_edit        = 0;    //申请状态 - 编辑
+    public static final Integer apply_state_suc         = 1;    //申请状态 - 通过
+    public static final Integer apply_state_waitcheck   = 2;    //申请状态 - 待审核
+    public static final Integer apply_state_failed      = 3;    //申请状态 - 未通过
+    public static final Integer apply_state_waitdist    = 4;    //申请状态 - 待分配
+
+    /**
+     * 查询商户申请的操作员申请列表
+     * 如果是超级管理员，则查询所有的操作员申请记录，
+     * 如果不是超级管理员，只能查询操作员自己申请的申请记录
+     * */
+    public Map<String, Object> queryApplysForOperatorApply(PlateformMerchanApply dto, OperatorInfo oi,
+                                                           Map<String,Object> appendParam) throws BusiException{
+        if (!dto.getApplyState().equals(apply_state_waitdist)||!dto.getApplyState().equals(apply_state_edit)){
             PlateformOperator ope=plateformOperatorComponent.getOperatorByCode(oi.getOperatorCode());
             if (!ope.getOpeType().equals(PlateformOperatorComponent.OperatorType.SupperMgr.getValue()))
-                dto.setOpeCode(oi.getOperatorCode());//如果已经分配了操作员
+                dto.setCreatorCode(oi.getOperatorCode());//如果已经分配了操作员
         }
-        Integer count=plateformMerchanApplyService.findModelCount(dto);
+        return queryApplyList(dto,appendParam);
+    }
+    /**
+     * 查询商户申请的用于审核的列表
+     * 如果是超级管理员，则查询指定申请状态下所有的操作员申请记录，
+     * 如果不是超级管理员，在待审核，通过，拒绝 状态下只能查询分配给自己的申请记录
+     * */
+    public Map<String, Object> queryApplysForApplyCheck(PlateformMerchanApply dto, OperatorInfo oi,
+                                                           Map<String,Object> appendParam) throws BusiException{
+        if (dto.getApplyState().equals(apply_state_waitcheck)||dto.getApplyState().equals(apply_state_suc)
+            ||dto.getApplyState().equals(apply_state_failed)){
+            PlateformOperator ope=plateformOperatorComponent.getOperatorByCode(oi.getOperatorCode());
+            if (!ope.getOpeType().equals(PlateformOperatorComponent.OperatorType.SupperMgr.getValue()))
+                dto.setOpeCode(oi.getOperatorCode());
+        }
+        return queryApplyList(dto,appendParam);
+    }
+    /**
+     * 查询申请列表
+     */
+    public Map<String, Object> queryApplyList(PlateformMerchanApply dto,Map<String,Object> appendParam)
+            throws BusiException {
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        Map<String,Object> paramMap=MapUtil.beanToMap(dto);
+        if (appendParam!=null && appendParam.size()>0){
+            paramMap.putAll(appendParam);
+        }
+        if (paramMap.get("sort")==null) {
+            paramMap.put("sort", "create_time");
+            paramMap.put("dir", "desc");
+        }
+        Integer count=plateformMerchanApplyService.findPlateformMerchanApplysCustmerCount(paramMap);
         if (count!=null && count>0) {
             ret.put("count", count);
-            List<PlateformMerchanApply> list = plateformMerchanApplyService.findModelWithPg(dto);
+            List<PlateformMerchanApply> list = plateformMerchanApplyService.findPlateformMerchanApplysCustmerList(paramMap);
             ret.put("list", list);
             BaseNnte.setRetTrue(ret, "查询列表成功");
         }else{
@@ -99,6 +144,8 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
      * 通过ID查询申请
      */
     public PlateformMerchanApply getMerchantApplyById(Long id) {
+        if (id==null || id<=0)
+            return null;
         PlateformMerchanApply ret = plateformMerchanApplyService.findModelByKey(id);
         return ret;
     }
@@ -251,13 +298,27 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
             }
             dto.setPmCompanyPerson(rApply.getPmCompanyPerson());
             dto.setApplyWays(rApply.getApplyWays());
-            if (dto.getApplyWays().equals(1))//如果是操作员申请，申请人填操作员姓名
+            if (dto.getApplyWays().equals(1)) {//如果是操作员申请，申请人填操作员姓名
+                dto.setApplyerCode(oi.getOperatorCode());
                 dto.setApplyerName(oi.getOperatorName());
-            else//如果不是操作员申请，申请人填申请请求中的申请人姓名
+            }
+            else {//如果不是操作员申请，申请人填申请请求中的申请人姓名
+                if (dto.getApplyWays().equals(2)|| dto.getApplyWays().equals(3)){
+                    if (StringUtils.isEmpty(rApply.getApplyerCode()))
+                        throw new BusiException("用户申请时申请人代码不能为空");
+                }
+                else if (dto.getApplyWays().equals(4)){
+                    if (StringUtils.isEmpty(rApply.getApplyerCode()))
+                        throw new BusiException("业务员申请时申请人代码不能为空");
+                }
+                dto.setApplyerCode(rApply.getApplyerCode());
                 dto.setApplyerName(rApply.getApplyerName());
+            }
             dto.setApplyContent(rApply.getApplyContent());
             dto.setApplyMemo(rApply.getApplyMemo());
-            dto.setApplyState(0);//初始状态为申请编辑
+            dto.setApplyState(apply_state_edit);//初始状态为申请编辑
+            dto.setCreatorCode(oi.getOperatorCode());
+            dto.setCreatorName(oi.getOperatorName());
             dto.setCreateTime(new Date());
             Integer count = plateformMerchanApplyService.addModel(dto);
             if (count == null || count <= 0 || dto.getId() == null || dto.getId() <= 0)
@@ -265,10 +326,215 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
             PlateformMerchanApply apply = getMerchantApplyById(dto.getId());
             if (dto.getConfirmType().equals(1))
                 sendConfirmEmail(apply,envData);//如果是邮件确认，发送确认邮件消息
-
+            ret.put("apply",apply);
+            BaseNnte.setRetTrue(ret,"新增商户申请成功");
         } else {//如果是编辑操作
-
+            PlateformMerchanApply srcApply=getMerchantApplyById(rApply.getId());
+            if (srcApply==null)
+                throw new BusiException("没找到需要更改的商户申请");
+            if (srcApply.getApplyState()==null || !srcApply.getApplyState().equals(0))
+                throw new BusiException("商户申请状态不为可编辑");
+            PlateformMerchanApply updateDto=new PlateformMerchanApply();
+            updateDto.setId(srcApply.getId());
+            updateDto.setPmName(rApply.getPmName());
+            updateDto.setApplyMemo(rApply.getApplyMemo());
+            updateDto.setPmCompanyPerson(rApply.getPmCompanyPerson());
+            updateDto.setConfirmType(rApply.getConfirmType());
+            if (updateDto.getConfirmType().equals(1)){
+                if (StringUtils.isEmpty(rApply.getApplyEmail()))
+                    throw new BusiException("邮件确认时邮箱不能为空");
+                if (!rApply.getApplyEmail().equals(srcApply.getApplyEmail())){
+                    updateDto.setApplyEmail(rApply.getApplyEmail());
+                    updateDto.setEmailSendState(0);
+                    updateDto.setEmailRandomCode("");
+                    updateDto.setEmailConfirmState(0);
+                }
+            }else if(updateDto.getConfirmType().equals(2)){
+                if (StringUtils.isEmpty(rApply.getApplyPhone()))
+                    throw new BusiException("电话号码确认时号码不能为空");
+                if (srcApply.getSmConfirmState()==null || 1!=srcApply.getSmConfirmState()
+                        ||!StringUtils.defaultString(rApply.getApplyPhone()).equals(srcApply.getApplyPhone())){
+                    if (StringUtils.isEmpty(rApply.getSmRandomCode()))
+                        throw new BusiException("电话号码确认短信验证码不能为空");
+                    if (!rApply.getApplyPhone().equals(srcApply.getApplyPhone())){
+                        SMContent sm=applyVerifySM(rApply.getApplyPhone(),rApply.getSmRandomCode());
+                        updateDto.setApplyPhone(rApply.getApplyPhone());
+                        updateDto.setSmSendState(1);
+                        updateDto.setSmRandomCode(sm.getContent());
+                        updateDto.setSmSendTime(DateUtils.stringToDate(sm.getSendTime(),DateUtils.DF_YMDHMS));
+                        updateDto.setSmConfirmState(1);
+                    }
+                }
+            }
+            updateDto.setApplyWays(rApply.getApplyWays());
+            if (updateDto.getApplyWays().equals(1))//如果是操作员申请，申请人填操作员姓名
+                updateDto.setApplyerName(oi.getOperatorName());
+            else//如果不是操作员申请，申请人填申请请求中的申请人姓名
+                updateDto.setApplyerName(rApply.getApplyerName());
+            updateDto.setApplyContent(rApply.getApplyContent());
+            Integer count = plateformMerchanApplyService.updateModel(updateDto);
+            if (count == null || count <= 0)
+                throw new BusiException("保存商户申请变更时出现异常");
+            PlateformMerchanApply apply = getMerchantApplyById(updateDto.getId());
+            if (apply.getConfirmType().equals(1) && !NumberUtil.getDefaultInteger(apply.getEmailConfirmState()).equals(1)){
+                sendConfirmEmail(apply,envData);//如果是邮件确认，发送确认邮件消息
+            }
+            ret.put("apply",apply);
+            BaseNnte.setRetTrue(ret,"更改商户申请成功");
         }
+        return ret;
+    }
+    /**
+     * 确认商户申请，商户状态变化：编辑状态 ==> 待审核状态
+     * 要验证邮箱或短信验证是否通过
+     * */
+    public Map confirmApply(RequestApply rApply,OperatorInfo oi)throws BusiException{
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(rApply.getId());
+        if (apply==null || apply.getId()==null || apply.getId()<=0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_edit))
+            throw new BusiException("商户申请状态不是编辑状态");
+        //按验证方式判断是否验证过
+        if (apply.getConfirmType()==null)
+            throw new BusiException("商户申请验证方式未确定");
+        if (apply.getConfirmType().equals(1)) {//如果是邮箱验证
+            if (apply.getEmailConfirmState()==null || !apply.getEmailConfirmState().equals(1))
+                throw new BusiException("商户申请邮件验证未完成");
+        }else if (apply.getConfirmType().equals(2)){
+            //如果是短信验证
+            if (apply.getSmConfirmState()==null || !apply.getSmConfirmState().equals(1))
+                throw new BusiException("商户申请短信验证未完成");
+        }
+        PlateformMerchanApply updateDto=new PlateformMerchanApply();
+        updateDto.setId(apply.getId());
+        updateDto.setApplyState(apply_state_waitdist);
+        updateDto.setConfirmCode(oi.getOperatorCode());
+        updateDto.setConfirmName(oi.getOperatorName());
+        updateDto.setConfirmTime(new Date());
+        Integer count = plateformMerchanApplyService.updateModel(updateDto);
+        if (count == null || count <= 0)
+            throw new BusiException("保存商户申请变更时出现异常");
+        apply.setApplyState(apply_state_waitdist);
+        ret.put("apply",apply);
+        BaseNnte.setRetTrue(ret,"确认商户申请成功");
+        return ret;
+    }
+
+    /**
+     * 删除商户申请，商户状态变化：编辑状态 ==> 物理删除，非编辑非删除状态 ==> 删除状态
+     * */
+    public Map deleteApply(RequestApply rApply,OperatorInfo oi)throws BusiException {
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(rApply.getId());
+        if (apply == null || apply.getId() == null || apply.getId() <= 0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState() == null || apply.getApplyState().equals(apply_state_del))
+            throw new BusiException("商户申请当前状态不可删除");
+        if (apply.getApplyState().equals(apply_state_edit)){//物理删除
+            Integer count = plateformMerchanApplyService.deleteModel(apply.getId());
+            if (count == null || count <= 0)
+                throw new BusiException("删除商户申请时出现异常");
+        }else{
+            PlateformMerchanApply updateDto=new PlateformMerchanApply();
+            updateDto.setId(apply.getId());
+            updateDto.setApplyState(apply_state_del);
+            Integer count = plateformMerchanApplyService.updateModel(updateDto);
+            if (count == null || count <= 0)
+                throw new BusiException("删除商户申请时出现异常(1)");
+        }
+        BaseNnte.setRetTrue(ret,"删除商户申请["+apply.getPmName()+"]成功");
+        return ret;
+    }
+    /**
+     * 将商户申请手动分配给指定的操作员
+     * */
+    public Map applyDistribute(Integer applyId,String opeCode,OperatorInfo oi)throws BusiException{
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        if (apply == null || apply.getId() == null || apply.getId() <= 0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitdist))
+            throw new BusiException("商户申请未处于待分配状态，不能分配操作员");
+        PlateformOperator ope=plateformOperatorComponent.getOperatorByCode(opeCode);
+        if (ope == null || ope.getId() == null || ope.getId()<=0)
+            throw new BusiException("未找到指定的操作员");
+        PlateformMerchanApply updateDto = new PlateformMerchanApply();
+        updateDto.setId(apply.getId());
+        updateDto.setOpeCode(ope.getOpeCode());
+        updateDto.setOpeName(ope.getOpeName());
+        updateDto.setLockTime(new Date());
+        updateDto.setApplyState(apply_state_waitcheck);
+        Integer count = plateformMerchanApplyService.updateModel(updateDto);
+        if (count == null || count <= 0)
+            throw new BusiException("分配商户申请["+apply.getPmName()+"]失败");
+        BaseNnte.setRetTrue(ret,"分配商户申请["+apply.getPmName()+"]成功");
+        return ret;
+    }
+
+    /**
+     * 驳回商户申请
+     * */
+    public Map applyReject(Integer applyId,OperatorInfo oi)throws BusiException{
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        if (apply == null || apply.getId() == null || apply.getId() <= 0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitdist))
+            throw new BusiException("商户申请未处于待分配状态，不能执行驳回操作");
+        if (apply.getApplyWays()==null || apply.getApplyWays().equals(2) || apply.getApplyWays().equals(3))
+            throw new BusiException("商户申请的申请方式为自助申请，不能执行驳回操作");
+        PlateformMerchanApply updateDto = new PlateformMerchanApply();
+        updateDto.setId(apply.getId());
+        updateDto.setApplyState(apply_state_edit);
+        Integer count = plateformMerchanApplyService.updateModel(updateDto);
+        if (count == null || count <= 0)
+            throw new BusiException("驳回商户申请["+apply.getPmName()+"]失败");
+        BaseNnte.setRetTrue(ret,"驳回商户申请["+apply.getPmName()+"]成功");
+        return ret;
+    }
+    /**
+     * 拒绝商户申请
+     * */
+    public Map applyRefuse(Integer applyId,String refuseReason,OperatorInfo oi)throws BusiException{
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        if (apply == null || apply.getId() == null || apply.getId() <= 0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitcheck))
+            throw new BusiException("商户申请未处于待审核状态，不能执行驳回操作");
+        if (StringUtils.isEmpty(refuseReason))
+            throw new BusiException("拒绝商户申请时拒绝原因不能为空");
+        PlateformMerchanApply updateDto = new PlateformMerchanApply();
+        updateDto.setId(apply.getId());
+        updateDto.setApplyState(apply_state_failed);
+        updateDto.setCheckResult(0); //审核不通过
+        updateDto.setCheckerCode(oi.getOperatorCode());
+        updateDto.setCheckerName(oi.getOperatorName());
+        updateDto.setCheckTime(new Date());
+        updateDto.setCheckDesc(refuseReason);
+        Integer count = plateformMerchanApplyService.updateModel(updateDto);
+        if (count == null || count <= 0)
+            throw new BusiException("拒绝商户申请["+apply.getPmName()+"]失败");
+        BaseNnte.setRetTrue(ret,"拒绝商户申请["+apply.getPmName()+"]成功");
+        return ret;
+    }
+    /**
+     * 商户申请通过操作
+     * */
+    public Map applyPass(Long applyId,String pmCode,String pmShortName,String checkDesc,OperatorInfo oi)
+            throws BusiException{
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        PlateformMerchanApply apply = getMerchantApplyById(applyId);
+        if (apply == null || apply.getId() == null || apply.getId() <= 0)
+            throw new BusiException("未找到指定的商户申请");
+        if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitcheck))
+            throw new BusiException("商户申请未处于待审核状态，不能执行审核通过操作");
+        Map<String, Object> paramMap=new HashMap<>();
+        apply.setCheckDesc(checkDesc);
+        apply.setPmCode(pmCode);
+        paramMap.put("pmShortName",pmShortName);
+        ret=plateformMerchanComponent.passMerchantApply(paramMap,apply,oi);
         return ret;
     }
 }

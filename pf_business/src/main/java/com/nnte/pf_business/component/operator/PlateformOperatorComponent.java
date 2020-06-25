@@ -394,8 +394,9 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
                 if (fun.getFunState().equals(1)) {
                     if (keyType==0)
                         map.put(fun.getFunCode(), fun);
-                    else if (keyType==1)
-                        map.put(fun.getFunPath(), fun);
+                    else if (keyType==1) {
+                        map.put(BaseBusiComponent.getPathByRuler(fun.getAuthCode()), fun);
+                    }
                 }
         }
     }

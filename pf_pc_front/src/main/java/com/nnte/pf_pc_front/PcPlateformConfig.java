@@ -9,6 +9,7 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.base.DynamicDatabaseSourceHolder;
 import com.nnte.framework.base.SpringContextHolder;
+import com.nnte.framework.utils.BaiduMapUtil;
 import com.nnte.pf_business.component.*;
 import com.nnte.pf_business.component.mqcomp.EmailMQComponent;
 import com.nnte.pf_business.component.mqcomp.SMMQComponent;
@@ -37,6 +38,7 @@ public class PcPlateformConfig extends BaseBusiComponent
     private String localHostName;
     private String localHostAbstractName;
     private String staticRoot;
+    private String uploadStaticRoot;
     //工作数据库连接配置
     private String workDBDriverClassName;
     private String workDBIp;
@@ -44,18 +46,22 @@ public class PcPlateformConfig extends BaseBusiComponent
     private String workDBSchema;
     private String workDBUser;
     private String workDBPassword;
+    //百度API-KEY
+    private String baiduApiKey;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         appInit();
     }
 
-    private static void appInit(){
+    private static void appInit() throws Exception{
+
         BaseNnte.outConsoleLog("执行后续初始化功能......日志设置");
         BaseBusiComponent.loadComponentBusiLogAttr();
         //--------------------------------------------------------------------------------------
         PcPlateformConfig Config= SpringContextHolder.getBean("pcPlateformConfig");
         BaseBusiComponent.logInfo(Config,"初始化PcPlateformConfig组件......");
+        BaiduMapUtil.setBaiduApiKey(Config.getBaiduApiKey());
         ConfigInterface.LoadConfigComponent(Config);
         DynamicDatabaseSourceHolder ddh= SpringContextHolder.getBean("dynamicDatabaseSourceHolder");
         BaseBusiComponent.logInfo(Config,"初始化DynamicDatabaseSourceHolder组件......"+(ddh==null?"null":"suc"));
@@ -112,11 +118,13 @@ public class PcPlateformConfig extends BaseBusiComponent
         //-------------------------------------
         //--启动程序守护线程，注册组件（系统参数）
         PlateformSysParamComponent pfsp=SpringContextHolder.getBean("plateformSysParamComponent");
+    //    PfBusinessComponent pfbc=SpringContextHolder.getBean("pfBusinessComponent");
         PlateformWatchComponent pfw= SpringContextHolder.getBean("plateformWatchComponent");
         if (pfw!=null){
             try{
                 if (pfsp!=null){
                     pfw.registerWatchItem(pfsp,0);
+      //              pfw.registerWatchItem(pfbc,1);
                 }
             }catch (BusiException be){
                 pfw.logException(be);

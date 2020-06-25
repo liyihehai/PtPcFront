@@ -38,7 +38,7 @@
 
     <select id="findFunctionsBySysRoleCode" parameterType="java.lang.String" resultMap="PlateformFunctionsResult">
         select * from plateform_functions
-        where fun_path in (select fun_path from plateform_function_rec
+        where auth_code in (select auth_code from plateform_function_rec
                            where sys_role_code in (${_parameter}))
     </select>
 

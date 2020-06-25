@@ -4,6 +4,7 @@ import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
+import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.entity.KeyValue;
@@ -27,7 +28,7 @@ import java.util.*;
 
 @Component
 @BusiLogAttr("Pf_Business")
-public class PfBusinessComponent extends BaseBusiComponent{
+public class PfBusinessComponent extends BaseBusiComponent implements WatchInterface{
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
     @Autowired
@@ -40,6 +41,8 @@ public class PfBusinessComponent extends BaseBusiComponent{
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
     private PlateformFunctionRecService plateformFunctionRecService;
+    @Autowired
+    private FdfsClientMgrComponent fdfsClientMgrComponent;
 
     public final static String TOKEN_MERCHANT_CODE = "PlateformPCFront";
 
@@ -88,6 +91,11 @@ public class PfBusinessComponent extends BaseBusiComponent{
         return SystemRoleList;
     }
 
+    @Override
+    public void runWatch() {
+        Boolean result=fdfsClientMgrComponent.activeTest();
+        System.out.println("fdfsClientMgrComponent.activeTest......"+result.toString());
+    }
     /**
      * 取得状态可用的单一操作员信息
      */
@@ -365,6 +373,20 @@ public class PfBusinessComponent extends BaseBusiComponent{
             return list.get(0);
         throw new BusiException("模块路径重复");
     }
+
+    private PlateformFunctionRec getFunctionRecByAuthCode(String authCode) throws BusiException{
+        if (StringUtils.isEmpty(authCode))
+            return null;
+        PlateformFunctionRec dto=new PlateformFunctionRec();
+        dto.setAuthCode(authCode);
+        List<PlateformFunctionRec> list=plateformFunctionRecService.findModelList(dto);
+        if (list==null||list.size()<=0)
+            return null;
+        if(list.size()==1)
+            return list.get(0);
+        throw new BusiException("模块权限重复");
+    }
+
     /**
      * 在系统中注册功能模块信息
      */
@@ -374,12 +396,12 @@ public class PfBusinessComponent extends BaseBusiComponent{
             if (functionModuleList != null && functionModuleList.size() > 0) {
                 for (MEnter me : functionModuleList) {
                     PlateformFunctionRec dto = new PlateformFunctionRec();
-                    PlateformFunctionRec srcFRec = getFunctionRecByPath(me.getPath());
+                    PlateformFunctionRec srcFRec = getFunctionRecByAuthCode(me.getRoleRuler());
                     //---------------------
                     dto.setFunName(me.getName());
                     dto.setSysRoleCode(me.getSysRole());
                     dto.setSysRoleName(me.getName());
-                    dto.setAuthCode(me.getRoleRuler());
+                    dto.setFunPath(me.getPath());
                     dto.setAppCode(appCode);
                     dto.setAppName(appName);
                     dto.setModuleCode(me.getModuleCode());
@@ -388,7 +410,7 @@ public class PfBusinessComponent extends BaseBusiComponent{
                     dto.setModuleVersion(me.getModuleVersion());
                     //----------------------
                     if (srcFRec==null){
-                        dto.setFunPath(me.getPath());
+                        dto.setAuthCode(me.getRoleRuler());
                         plateformFunctionRecService.addModel(dto);
                     }else{
                         dto.setId(srcFRec.getId());
@@ -399,5 +421,26 @@ public class PfBusinessComponent extends BaseBusiComponent{
         }catch (BusiException be){
             logException(be);
         }
+    }
+    /**
+     * 上传并保存图片文件,为防止垃圾文件需删除原图片文件
+     * */
+    public Map<String, Object> uploadImageFile(String imageGroup,String fileName,
+                                                  String srcFile, byte[] content) {
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        //替换原有将模板文件保存在应用服务器,模板文件改为保存在文件服务器中
+        String submitName=fdfsClientMgrComponent.uploadFile(imageGroup,content,FileUtil.getExtention(fileName));
+        if (StringUtils.isNotEmpty(submitName)){
+            ret.put("submitName",submitName);
+            BaseNnte.setRetTrue(ret,"保存图片文件成功");
+            if (StringUtils.isNotEmpty(srcFile)){
+                //如果存在被替换的模板文件名，需要在文件服务器端删除原始的模板文件
+                fdfsClientMgrComponent.deleteFile(imageGroup,srcFile);
+            }
+        }else{
+            BaseNnte.setRetTrue(ret,"保存图片文件失败");
+        }
+        //------------------------------------------------------
+        return ret;
     }
 }

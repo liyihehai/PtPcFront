@@ -1,4 +1,4 @@
-<#include "../taglib.ftl">
+<#include "../../taglib.ftl">
 <link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.css"/>
 <link rel="stylesheet" type="text/css" href="${envData.staticRoot}/resources/plugins/jquery-treetable/css/jquery.treetable.theme.default.css" />
 <style>
@@ -70,8 +70,8 @@
 </div><!-- /.row -->
 
 <script src="${envData.staticRoot}/resources/plugins/jquery-treetable/jquery.treetable.js"></script>
-<#include "./menuModify.ftl">
-<#include "./functionModify.ftl">
+<#include "menuModify.ftl">
+<#include "functionModify.ftl">
 <script>
     $("#menuTreeTableHead").treetable({});
     $("#menuTreeTable").treetable({

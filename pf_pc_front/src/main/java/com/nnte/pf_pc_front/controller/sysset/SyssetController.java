@@ -45,7 +45,8 @@ public class SyssetController extends BaseController {
      * 显示菜单设置页面
      * */
     @ModuleEnter(path = "/sysset/menuset", name="菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
+            roleRuler = "pf-menuset",appCode = PcPlateformApplication.App_Code,
+            moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
     @RequestMapping(value = "/menuset")
     public ModelAndView menuset(HttpServletRequest request,ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();
@@ -63,7 +64,7 @@ public class SyssetController extends BaseController {
         map.put("menuTreeRows",menuTreeRows);
         map.put("FEnterList",FEnterList);
         modelAndView.addObject("map", map);
-        modelAndView.setViewName("front/sysset/menuset");
+        modelAndView.setViewName("front/sysset/menu/menuset");
         return modelAndView;
     }
     @RequestMapping(value = "/refreshMenus")
@@ -94,7 +95,8 @@ public class SyssetController extends BaseController {
         paramMap.put("func",func);
         paramMap.put("staticRoot",staticRoot);
         paramMap.put("contextPath",contextPath);
-        return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap,"/templates/front/sysset/function.ftl");
+        paramMap.put("funcPath",BaseBusiComponent.getPathByRuler(func.getAuthCode()));
+        return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap, "/templates/front/sysset/menu/function.ftl");
     }
     /**
      * 通过FTL渲染一个特定的菜单
@@ -105,7 +107,7 @@ public class SyssetController extends BaseController {
         paramMap.put("menu",menu);
         paramMap.put("staticRoot",staticRoot);
         paramMap.put("contextPath",contextPath);
-        return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap,"/templates/front/sysset/menu.ftl");
+        return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap, "/templates/front/sysset/menu/menu.ftl");
     }
     /**
      * 渲染菜单，如果有子菜单或功能，需要
@@ -200,6 +202,6 @@ public class SyssetController extends BaseController {
         }
         PlateformFunctions func = new PlateformFunctions();
         BeanUtils.copyFromSrc(rFunc,func);
-        return plateformFunctionComponent.saveFunctionModify(func);
+        return plateformFunctionComponent.saveFunctionModify(func,rFunc.getFunPath());
     }
 }

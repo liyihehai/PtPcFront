@@ -4,14 +4,14 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-20 19:23:41>
+ * 自动代码 请勿更改 <2020-06-21 13:55:29>
  */
 public class PlateformFunctions extends BaseModel {
     @DBPKColum private Long id;
     private String menuCode;
     private String funCode;
     private String funName;
-    private String funPath;
+    private String authCode;
     private String funParam;
     private Integer funState;
     private Date createTime;
@@ -26,8 +26,8 @@ public class PlateformFunctions extends BaseModel {
     public void setFunCode(String  funCode){ this.funCode = funCode;}
     public String  getFunName(){ return funName;}
     public void setFunName(String  funName){ this.funName = funName;}
-    public String  getFunPath(){ return funPath;}
-    public void setFunPath(String  funPath){ this.funPath = funPath;}
+    public String  getAuthCode(){ return authCode;}
+    public void setAuthCode(String  authCode){ this.authCode = authCode;}
     public String  getFunParam(){ return funParam;}
     public void setFunParam(String  funParam){ this.funParam = funParam;}
     public Integer  getFunState(){ return funState;}

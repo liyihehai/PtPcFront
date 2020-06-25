@@ -10,10 +10,11 @@
         <result column="pm_company_person" property="pmCompanyPerson"/>
         <result column="pm_state" property="pmState"/>
         <result column="create_time" property="createTime"/>
+        <result column="apply_email" property="applyEmail"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.merchant.PlateformMerchant">
-        insert into plateform_merchant (pm_code ,pm_name ,pm_short_name ,pm_company_person ,pm_state ,create_time )
-        values (#{pmCode} ,#{pmName} ,#{pmShortName} ,#{pmCompanyPerson} ,#{pmState} ,#{createTime} )
+        insert into plateform_merchant (pm_code ,pm_name ,pm_short_name ,pm_company_person ,pm_state ,create_time ,apply_email )
+        values (#{pmCode} ,#{pmName} ,#{pmShortName} ,#{pmCompanyPerson} ,#{pmState} ,#{createTime} ,#{applyEmail} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMerchantResult" parameterType="java.lang.Long">
         select * from plateform_merchant where id=#{id}
@@ -30,6 +31,7 @@
         <if test="pmCompanyPerson!= null"><![CDATA[pm_company_person=#{pmCompanyPerson},]]></if>
         <if test="pmState!= null"><![CDATA[pm_state=#{pmState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="applyEmail!= null"><![CDATA[apply_email=#{applyEmail},]]></if>
         </set>
         where id=#{id}
     </update>
@@ -43,6 +45,7 @@
             <if test="pmCompanyPerson!= null"><![CDATA[and t.pm_company_person = #{pmCompanyPerson}]]></if>
             <if test="pmState!= null"><![CDATA[and t.pm_state = #{pmState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="applyEmail!= null"><![CDATA[and t.apply_email = #{applyEmail}]]></if>
         </where>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
     </sql>

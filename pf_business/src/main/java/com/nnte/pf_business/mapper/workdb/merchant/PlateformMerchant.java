@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-18 20:05:23>
+ * 自动代码 请勿更改 <2020-06-24 13:45:11>
  */
 public class PlateformMerchant extends BaseModel {
     @DBPKColum private Long id;
@@ -14,6 +14,7 @@ public class PlateformMerchant extends BaseModel {
     private Integer pmCompanyPerson;
     private Integer pmState;
     private Date createTime;
+    private String applyEmail;
 
     public PlateformMerchant(){}
 
@@ -31,4 +32,6 @@ public class PlateformMerchant extends BaseModel {
     public void setPmState(Integer  pmState){ this.pmState = pmState;}
     public Date  getCreateTime(){ return createTime;}
     public void setCreateTime(Date  createTime){ this.createTime = createTime;}
+    public String  getApplyEmail(){ return applyEmail;}
+    public void setApplyEmail(String  applyEmail){ this.applyEmail = applyEmail;}
 }

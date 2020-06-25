@@ -7,14 +7,14 @@
         <result column="menu_code" property="menuCode"/>
         <result column="fun_code" property="funCode"/>
         <result column="fun_name" property="funName"/>
-        <result column="fun_path" property="funPath"/>
+        <result column="auth_code" property="authCode"/>
         <result column="fun_param" property="funParam"/>
         <result column="fun_state" property="funState"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
-    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
-        insert into plateform_functions (menu_code ,fun_code ,fun_name ,fun_path ,fun_param ,fun_state ,create_time )
-        values (#{menuCode} ,#{funCode} ,#{funName} ,#{funPath} ,#{funParam} ,#{funState} ,#{createTime} )
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="false" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
+        insert into plateform_functions (id ,menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time )
+        values (#{id} ,#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Long">
         select * from plateform_functions where id=#{id}
@@ -25,10 +25,11 @@
     <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
         update plateform_functions
         <set>
+        <if test="id!= null"><![CDATA[id=#{id},]]></if>
         <if test="menuCode!= null"><![CDATA[menu_code=#{menuCode},]]></if>
         <if test="funCode!= null"><![CDATA[fun_code=#{funCode},]]></if>
         <if test="funName!= null"><![CDATA[fun_name=#{funName},]]></if>
-        <if test="funPath!= null"><![CDATA[fun_path=#{funPath},]]></if>
+        <if test="authCode!= null"><![CDATA[auth_code=#{authCode},]]></if>
         <if test="funParam!= null"><![CDATA[fun_param=#{funParam},]]></if>
         <if test="funState!= null"><![CDATA[fun_state=#{funState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
@@ -42,7 +43,7 @@
             <if test="menuCode!= null"><![CDATA[and t.menu_code = #{menuCode}]]></if>
             <if test="funCode!= null"><![CDATA[and t.fun_code = #{funCode}]]></if>
             <if test="funName!= null"><![CDATA[and t.fun_name = #{funName}]]></if>
-            <if test="funPath!= null"><![CDATA[and t.fun_path = #{funPath}]]></if>
+            <if test="authCode!= null"><![CDATA[and t.auth_code = #{authCode}]]></if>
             <if test="funParam!= null"><![CDATA[and t.fun_param = #{funParam}]]></if>
             <if test="funState!= null"><![CDATA[and t.fun_state = #{funState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>

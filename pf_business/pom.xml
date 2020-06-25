@@ -18,12 +18,17 @@
 	
 	<repositories>
         <repository>
-            <id>maven-releases</id>
-            <name>maven-releases</name>
-            <url>http://39.99.191.134:8999/repository/maven-releases</url>
+            <id>snapshots</id>
+            <name>snapshots</name>
+            <url>http://39.99.191.134:8999/repository/maven-snapshots</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>releases</id>
+            <name>releases</name>
+            <url>http://39.99.191.134:8999/repository/maven-releases</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -50,6 +55,11 @@
         <dependency>
             <groupId>com.nnte</groupId>
             <artifactId>nnte_BaseBusi</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nnte.kservice</groupId>
+            <artifactId>fdfs_client_mgr</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
