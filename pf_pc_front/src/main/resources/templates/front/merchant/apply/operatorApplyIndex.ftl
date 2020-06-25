@@ -214,7 +214,10 @@
                 }
             }]
     });
-    new $.fn.dataTable.FixedColumns( merchantApplyTable, { leftColumns: 1, rightColumns: 1 } );
+    var wndWideth = $("#merchantApplyTable").parent().width();
+    var tableWideth = $("#merchantApplyTable").width();
+    if (wndWideth<tableWideth)
+        new $.fn.dataTable.FixedColumns( merchantApplyTable, { leftColumns: 1, rightColumns: 1 } );
 
     function searchQuery(){
         merchantApplyTable.ajax.reload();
