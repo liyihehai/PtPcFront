@@ -213,7 +213,10 @@
                 }
             }]
     });
-    new $.fn.dataTable.FixedColumns( merchantApplyTable, { leftColumns: 1, rightColumns: 1 } );
+    window.onresize = function (){
+        GlobalUtil.dataTableSetFixCols(merchantApplyTable,1,1);
+    };
+    window.onresize();
 
     function searchQuery(){
         merchantApplyTable.ajax.reload();

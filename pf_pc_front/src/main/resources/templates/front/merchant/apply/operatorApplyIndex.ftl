@@ -214,23 +214,11 @@
                 }
             }]
     });
-    window.onresize = adjuest;
-    var fixedColumns;
-    adjuest();
-    function adjuest(){
-        var wndWideth = $("#merchantApplyTable").parent().width();
-        var tableWideth = $("#merchantApplyTable").width();
-        if (wndWideth<tableWideth){
-            if (GlobalUtil.isEmpty(fixedColumns))
-                fixedColumns=new $.fn.dataTable.FixedColumns( merchantApplyTable, { leftColumns: 1, rightColumns: 1 } );
-        }
-        else{
-            if (!GlobalUtil.isEmpty(fixedColumns)){
-                fixedColumns.remove();
-                fixedColumns=null;
-            }
-        }
-    }
+
+    window.onresize = function (){
+        GlobalUtil.dataTableSetFixCols(merchantApplyTable,1,1);
+    };
+    window.onresize();
 
     function searchQuery(){
         merchantApplyTable.ajax.reload();
