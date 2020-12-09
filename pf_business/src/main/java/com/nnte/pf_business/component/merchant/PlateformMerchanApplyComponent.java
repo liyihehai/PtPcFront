@@ -143,7 +143,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
     /**
      * 通过ID查询申请
      */
-    public PlateformMerchanApply getMerchantApplyById(Long id) {
+    public PlateformMerchanApply getMerchantApplyById(Integer id) {
         if (id==null || id<=0)
             return null;
         PlateformMerchanApply ret = plateformMerchanApplyService.findModelByKey(id);
@@ -199,7 +199,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
             paramMap.put("verifyUrl",verifyUrl);
             String content = FreeMarkertUtil.getFreemarkerFtl(this,FreeMarkertUtil.pathType.cls,paramMap,"/templates/front/merchant/apply/emailverify.ftl");
             EmailContent ec = new EmailContent();
-            ec.setId(apply.getId());
+            ec.setId(NumberDefUtil.getDefLong(apply.getId()));
             ec.setEmail(apply.getApplyEmail());
             ec.setRandomCode(randomCode);
             ec.setTitle("商户申请确认邮件");
@@ -227,7 +227,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
             JsonUtil.JNode node=JsonUtil.createJNode(JsonUtil.jsonToNode(json));
             if (node==null)
                 throw new Exception("验证内容为空");
-            PlateformMerchanApply apply=getMerchantApplyById(Long.valueOf(node.getInteger("id")));
+            PlateformMerchanApply apply=getMerchantApplyById(node.getInteger("id"));
             if (apply==null)
                 throw new Exception("没找到指定的申请记录");
             if (apply.getEmailConfirmState()!=null && apply.getEmailConfirmState().equals(1)){
@@ -451,7 +451,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
      * */
     public Map applyDistribute(Integer applyId,String opeCode,OperatorInfo oi)throws BusiException{
         Map<String, Object> ret = BaseNnte.newMapRetObj();
-        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        PlateformMerchanApply apply = getMerchantApplyById(applyId);
         if (apply == null || apply.getId() == null || apply.getId() <= 0)
             throw new BusiException("未找到指定的商户申请");
         if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitdist))
@@ -477,7 +477,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
      * */
     public Map applyReject(Integer applyId,OperatorInfo oi)throws BusiException{
         Map<String, Object> ret = BaseNnte.newMapRetObj();
-        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        PlateformMerchanApply apply = getMerchantApplyById(applyId);
         if (apply == null || apply.getId() == null || apply.getId() <= 0)
             throw new BusiException("未找到指定的商户申请");
         if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitdist))
@@ -498,7 +498,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
      * */
     public Map applyRefuse(Integer applyId,String refuseReason,OperatorInfo oi)throws BusiException{
         Map<String, Object> ret = BaseNnte.newMapRetObj();
-        PlateformMerchanApply apply = getMerchantApplyById(Long.valueOf(applyId));
+        PlateformMerchanApply apply = getMerchantApplyById(applyId);
         if (apply == null || apply.getId() == null || apply.getId() <= 0)
             throw new BusiException("未找到指定的商户申请");
         if (apply.getApplyState()==null || !apply.getApplyState().equals(apply_state_waitcheck))
@@ -522,7 +522,7 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
     /**
      * 商户申请通过操作
      * */
-    public Map applyPass(Long applyId,String pmCode,String pmShortName,String checkDesc,OperatorInfo oi)
+    public Map applyPass(Integer applyId,String pmCode,String pmShortName,String checkDesc,OperatorInfo oi)
             throws BusiException{
         Map<String, Object> ret = BaseNnte.newMapRetObj();
         PlateformMerchanApply apply = getMerchantApplyById(applyId);

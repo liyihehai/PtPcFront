@@ -94,7 +94,7 @@ public class EmailMQComponent extends BaseBusiComponent implements RocketmqMsgLi
             String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSingleParamVText(PlateformSysParamComponent.SYS_SMTP_ACCOUNT_JSON));
             SysSmtpAccount ssa = JsonUtil.jsonToBean(smtpJson, SysSmtpAccount.class);
             if (ssa == null)
-                throw new FException("");
+                throw new FException("邮件账户JSON数据定义不合法");
             JavaMailSenderImpl sender=MailUtils.setInitData(ssa.getSmtp_host(), ssa.getPort(), ssa.getUsername(), ssa.getPasswd(),
                         ssa.isTsl());
             MailUtils.richContentSend(sender,bodyObject.getEmail(),bodyObject.getTitle(),

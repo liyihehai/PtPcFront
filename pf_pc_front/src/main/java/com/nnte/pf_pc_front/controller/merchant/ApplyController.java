@@ -381,7 +381,7 @@ public class ApplyController extends BaseController {
             Integer applyId = node.getInteger("id");
             if (applyId==null || applyId<=0)
                 throw new BusiException("没有找到要拒绝的商户申请");
-            PlateformMerchanApply apply=plateformMerchanApplyComponent.getMerchantApplyById(Long.valueOf(applyId));
+            PlateformMerchanApply apply=plateformMerchanApplyComponent.getMerchantApplyById(applyId);
             if (apply==null || apply.getId()==null || apply.getId()<=0)
                 throw new BusiException("没有找到要拒绝的商户申请(1)");
             if (apply.getApplyState()==null || !apply.getApplyState().equals(PlateformMerchanApplyComponent.apply_state_waitcheck))
@@ -431,7 +431,7 @@ public class ApplyController extends BaseController {
             Integer applyId = node.getInteger("id");
             if (applyId==null || applyId<=0)
                 throw new BusiException("没有找到要通过的商户申请");
-            PlateformMerchanApply apply=plateformMerchanApplyComponent.getMerchantApplyById(Long.valueOf(applyId));
+            PlateformMerchanApply apply=plateformMerchanApplyComponent.getMerchantApplyById(applyId);
             if (apply==null || apply.getId()==null || apply.getId()<=0)
                 throw new BusiException("没有找到要通过的商户申请(1)");
             if (apply.getApplyState()==null || !apply.getApplyState().equals(PlateformMerchanApplyComponent.apply_state_waitcheck))

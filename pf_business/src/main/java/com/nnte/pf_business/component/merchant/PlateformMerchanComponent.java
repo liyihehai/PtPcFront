@@ -6,8 +6,10 @@ import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.WorkDBAspect;
 import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.base.BaseService;
 import com.nnte.framework.base.ConnSqlSessionFactory;
 import com.nnte.framework.utils.JsonUtil;
+import com.nnte.framework.utils.MapUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.mapper.workdb.merchant.PlateformMerchant;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -60,7 +63,7 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
                                                 PlateformMerchanApply apply, OperatorInfo oi){
         Map<String, Object> ret = BaseNnte.newMapRetObj();
         try {
-            ConnSqlSessionFactory cssf = (ConnSqlSessionFactory) paramMap.get("ConnSqlSessionFactory");
+            BaseService.ConnDaoSession session = BaseService.getThreadLocalSession();
             if (apply == null || apply.getApplyContent() == null)
                 throw new BusiException("申请详细内容为空");
             PlateformMerchantExpand newExpandDto = JsonUtil.jsonToBean(apply.getApplyContent(),PlateformMerchantExpand.class);
@@ -77,13 +80,13 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
             newDto.setPmState(Merchant_State_Pause);//申请通过的商户初始状态为暂停
             newDto.setCreateTime(new Date());
             newDto.setApplyEmail(newExpandDto.getPmEmail());
-            Integer count=plateformMerchantService.addModel(cssf,newDto);
+            Integer count=plateformMerchantService.addModel(session,newDto);
             if (count==null || count!=1)
                 throw new BusiException("新增商户主信息失败");
             //---准备商户附加信息----
             newExpandDto.setPmCode(newDto.getPmCode());
             newExpandDto.setCreateTime(newDto.getCreateTime());
-            count=plateformMerchantExpandService.addModel(cssf,newExpandDto);
+            count=plateformMerchantExpandService.addModel(session,newExpandDto);
             if (count==null || count!=1)
                 throw new BusiException("新增商户附加信息失败");
             //--从新设置申请表相关字段--
@@ -96,7 +99,7 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
             updateApplyDto.setApplyState(PlateformMerchanApplyComponent.apply_state_suc);
             updateApplyDto.setCheckResult(1);//审核通过
             updateApplyDto.setCheckTime(newDto.getCreateTime());
-            count=plateformMerchanApplyService.updateModel(cssf,updateApplyDto);
+            count=plateformMerchanApplyService.updateModel(session,updateApplyDto);
             if (count==null || count!=1)
                 throw new BusiException("更改商户申请信息失败");
             BaseNnte.setRetTrue(ret,"商户申请通过操作成功");
@@ -104,5 +107,45 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
         }
         return ret;
+    }
+
+    public Map queryMerchantsForSetting(PlateformMerchant dto,OperatorInfo oi,Map<String,Object> appendParam)
+            throws BusiException{
+        return queryMerchantList(dto,appendParam);
+    }
+
+    /**
+     * 查询商户列表
+     */
+    public Map<String, Object> queryMerchantList(PlateformMerchant dto,Map<String,Object> appendParam)
+            throws BusiException {
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        Map<String,Object> paramMap= MapUtil.beanToMap(dto);
+        if (appendParam!=null && appendParam.size()>0){
+            paramMap.putAll(appendParam);
+        }
+        if (paramMap.get("sort")==null) {
+            paramMap.put("sort", "create_time");
+            paramMap.put("dir", "desc");
+        }
+        Integer count=plateformMerchantService.findPlateformMerchansCustmerCount(paramMap);
+        if (count!=null && count>0) {
+            ret.put("count", count);
+            List<PlateformMerchant> list = plateformMerchantService.findPlateformMerchansCustmerList(paramMap);
+            ret.put("list", list);
+            BaseNnte.setRetTrue(ret, "查询列表成功");
+        }else{
+            ret.put("count", 0);
+            ret.put("list", null);
+            BaseNnte.setRetTrue(ret, "查询列表成功");
+        }
+        return ret;
+    }
+    public PlateformMerchant getMerchantById(Long id){
+        return plateformMerchantService.findModelByKey(id);
+    }
+
+    public PlateformMerchantExpand getMerchantExpandByCode(String code){
+        return plateformMerchantExpandService.findModelByKey(code);
     }
 }

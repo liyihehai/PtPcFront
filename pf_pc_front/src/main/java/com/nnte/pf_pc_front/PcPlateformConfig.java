@@ -5,12 +5,11 @@ import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.base.JedisComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.base.BaseNnte;
-import com.nnte.framework.base.ConfigInterface;
-import com.nnte.framework.base.DynamicDatabaseSourceHolder;
-import com.nnte.framework.base.SpringContextHolder;
+import com.nnte.framework.base.*;
 import com.nnte.framework.utils.BaiduMapUtil;
+import com.nnte.framework.utils.NumberUtil;
 import com.nnte.pf_business.component.*;
+import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.mqcomp.EmailMQComponent;
 import com.nnte.pf_business.component.mqcomp.SMMQComponent;
 import com.zaxxer.hikari.HikariConfig;
@@ -101,10 +100,11 @@ public class PcPlateformConfig extends BaseBusiComponent
         }
         //------------------------
         BaseBusiComponent.logInfo(Config,"初始化工作数据库连接......");
+        DBSchemaPostgreSQL dbschema= SpringContextHolder.getBean("DBSchemaPostgreSQL");
         HikariConfig config = new HikariConfig();
         config.setDriverClassName(Config.getWorkDBDriverClassName());
-        config.setJdbcUrl("jdbc:mysql://"+Config.getWorkDBIp()+":"+Config.getWorkDBPort()+"/"+
-                Config.getWorkDBSchema()+"?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        config.setJdbcUrl(dbschema.makeJDBCUrl(Config.getWorkDBIp(), NumberUtil.getDefaultLong(Config.getWorkDBPort()),
+                Config.getWorkDBSchema()));
         config.setUsername(Config.getWorkDBUser());
         config.setPassword(Config.getWorkDBPassword());
         config.setMinimumIdle(0);
@@ -118,13 +118,13 @@ public class PcPlateformConfig extends BaseBusiComponent
         //-------------------------------------
         //--启动程序守护线程，注册组件（系统参数）
         PlateformSysParamComponent pfsp=SpringContextHolder.getBean("plateformSysParamComponent");
-    //    PfBusinessComponent pfbc=SpringContextHolder.getBean("pfBusinessComponent");
+        PlateformFunctionComponent pfc=SpringContextHolder.getBean(PlateformFunctionComponent.class);
         PlateformWatchComponent pfw= SpringContextHolder.getBean("plateformWatchComponent");
         if (pfw!=null){
             try{
                 if (pfsp!=null){
                     pfw.registerWatchItem(pfsp,0);
-      //              pfw.registerWatchItem(pfbc,1);
+                    pfw.registerWatchItem(pfc,1);
                 }
             }catch (BusiException be){
                 pfw.logException(be);

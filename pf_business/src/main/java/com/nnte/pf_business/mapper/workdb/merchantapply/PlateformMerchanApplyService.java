@@ -13,7 +13,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
     }
 
     public List<PlateformMerchanApply> findPlateformMerchanApplysCustmerList(Map<String,Object> paramMap){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findPlateformMerchanApplysCustmerList",paramMap);
         }catch (Exception e){
             e.printStackTrace();
@@ -22,7 +22,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
     }
 
     public Integer findPlateformMerchanApplysCustmerCount(Map<String,Object> paramMap){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findPlateformMerchanApplysCustmerCount",paramMap);
         }catch (Exception e){
             e.printStackTrace();

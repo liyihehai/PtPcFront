@@ -17,7 +17,7 @@ public class PlateformRoleService extends BaseService<PlateformRoleDao,Plateform
      * 按操作员查询关联的角色列表
      * */
     public List<PlateformRole> findOpeRoleList(String opeCode){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findOpeRoleList",opeCode);
         }catch (Exception e){
             e.printStackTrace();

@@ -7,7 +7,7 @@ import com.nnte.framework.annotation.DBPKColum;
  * 自动代码 请勿更改 <2020-05-10 15:47:28>
  */
 public class PlateformFunctionRec extends BaseModel {
-    @DBPKColum private Long id;
+    @DBPKColum private Integer id;
     private String funPath;
     private String funName;
     private String sysRoleCode;
@@ -21,8 +21,8 @@ public class PlateformFunctionRec extends BaseModel {
 
     public PlateformFunctionRec(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getFunPath(){ return funPath;}
     public void setFunPath(String  funPath){ this.funPath = funPath;}
     public String  getFunName(){ return funName;}

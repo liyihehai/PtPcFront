@@ -12,20 +12,20 @@
         <result column="fun_state" property="funState"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
-    <insert id="addModel" keyProperty="id" useGeneratedKeys="false" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
-        insert into plateform_functions (id ,menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time )
-        values (#{id} ,#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} )
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
+        insert into plateform_functions (menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time )
+        values (#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} )
     </insert>
-    <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Long">
+    <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Integer">
         select * from plateform_functions where id=#{id}
     </select>
-    <delete id="deleteModel" parameterType="java.lang.Long">
+    <delete id="deleteModel" parameterType="java.lang.Integer">
         delete from plateform_functions where id=#{id}
     </delete>
     <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
         update plateform_functions
         <set>
-        <if test="id!= null"><![CDATA[id=#{id},]]></if>
+            <trim suffixOverrides=",">
         <if test="menuCode!= null"><![CDATA[menu_code=#{menuCode},]]></if>
         <if test="funCode!= null"><![CDATA[fun_code=#{funCode},]]></if>
         <if test="funName!= null"><![CDATA[fun_name=#{funName},]]></if>
@@ -33,6 +33,7 @@
         <if test="funParam!= null"><![CDATA[fun_param=#{funParam},]]></if>
         <if test="funState!= null"><![CDATA[fun_state=#{funState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+            </trim>
         </set>
         where id=#{id}
     </update>
@@ -56,11 +57,19 @@
     <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultType="java.lang.Integer">
         SELECT count(1) PG_TOTALCOUNT FROM (
         <include refid="findPlateformFunctionsListSql" />
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
         ) m
     </select>
     <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions" resultMap="PlateformFunctionsResult">
         <include refid="findPlateformFunctionsListSql" />
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformFunctionsResult">
+        select * from plateform_functions
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
     </select>
 </mapper>

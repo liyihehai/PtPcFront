@@ -4,10 +4,10 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-16 17:23:59>
+ * 自动代码 请勿更改 <2020-12-08 21:01:57>
  */
-public class PalteformSysparam extends BaseModel {
-    @DBPKColum private Long id;
+public class PlateformSysparam extends BaseModel {
+    @DBPKColum private Integer id;
     private String paramType;
     private String paramName;
     private String paramKeyGroup;
@@ -20,10 +20,10 @@ public class PalteformSysparam extends BaseModel {
     private String createOpeCode;
     private String createOpeName;
 
-    public PalteformSysparam(){}
+    public PlateformSysparam(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getParamType(){ return paramType;}
     public void setParamType(String  paramType){ this.paramType = paramType;}
     public String  getParamName(){ return paramName;}

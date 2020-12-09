@@ -6,7 +6,9 @@
         <result column="pm_code" property="pmCode"/>
         <result column="pm_busi_type" property="pmBusiType"/>
         <result column="pm_country" property="pmCountry"/>
+        <result column="pm_province" property="pmProvince"/>
         <result column="pm_city" property="pmCity"/>
+        <result column="pm_area" property="pmArea"/>
         <result column="pm_address" property="pmAddress"/>
         <result column="pm_zipcode" property="pmZipcode"/>
         <result column="pm_coordinate" property="pmCoordinate"/>
@@ -31,8 +33,8 @@
         <result column="create_time" property="createTime"/>
     </resultMap>
     <insert id="addModel" keyProperty="pmCode" useGeneratedKeys="false" parameterType="com.nnte.pf_business.mapper.workdb.merchant_expand.PlateformMerchantExpand">
-        insert into plateform_merchant_expand (pm_code ,pm_busi_type ,pm_country ,pm_city ,pm_address ,pm_zipcode ,pm_coordinate ,pm_longitude ,pm_latitude ,pm_link_name ,pm_link_phone ,pm_csr_phone ,pm_email ,pm_introduce ,pm_logo ,pm_pic1 ,pm_pic2 ,pm_pic3 ,pm_remark ,pm_legal_name ,pm_legal_id_num ,pm_certificate_pic1 ,pm_certificate_pic2 ,pm_certificate_pic3 ,pm_certificate_pic4 ,create_time )
-        values (#{pmCode} ,#{pmBusiType} ,#{pmCountry} ,#{pmCity} ,#{pmAddress} ,#{pmZipcode} ,#{pmCoordinate} ,#{pmLongitude} ,#{pmLatitude} ,#{pmLinkName} ,#{pmLinkPhone} ,#{pmCsrPhone} ,#{pmEmail} ,#{pmIntroduce} ,#{pmLogo} ,#{pmPic1} ,#{pmPic2} ,#{pmPic3} ,#{pmRemark} ,#{pmLegalName} ,#{pmLegalIdNum} ,#{pmCertificatePic1} ,#{pmCertificatePic2} ,#{pmCertificatePic3} ,#{pmCertificatePic4} ,#{createTime} )
+        insert into plateform_merchant_expand (pm_code ,pm_busi_type ,pm_country ,pm_province ,pm_city ,pm_area ,pm_address ,pm_zipcode ,pm_coordinate ,pm_longitude ,pm_latitude ,pm_link_name ,pm_link_phone ,pm_csr_phone ,pm_email ,pm_introduce ,pm_logo ,pm_pic1 ,pm_pic2 ,pm_pic3 ,pm_remark ,pm_legal_name ,pm_legal_id_num ,pm_certificate_pic1 ,pm_certificate_pic2 ,pm_certificate_pic3 ,pm_certificate_pic4 ,create_time )
+        values (#{pmCode} ,#{pmBusiType} ,#{pmCountry} ,#{pmProvince} ,#{pmCity} ,#{pmArea} ,#{pmAddress} ,#{pmZipcode} ,#{pmCoordinate} ,#{pmLongitude} ,#{pmLatitude} ,#{pmLinkName} ,#{pmLinkPhone} ,#{pmCsrPhone} ,#{pmEmail} ,#{pmIntroduce} ,#{pmLogo} ,#{pmPic1} ,#{pmPic2} ,#{pmPic3} ,#{pmRemark} ,#{pmLegalName} ,#{pmLegalIdNum} ,#{pmCertificatePic1} ,#{pmCertificatePic2} ,#{pmCertificatePic3} ,#{pmCertificatePic4} ,#{createTime} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMerchantExpandResult" parameterType="java.lang.String">
         select * from plateform_merchant_expand where pm_code=#{pmCode}
@@ -43,10 +45,13 @@
     <update id="updateModel" parameterType="com.nnte.pf_business.mapper.workdb.merchant_expand.PlateformMerchantExpand">
         update plateform_merchant_expand
         <set>
+            <trim suffixOverrides=",">
         <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
         <if test="pmBusiType!= null"><![CDATA[pm_busi_type=#{pmBusiType},]]></if>
         <if test="pmCountry!= null"><![CDATA[pm_country=#{pmCountry},]]></if>
+        <if test="pmProvince!= null"><![CDATA[pm_province=#{pmProvince},]]></if>
         <if test="pmCity!= null"><![CDATA[pm_city=#{pmCity},]]></if>
+        <if test="pmArea!= null"><![CDATA[pm_area=#{pmArea},]]></if>
         <if test="pmAddress!= null"><![CDATA[pm_address=#{pmAddress},]]></if>
         <if test="pmZipcode!= null"><![CDATA[pm_zipcode=#{pmZipcode},]]></if>
         <if test="pmCoordinate!= null"><![CDATA[pm_coordinate=#{pmCoordinate},]]></if>
@@ -69,6 +74,7 @@
         <if test="pmCertificatePic3!= null"><![CDATA[pm_certificate_pic3=#{pmCertificatePic3},]]></if>
         <if test="pmCertificatePic4!= null"><![CDATA[pm_certificate_pic4=#{pmCertificatePic4},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+            </trim>
         </set>
         where pm_code=#{pmCode}
     </update>
@@ -78,7 +84,9 @@
             <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
             <if test="pmBusiType!= null"><![CDATA[and t.pm_busi_type = #{pmBusiType}]]></if>
             <if test="pmCountry!= null"><![CDATA[and t.pm_country = #{pmCountry}]]></if>
+            <if test="pmProvince!= null"><![CDATA[and t.pm_province = #{pmProvince}]]></if>
             <if test="pmCity!= null"><![CDATA[and t.pm_city = #{pmCity}]]></if>
+            <if test="pmArea!= null"><![CDATA[and t.pm_area = #{pmArea}]]></if>
             <if test="pmAddress!= null"><![CDATA[and t.pm_address = #{pmAddress}]]></if>
             <if test="pmZipcode!= null"><![CDATA[and t.pm_zipcode = #{pmZipcode}]]></if>
             <if test="pmCoordinate!= null"><![CDATA[and t.pm_coordinate = #{pmCoordinate}]]></if>
@@ -110,11 +118,19 @@
     <select id="findModelCount"  parameterType="com.nnte.pf_business.mapper.workdb.merchant_expand.PlateformMerchantExpand" resultType="java.lang.Integer">
         SELECT count(1) PG_TOTALCOUNT FROM (
         <include refid="findPlateformMerchantExpandListSql" />
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
         ) m
     </select>
     <select id="findModelWithPg" parameterType="com.nnte.pf_business.mapper.workdb.merchant_expand.PlateformMerchantExpand" resultMap="PlateformMerchantExpandResult">
         <include refid="findPlateformMerchantExpandListSql" />
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformMerchantExpandResult">
+        select * from plateform_merchant_expand
+        where pm_code in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
     </select>
 </mapper>

@@ -102,7 +102,7 @@
 <!-- 弹出窗 项目新增，更改-->
 <#include "./applyModify.ftl">
 <#include "./applyDetail.ftl">
-<script src="${envData.staticRoot!''}/js/front/merchant/apply/apply.js?v=1.1"></script>
+<script src="${envData.staticRoot!''}/js/front/merchant/apply/apply.js?v=1.1.1"></script>
 <!-- 弹出窗结束 -->
 <script>
     var globUtil = new AppJSGlobUtil();
@@ -157,7 +157,7 @@
                 "data" : "pmCompanyPerson",
                 "render" : function(data,type,full)
                 {
-                    return getPmCompanyPersonName(data);
+                    return GlobalOptionName.getPmCompanyPersonName(data);
                 }
             },{
                 "targets" : [2],

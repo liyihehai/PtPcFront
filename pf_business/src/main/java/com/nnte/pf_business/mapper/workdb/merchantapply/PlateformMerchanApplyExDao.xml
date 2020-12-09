@@ -38,7 +38,7 @@
     <select id="findPlateformMerchanApplysCustmerList" parameterType="java.util.Map" resultMap="PlateformMerchanApplyResult">
         <include refid="findPlateformMerchanApplysCustmerSql"/>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
     </select>
     <select id="findPlateformMerchanApplysCustmerCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT count(1) PG_TOTALCOUNT FROM (

@@ -7,7 +7,7 @@ import java.util.Date;
  * 自动代码 请勿更改 <2020-05-07 08:38:48>
  */
 public class PlateformRole extends BaseModel {
-    @DBPKColum private Long id;
+    @DBPKColum private Integer id;
     private String roleCode;
     private String roleName;
     private String sysroleList;
@@ -16,8 +16,8 @@ public class PlateformRole extends BaseModel {
 
     public PlateformRole(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getRoleCode(){ return roleCode;}
     public void setRoleCode(String  roleCode){ this.roleCode = roleCode;}
     public String  getRoleName(){ return roleName;}

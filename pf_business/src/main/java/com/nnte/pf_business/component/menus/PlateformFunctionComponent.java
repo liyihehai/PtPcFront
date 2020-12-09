@@ -5,6 +5,7 @@ import com.nnte.basebusi.entity.MEnter;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_business.component.WatchInterface;
 import com.nnte.pf_business.entertity.PFFunction;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class PlateformFunctionComponent {
+public class PlateformFunctionComponent implements WatchInterface {
     @Autowired
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
@@ -361,5 +362,17 @@ public class PlateformFunctionComponent {
             retList.add(pff);
         });
         return retList;
+    }
+
+    @Override
+    public void runWatch() {
+        List<Object> ids = new ArrayList<>();
+        ids.add(1L);
+        ids.add(2L);
+        /*
+        Map<Object,PlateformFunctions> resultList=plateformFunctionsService.getEntityMapByIdList(ids);
+        if (resultList!=null && resultList.size()>0){
+            BaseNnte.outConsoleLog("get function count="+resultList.size());
+        }*/
     }
 }

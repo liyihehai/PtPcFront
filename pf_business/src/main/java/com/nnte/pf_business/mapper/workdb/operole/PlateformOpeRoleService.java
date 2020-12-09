@@ -16,7 +16,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
      * 按操作员编码查询操作员用户角色
      * */
     public List<PlateformOpeRoleEx> findRoleListByOpeCode(PlateformOpeRole param){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findRoleListByOpeCode",param);
         }catch (Exception e){
             e.printStackTrace();
@@ -27,7 +27,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
      * 按操作员编码删除操作员角色
      * */
     public Integer deleteRoleListByOpeCode(String opeCode){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteRoleListByOpeCode",opeCode);
         }catch (Exception e){
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
      * 按操作员编码删除操作员角色
      * */
     public Integer deleteRoleListByRoleCode(String roleCode){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteRoleListByRoleCode",roleCode);
         }catch (Exception e){
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
      * 按操作员编码批量增加角色
      * */
     public Integer insertRoleListByOpeCode(String opeCode,String userRoles){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             Map<String,Object> map = new HashMap<>();
             map.put("opeCode",opeCode);
             map.put("userRoles",userRoles);

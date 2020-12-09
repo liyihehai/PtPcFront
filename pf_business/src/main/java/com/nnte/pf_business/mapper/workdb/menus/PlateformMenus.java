@@ -8,7 +8,7 @@ import java.util.Date;
  * 自动代码 请勿更改 <2020-04-20 19:23:21>
  */
 public class PlateformMenus extends BaseModel {
-    @DBPKColum private Long id;
+    @DBPKColum private Integer id;
     private String menuCode;
     private String menuName;
     private Integer menuClass;
@@ -18,8 +18,8 @@ public class PlateformMenus extends BaseModel {
 
     public PlateformMenus(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getMenuCode(){ return menuCode;}
     public void setMenuCode(String  menuCode){ this.menuCode = menuCode;}
     public String  getMenuName(){ return menuName;}

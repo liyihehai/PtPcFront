@@ -14,7 +14,7 @@ public class PlateformMenusService extends BaseService<PlateformMenusDao,Platefo
      * 查询平台所有菜单
      * */
     public List<PlateformMenus> queryAllPlateformMenus(PlateformMenus paramMenu){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryAllPlateformMenus",paramMenu);
         }catch (Exception e){
             e.printStackTrace();

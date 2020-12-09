@@ -4,13 +4,15 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-18 20:07:57>
+ * 自动代码 请勿更改 <2020-06-28 11:07:14>
  */
 public class PlateformMerchantExpand extends BaseModel {
     @DBPKColum private String pmCode;
     private String pmBusiType;
     private String pmCountry;
+    private String pmProvince;
     private String pmCity;
+    private String pmArea;
     private String pmAddress;
     private String pmZipcode;
     private String pmCoordinate;
@@ -42,8 +44,12 @@ public class PlateformMerchantExpand extends BaseModel {
     public void setPmBusiType(String  pmBusiType){ this.pmBusiType = pmBusiType;}
     public String  getPmCountry(){ return pmCountry;}
     public void setPmCountry(String  pmCountry){ this.pmCountry = pmCountry;}
+    public String  getPmProvince(){ return pmProvince;}
+    public void setPmProvince(String  pmProvince){ this.pmProvince = pmProvince;}
     public String  getPmCity(){ return pmCity;}
     public void setPmCity(String  pmCity){ this.pmCity = pmCity;}
+    public String  getPmArea(){ return pmArea;}
+    public void setPmArea(String  pmArea){ this.pmArea = pmArea;}
     public String  getPmAddress(){ return pmAddress;}
     public void setPmAddress(String  pmAddress){ this.pmAddress = pmAddress;}
     public String  getPmZipcode(){ return pmZipcode;}

@@ -4,10 +4,10 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-06-20 09:27:44>
+ * 自动代码 请勿更改 <2020-12-09 15:32:25>
  */
 public class PlateformMerchanApply extends BaseModel {
-    @DBPKColum private Long id;
+    @DBPKColum private Integer id;
     private String pmName;
     private Integer confirmType;
     private String applyPhone;
@@ -45,8 +45,8 @@ public class PlateformMerchanApply extends BaseModel {
 
     public PlateformMerchanApply(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getPmName(){ return pmName;}
     public void setPmName(String  pmName){ this.pmName = pmName;}
     public Integer  getConfirmType(){ return confirmType;}

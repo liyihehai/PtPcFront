@@ -15,7 +15,7 @@ public class PlateformOperatorService extends BaseService<PlateformOperatorDao,P
      * 按条件查询操作员
      * */
     public List<PlateformOperator> queryPlateformOperators(PlateformOperator param){
-        try (connDaoSession cds=this.getDefaultConnDaoSession()){
+        try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryPlateformOperators",param);
         }catch (Exception e){
             e.printStackTrace();

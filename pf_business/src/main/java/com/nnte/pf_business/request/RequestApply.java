@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestApply {
-    private Long id;
+    private Integer id;
     @StringCheck(colName = "商户名称",maxLen = 100,nullValid = false)
     private String pmName;
     @IntegerCheck(colName = "验证方式",inVals = {1,2},nullValid = false)

@@ -7,7 +7,7 @@ import java.util.Date;
  * 自动代码 请勿更改 <2020-06-24 13:45:11>
  */
 public class PlateformMerchant extends BaseModel {
-    @DBPKColum private Long id;
+    @DBPKColum private Integer id;
     private String pmCode;
     private String pmName;
     private String pmShortName;
@@ -18,8 +18,8 @@ public class PlateformMerchant extends BaseModel {
 
     public PlateformMerchant(){}
 
-    public Long  getId(){ return id;}
-    public void setId(Long  id){ this.id = id;}
+    public Integer  getId(){ return id;}
+    public void setId(Integer  id){ this.id = id;}
     public String  getPmCode(){ return pmCode;}
     public void setPmCode(String  pmCode){ this.pmCode = pmCode;}
     public String  getPmName(){ return pmName;}
