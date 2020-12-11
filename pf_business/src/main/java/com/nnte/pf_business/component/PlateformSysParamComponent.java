@@ -1,5 +1,7 @@
 package com.nnte.pf_business.component;
 
+import com.nnte.basebusi.annotation.WatchAttr;
+import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.framework.annotation.WorkDBAspect;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.BaseService;
@@ -18,6 +20,7 @@ import java.util.*;
 /**
  * 平台系统参数组件
  * */
+@WatchAttr(value = 100)
 public class PlateformSysParamComponent implements WatchInterface {
 
     /**

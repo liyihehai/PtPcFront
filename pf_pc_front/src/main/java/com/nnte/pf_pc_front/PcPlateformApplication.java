@@ -23,14 +23,6 @@ public class PcPlateformApplication
      * */
     public final static String MODULE_SYSSETTING = "systemSetting"; //系统设置
     public final static String MODULE_MERCHANT_MANAGE = "merchantManage"; //商户管理
-    private static Map<String,String> moduleMap = new HashMap<>();
-    static {
-        moduleMap.put(MODULE_SYSSETTING,"系统设置");
-        moduleMap.put(MODULE_MERCHANT_MANAGE,"商户管理");
-    }
-    public static Map<String,String> getModuleMap(){
-        return moduleMap;
-    }
     //------------------------------------------------------------
     public static void main(String[] args)
     {

@@ -1,6 +1,8 @@
 package com.nnte.pf_business.component;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
+import com.nnte.basebusi.annotation.WatchAttr;
+import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
@@ -28,7 +30,8 @@ import java.util.*;
 
 @Component
 @BusiLogAttr("Pf_Business")
-public class PfBusinessComponent extends BaseBusiComponent implements WatchInterface{
+@WatchAttr(value = 102)
+public class PfBusinessComponent extends BaseBusiComponent implements WatchInterface {
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
     @Autowired
