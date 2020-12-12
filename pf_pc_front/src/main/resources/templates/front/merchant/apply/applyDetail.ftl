@@ -325,10 +325,10 @@
             $("#applyDetail_applyMemo").val(apply.applyMemo);
             $("#applyDetail_applyState").val(apply.applyState);
             $("#applyDetail_opeName").val(apply.opeName);
-            $("#applyDetail_lockTime").val(apply.lockTime);
+            $("#applyDetail_lockTime").val(globUtil.dateFtt('yyyy-MM-dd hh:mm',new Date(apply.lockTime)));
             $("#applyDetail_checkerCode").val(apply.checkerCode);
             $("#applyDetail_checkerName").val(apply.checkerName);
-            $("#applyDetail_checkTime").val(apply.checkTime);
+            $("#applyDetail_checkTime").val(globUtil.dateFtt('yyyy-MM-dd hh:mm',new Date(apply.checkTime)));
             $(":radio[name='applyDetail_confirmType'][value='"+apply.confirmType+"']").prop('checked',true);
             this.setVerifyInput(apply.confirmType);
             if (!apply.applyContent)

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestMerchant {
-    private Long id;
+    private Integer id;
     @StringCheck(colName = "商户代码",maxLen = 20)
     private String pmCode;
     @StringCheck(colName = "商户名称",maxLen = 100,nullValid = false)

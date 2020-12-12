@@ -25,7 +25,7 @@
     <select id="findPlateformMerchansCustmerList" parameterType="java.util.Map" resultMap="PlateformMerchantResult">
         <include refid="findPlateformMerchansCustmerSql"/>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
-        <if test="start!= null">  limit #{start},#{limit} </if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
     </select>
 
     <select id="findPlateformMerchansCustmerCount"  parameterType="java.util.Map" resultType="java.lang.Integer">

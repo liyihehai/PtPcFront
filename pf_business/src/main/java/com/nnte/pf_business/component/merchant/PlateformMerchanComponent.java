@@ -141,7 +141,7 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
         }
         return ret;
     }
-    public PlateformMerchant getMerchantById(Long id){
+    public PlateformMerchant getMerchantById(Integer id){
         return plateformMerchantService.findModelByKey(id);
     }
 

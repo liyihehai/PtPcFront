@@ -131,7 +131,7 @@ public class SettingController extends BaseController {
             RequestMerchant rMerchant = JsonUtil.jsonToBean(json.toString(), RequestMerchant.class);
             if (rMerchant == null || rMerchant.getId() == null || rMerchant.getId() <= 0)
                 throw new BusiException("未取得商户编号信息");
-            PlateformMerchant merchant = plateformMerchanComponent.getMerchantById(rMerchant.getId());
+               PlateformMerchant merchant = plateformMerchanComponent.getMerchantById(rMerchant.getId());
             if (merchant == null)
                 throw new BusiException("未取得商户信息");
             PlateformMerchantExpand merchantExpand = plateformMerchanComponent.getMerchantExpandByCode(merchant.getPmCode());
