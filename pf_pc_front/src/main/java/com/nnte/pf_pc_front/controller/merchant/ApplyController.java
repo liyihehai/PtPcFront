@@ -14,6 +14,8 @@ import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.mapper.workdb.merchantapply.PlateformMerchanApply;
 import com.nnte.pf_business.request.RequestApply;
 import com.nnte.pf_pc_front.PcPlateformApplication;
+import com.nnte.pf_pc_front.config.AppModelConfig;
+import com.nnte.pf_pc_front.config.SysRoleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,8 +43,8 @@ public class ApplyController extends BaseController {
      * 显示商户申请列表Index页面
      * */
     @ModuleEnter(path = "/merchant/merchantApply/operatorApplyIndex", name="操作员商户申请", desc = "平台商户申请管理，业务操作员功能",
-            sysRole = PfBusinessComponent.PLATEFORM_MERCAHNT_WORKER,roleRuler = "pf-operatorApplyIndex",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_MERCHANT_MANAGE)
+            sysRole = SysRoleConfig.PLATEFORM_MERCAHNT_WORKER,roleRuler = "pf-operatorApplyIndex",
+            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_MERCHANT_MANAGE)
     @RequestMapping(value = "/operatorApplyIndex")
     public ModelAndView operatorApplyIndex(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();
@@ -281,8 +283,8 @@ public class ApplyController extends BaseController {
      * 显示商户申请分配及审核列表Index页面
      * */
     @ModuleEnter(path = "/merchant/merchantApply/applyCheckIndex", name="商户申请分配及审核", desc = "平台商户申请管理，业务管理员功能",
-            sysRole = PfBusinessComponent.PLATEFORM_MERCAHNT_MANAGER,roleRuler = "pf-applyCheckIndex",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_MERCHANT_MANAGE)
+            sysRole = SysRoleConfig.PLATEFORM_MERCAHNT_MANAGER,roleRuler = "pf-applyCheckIndex",
+            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_MERCHANT_MANAGE)
     @RequestMapping(value = "/applyCheckIndex")
     public ModelAndView applyCheckIndex(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();

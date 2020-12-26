@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.base.BaseController;
+import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
@@ -18,6 +19,8 @@ import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
 import com.nnte.pf_pc_front.PcPlateformApplication;
+import com.nnte.pf_pc_front.config.AppModelConfig;
+import com.nnte.pf_pc_front.config.SysRoleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,8 +45,8 @@ public class RoleController extends BaseController {
      * 显示用户角色设置页面
      * */
     @ModuleEnter(path = "/role/roleset", name="角色设置页面", desc = "平台系统角色设置，系统管理员功能",
-            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "pf-roleset",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
+            sysRole = SysRoleConfig.SYS_MANAGER,roleRuler = "pf-roleset",
+            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_SYSSETTING)
     @RequestMapping(value = "/roleset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map=refreshRoles(request);
@@ -123,7 +126,7 @@ public class RoleController extends BaseController {
         setParamMapDataEnv(request,map);
         List<RequestRole> roleList=plateformRoleComponent.queryRequestRoleList();
         map.put("roleList",roleList);
-        List<KeyValue> sysRoleList=PfBusinessComponent.getSystemRoleList();
+        List<KeyValue> sysRoleList= AppRegistry.getSysRoleNameList();
         map.put("sysRoleList",sysRoleList);
         String roleRows=applyRoleRows(request,map);
         map.put("roleRows", roleRows);

@@ -7,11 +7,11 @@ import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.WorkDBAspect;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.BaseService;
-import com.nnte.framework.base.ConnSqlSessionFactory;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.MapUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.entertity.OperatorInfo;
+import com.nnte.pf_business.mapper.workdb.DBPlateform;
 import com.nnte.pf_business.mapper.workdb.merchant.PlateformMerchant;
 import com.nnte.pf_business.mapper.workdb.merchant.PlateformMerchantService;
 import com.nnte.pf_business.mapper.workdb.merchant_expand.PlateformMerchantExpand;
@@ -58,7 +58,7 @@ public class PlateformMerchanComponent extends BaseBusiComponent {
     /**
      * 商户申请通过
      * */
-    @DBSrcTranc(autocommit = false)
+    @DBSrcTranc(value = DBPlateform.DB_NAME ,autocommit = false)
     public Map<String,Object> passMerchantApply(Map<String, Object> paramMap,
                                                 PlateformMerchanApply apply, OperatorInfo oi){
         Map<String, Object> ret = BaseNnte.newMapRetObj();

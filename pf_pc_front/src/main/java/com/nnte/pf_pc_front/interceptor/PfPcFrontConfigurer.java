@@ -14,14 +14,9 @@ public class PfPcFrontConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(pfPcFrontMainInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/","/**/applyVerify","/**/sysRepairing","/**/error",
-                        "/**/resources/**");//添加不拦截路径
+                .addPathPatterns("/**");//添加不拦截路径
         //登录拦截的管理器
         registry.addInterceptor(pfPcFrontNormalInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/","/**/applyVerify","/**/sysRepairing",
-                        "/**/login","/**/loginCheck","/**/priCheck",
-                        "/**/error","/**/resources/**");//添加不拦截路径
+                .addPathPatterns("/**");//添加不拦截路径
     }
 }

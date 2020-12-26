@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component
 public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
@@ -24,8 +25,21 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
     private ConfigInterface appconfig;
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
+
+    private boolean excludePathPatterns(String path){
+        String[] excludes={".*/applyVerify.*",".*/sysRepairing.*",".*/login.*",".*/loginCheck.*",".*/priCheck.*",
+        ".*/error.*",".*/resources/.*"};
+        for(String exclude:excludes){
+            if (Pattern.matches(exclude, path))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (excludePathPatterns(request.getServletPath()))
+            return true;
         //请求进入这个拦截器
         Map<String, Object> envData = (Map)request.getAttribute("envData");
         BaseNnte.outConsoleLog(request.getServletPath());

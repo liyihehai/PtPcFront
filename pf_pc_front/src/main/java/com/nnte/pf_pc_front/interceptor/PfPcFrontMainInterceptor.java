@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component
 public class PfPcFrontMainInterceptor implements HandlerInterceptor {
@@ -20,8 +21,19 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
     private ConfigInterface appconfig;
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
+
+    private boolean excludePathPatterns(String path){
+        String[] excludes={".*/applyVerify.*",".*/sysRepairing.*",".*/error.*",".*/resources/.*"};
+        for(String exclude:excludes){
+            if (Pattern.matches(exclude, path))
+                return true;
+        }
+        return false;
+    }
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (excludePathPatterns(request.getServletPath()))
+            return true;
         //查询系统参数判断系统是否处于维护状态
         String sysRepairing=plateformSysParamComponent.getSingleParams("SYS_REPAIRING", PlateformSysParamComponent.SysparamValCol.VAL_100);
         if (StringUtils.isNotEmpty(sysRepairing) && sysRepairing.equals("1")){

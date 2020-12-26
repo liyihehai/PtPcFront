@@ -17,12 +17,6 @@ public class PcPlateformApplication
      * */
     public final static String App_Code = "PF-PC-MANAGER";
     public final static String App_Name = "平台PC管理端应用";
-    /**
-     * 系统模块定义
-     * 模块定义为可独立交付给客户的一组功能
-     * */
-    public final static String MODULE_SYSSETTING = "systemSetting"; //系统设置
-    public final static String MODULE_MERCHANT_MANAGE = "merchantManage"; //商户管理
     //------------------------------------------------------------
     public static void main(String[] args)
     {

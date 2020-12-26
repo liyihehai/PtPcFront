@@ -15,6 +15,8 @@ import com.nnte.pf_business.mapper.workdb.merchantapply.PlateformMerchanApply;
 import com.nnte.pf_business.request.RequestApply;
 import com.nnte.pf_business.request.RequestMerchant;
 import com.nnte.pf_pc_front.PcPlateformApplication;
+import com.nnte.pf_pc_front.config.AppModelConfig;
+import com.nnte.pf_pc_front.config.SysRoleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,8 +42,8 @@ public class SettingController extends BaseController {
      * 显示商户设置列表Index页面
      * */
     @ModuleEnter(path = "/merchant/merchantSetting/merchantIndex", name="商户设置管理", desc = "平台商户基础信息设置管理，业务操作员功能",
-            sysRole = PfBusinessComponent.PLATEFORM_MERCAHNT_WORKER,roleRuler = "pf-Mer-SettingIndex",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_MERCHANT_MANAGE)
+            sysRole = SysRoleConfig.PLATEFORM_MERCAHNT_WORKER,roleRuler = "pf-Mer-SettingIndex",
+            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_MERCHANT_MANAGE)
     @RequestMapping(value = "/merchantIndex")
     public ModelAndView merchantIndex(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();

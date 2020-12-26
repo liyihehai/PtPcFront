@@ -21,6 +21,8 @@ import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestOpe;
 import com.nnte.pf_business.request.RequestRole;
 import com.nnte.pf_pc_front.PcPlateformApplication;
+import com.nnte.pf_pc_front.config.AppModelConfig;
+import com.nnte.pf_pc_front.config.SysRoleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,8 +49,8 @@ public class OperatorController extends BaseController {
      * 显示操作员设置页面
      * */
     @ModuleEnter(path = "/operator/operatorset", name="操作员设置", desc = "平台系统操作员设置，系统管理员功能",
-            sysRole = PfBusinessComponent.SYS_MANAGER,roleRuler = "pf-operatorset",
-            appCode = PcPlateformApplication.App_Code,moduleCode = PcPlateformApplication.MODULE_SYSSETTING)
+            sysRole = SysRoleConfig.SYS_MANAGER,roleRuler = "pf-operatorset",
+            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_SYSSETTING)
     @RequestMapping(value = "/operatorset")
     public ModelAndView operatorset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();

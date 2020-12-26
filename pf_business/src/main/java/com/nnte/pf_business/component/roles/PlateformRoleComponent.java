@@ -2,6 +2,7 @@ package com.nnte.pf_business.component.roles;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.NumberUtil;
@@ -53,7 +54,6 @@ public class PlateformRoleComponent extends BaseBusiComponent {
         return retList;
     }
     private RequestRole getRequestRoleByPR(PlateformRole pr){
-        Map sysRoleMap=PfBusinessComponent.getSystemRoleMap();
         RequestRole rr = new RequestRole();
         BeanUtils.copyFromSrc(pr,rr);
         String sysrolelist = pr.getSysroleList();
@@ -63,7 +63,7 @@ public class PlateformRoleComponent extends BaseBusiComponent {
             for(String role:roles){
                 if (role.length()>=3){
                     String nRole=role.substring(1,role.length()-1);
-                    String roleName=StringUtils.defaultString(sysRoleMap.get(nRole));
+                    String roleName=StringUtils.defaultString(AppRegistry.getSysRoleName(nRole));
                     if (StringUtils.isNotEmpty(roleName)){
                         if (nameBuf.length()>0)
                             nameBuf.append(",");
