@@ -1,11 +1,10 @@
 package com.nnte.pf_business.mapper.workdb.menus;
-
-import com.nnte.framework.annotation.DBPKColum;
 import com.nnte.framework.base.BaseModel;
+import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-20 19:23:21>
+ * 自动代码 请勿更改 <2022-02-18 14:54:13>
  */
 public class PlateformMenus extends BaseModel {
     @DBPKColum private Integer id;
@@ -15,6 +14,8 @@ public class PlateformMenus extends BaseModel {
     private String parentMenuCode;
     private Integer menuState;
     private Date createTime;
+    private String menuPath;
+    private String menuIcon;
 
     public PlateformMenus(){}
 
@@ -32,4 +33,8 @@ public class PlateformMenus extends BaseModel {
     public void setMenuState(Integer  menuState){ this.menuState = menuState;}
     public Date  getCreateTime(){ return createTime;}
     public void setCreateTime(Date  createTime){ this.createTime = createTime;}
+    public String  getMenuPath(){ return menuPath;}
+    public void setMenuPath(String  menuPath){ this.menuPath = menuPath;}
+    public String  getMenuIcon(){ return menuIcon;}
+    public void setMenuIcon(String  menuIcon){ this.menuIcon = menuIcon;}
 }

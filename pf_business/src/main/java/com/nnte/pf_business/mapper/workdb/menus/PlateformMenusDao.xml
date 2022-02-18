@@ -10,10 +10,12 @@
         <result column="parent_menu_code" property="parentMenuCode"/>
         <result column="menu_state" property="menuState"/>
         <result column="create_time" property="createTime"/>
+        <result column="menu_path" property="menuPath"/>
+        <result column="menu_icon" property="menuIcon"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus">
-        insert into plateform_menus (menu_code ,menu_name ,menu_class ,parent_menu_code ,menu_state ,create_time )
-        values (#{menuCode} ,#{menuName} ,#{menuClass} ,#{parentMenuCode} ,#{menuState} ,#{createTime} )
+        insert into plateform_menus (menu_code ,menu_name ,menu_class ,parent_menu_code ,menu_state ,create_time ,menu_path ,menu_icon )
+        values (#{menuCode} ,#{menuName} ,#{menuClass} ,#{parentMenuCode} ,#{menuState} ,#{createTime} ,#{menuPath} ,#{menuIcon} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMenusResult" parameterType="java.lang.Integer">
         select * from plateform_menus where id=#{id}
@@ -31,6 +33,8 @@
         <if test="parentMenuCode!= null"><![CDATA[parent_menu_code=#{parentMenuCode},]]></if>
         <if test="menuState!= null"><![CDATA[menu_state=#{menuState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="menuPath!= null"><![CDATA[menu_path=#{menuPath},]]></if>
+        <if test="menuIcon!= null"><![CDATA[menu_icon=#{menuIcon},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -45,6 +49,8 @@
             <if test="parentMenuCode!= null"><![CDATA[and t.parent_menu_code = #{parentMenuCode}]]></if>
             <if test="menuState!= null"><![CDATA[and t.menu_state = #{menuState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="menuPath!= null"><![CDATA[and t.menu_path = #{menuPath}]]></if>
+            <if test="menuIcon!= null"><![CDATA[and t.menu_icon = #{menuIcon}]]></if>
         </where>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
     </sql>

@@ -12,10 +12,12 @@
         <result column="fun_state" property="funState"/>
         <result column="create_time" property="createTime"/>
         <result column="fun_component" property="funComponent"/>
+        <result column="fun_path" property="funPath"/>
+        <result column="fun_icon" property="funIcon"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
-        insert into plateform_functions (menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time ,fun_component )
-        values (#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} ,#{funComponent} )
+        insert into plateform_functions (menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time ,fun_component ,fun_path ,fun_icon )
+        values (#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} ,#{funComponent} ,#{funPath} ,#{funIcon} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Integer">
         select * from plateform_functions where id=#{id}
@@ -35,6 +37,8 @@
         <if test="funState!= null"><![CDATA[fun_state=#{funState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
         <if test="funComponent!= null"><![CDATA[fun_component=#{funComponent},]]></if>
+        <if test="funPath!= null"><![CDATA[fun_path=#{funPath},]]></if>
+        <if test="funIcon!= null"><![CDATA[fun_icon=#{funIcon},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -51,6 +55,8 @@
             <if test="funState!= null"><![CDATA[and t.fun_state = #{funState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
             <if test="funComponent!= null"><![CDATA[and t.fun_component = #{funComponent}]]></if>
+            <if test="funPath!= null"><![CDATA[and t.fun_path = #{funPath}]]></if>
+            <if test="funIcon!= null"><![CDATA[and t.fun_icon = #{funIcon}]]></if>
         </where>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
     </sql>
