@@ -11,10 +11,11 @@
         <result column="fun_param" property="funParam"/>
         <result column="fun_state" property="funState"/>
         <result column="create_time" property="createTime"/>
+        <result column="fun_component" property="funComponent"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions">
-        insert into plateform_functions (menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time )
-        values (#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} )
+        insert into plateform_functions (menu_code ,fun_code ,fun_name ,auth_code ,fun_param ,fun_state ,create_time ,fun_component )
+        values (#{menuCode} ,#{funCode} ,#{funName} ,#{authCode} ,#{funParam} ,#{funState} ,#{createTime} ,#{funComponent} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformFunctionsResult" parameterType="java.lang.Integer">
         select * from plateform_functions where id=#{id}
@@ -33,6 +34,7 @@
         <if test="funParam!= null"><![CDATA[fun_param=#{funParam},]]></if>
         <if test="funState!= null"><![CDATA[fun_state=#{funState},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="funComponent!= null"><![CDATA[fun_component=#{funComponent},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -48,6 +50,7 @@
             <if test="funParam!= null"><![CDATA[and t.fun_param = #{funParam}]]></if>
             <if test="funState!= null"><![CDATA[and t.fun_state = #{funState}]]></if>
             <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="funComponent!= null"><![CDATA[and t.fun_component = #{funComponent}]]></if>
         </where>
         <if test="sort!=null">order by t.${sort} ${dir}</if>
     </sql>
