@@ -1,16 +1,19 @@
 package com.nnte.pf_business.component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.WatchAttr;
 import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseBusiComponent;
-import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
-import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
@@ -24,6 +27,7 @@ import com.nnte.pf_business.mapper.workdb.menus.PlateformMenusService;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorService;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +53,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
     private FdfsClientMgrComponent fdfsClientMgrComponent;
 
     public final static String TOKEN_MERCHANT_CODE = "PlateformPCFront";
+    private final String routePath = "routePath";
 
     public JwtUtils createTokenJwt() {
         String secretKey = plateformSysParamComponent.getSingleParamV100("SYS_SECRETKEY");
@@ -157,6 +162,77 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             e.printStackTrace();
         }
         return ret;
+    }
+
+    private void loadMenuNodeSub(List<PFMenu> subMenuList,ObjectNode parentNodeMenu,boolean isForEdit) throws BusiException{
+        ArrayNode childrenMenuArray = JsonUtil.newJsonNode().arrayNode();
+        for(PFMenu menu:subMenuList) {
+            ObjectNode nodeMenu = createNodeFromMenu(menu,isForEdit);
+            nodeMenu.put(routePath,parentNodeMenu.get(routePath).textValue()+"/"+menu.getMenuName());
+            if (menu.getSubMenuList() != null && menu.getSubMenuList().size() > 0) {
+                loadMenuNodeSub(menu.getSubMenuList(), nodeMenu,isForEdit);
+            } else if (menu.getFunctionList() != null && menu.getFunctionList().size() > 0) {
+                loadMenuNodeFunc(menu.getFunctionList(), nodeMenu,isForEdit);
+            }
+        }
+        parentNodeMenu.put("children",childrenMenuArray);
+    }
+
+    private void loadMenuNodeFunc(List<PlateformFunctions> menuFuncList,ObjectNode parentNodeMenu,boolean isForEdit) throws BusiException{
+        ArrayNode childrenFuncArray = JsonUtil.newJsonNode().arrayNode();
+        for(PlateformFunctions func:menuFuncList){
+            ObjectNode nodeFunc;
+            if (isForEdit){
+                nodeFunc = JsonUtil.getObjectNodefromBean(func);
+                if (nodeFunc==null)
+                    throw new BusiException(1003,"菜单对象生成节点信息错误", BusiException.ExpLevel.ERROR);
+            }else {
+                nodeFunc = JsonUtil.newJsonNode();
+                nodeFunc.put("name", func.getFunName());
+                nodeFunc.put("path", func.getFunPath());
+                nodeFunc.put("icon", func.getFunIcon());
+            }
+            nodeFunc.put(routePath,parentNodeMenu.get(routePath).textValue()+"/"+func.getFunName());
+            childrenFuncArray.add(nodeFunc);
+        }
+        parentNodeMenu.put("children",childrenFuncArray);
+    }
+
+    private ObjectNode createNodeFromMenu(PFMenu menu,boolean isForEdit) throws BusiException{
+        ObjectNode nodeMenu;
+        if (isForEdit){
+            PlateformMenus pm = new PlateformMenus();
+            BeanUtils.copyProperties(menu,pm);
+            nodeMenu = JsonUtil.getObjectNodefromBean(pm);
+            if (nodeMenu==null)
+                throw new BusiException(1003,"菜单对象生成节点信息错误", BusiException.ExpLevel.ERROR);
+        }else {
+            nodeMenu = JsonUtil.newJsonNode();
+            nodeMenu.put("name", menu.getMenuName());
+            nodeMenu.put("path", menu.getMenuPath());
+            nodeMenu.put("icon", menu.getMenuIcon());
+        }
+        return nodeMenu;
+    }
+    /**
+     * 在服务器端将菜单及功能树转化前端需要的菜单结构
+     * parentNodeMenu 初始化为 JsonUtil.newJsonNode().arrayNode();
+     * */
+    public ArrayNode loadMenuFuncNode(List<PFMenu> menuFuncList,boolean isForEdit) throws BusiException{
+        ArrayNode childrenMenuArray = JsonUtil.newJsonNode().arrayNode();
+        if (menuFuncList==null || menuFuncList.size()<=0)
+            return childrenMenuArray;
+        for(PFMenu menu:menuFuncList){
+            ObjectNode nodeMenu= createNodeFromMenu(menu,isForEdit);
+            nodeMenu.put(routePath,menu.getMenuName());
+            if (menu.getSubMenuList()!=null && menu.getSubMenuList().size()>0) {
+                loadMenuNodeSub(menu.getSubMenuList(),nodeMenu,isForEdit);
+            }else if (menu.getFunctionList()!=null && menu.getFunctionList().size()>0){
+                loadMenuNodeFunc(menu.getFunctionList(),nodeMenu,isForEdit);
+            }
+            childrenMenuArray.add(nodeMenu);
+        }
+        return childrenMenuArray;
     }
 
     /**

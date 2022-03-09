@@ -68,6 +68,9 @@ public class SyssetController extends BaseController {
         modelAndView.setViewName("front/sysset/menu/menuset");
         return modelAndView;
     }
+
+
+
     @RequestMapping(value = "/refreshMenus")
     @ResponseBody
     public Map<String,Object> refreshMenus(HttpServletRequest request){

@@ -23,7 +23,12 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
     private PlateformSysParamComponent plateformSysParamComponent;
 
     private boolean excludePathPatterns(String path){
-        String[] excludes={".*/applyVerify.*",".*/sysRepairing.*",".*/error.*",".*/resources/.*"};
+        String[] excludes={ ".*/applyVerify.*",
+                            ".*/sysRepairing.*",
+                            ".*/error.*",
+                            ".*/resources/.*",
+                            ".*/api/priCheck/.*",
+                            ".*/api/login/account/.*"};
         for(String exclude:excludes){
             if (Pattern.matches(exclude, path))
                 return true;

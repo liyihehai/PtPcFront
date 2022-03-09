@@ -27,8 +27,15 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
     private PfBusinessComponent pfBusinessComponent;
 
     private boolean excludePathPatterns(String path){
-        String[] excludes={".*/applyVerify.*",".*/sysRepairing.*",".*/login.*",".*/loginCheck.*",".*/priCheck.*",
-        ".*/error.*",".*/resources/.*"};
+        String[] excludes={ ".*/applyVerify.*",
+                            ".*/sysRepairing.*",
+                            ".*/login.*",
+                            ".*/loginCheck.*",
+                            ".*/priCheck.*",
+                            ".*/error.*",
+                            ".*/resources/.*",
+                            ".*/api/priCheck/.*",
+                            ".*/api/login/account/.*"};
         for(String exclude:excludes){
             if (Pattern.matches(exclude, path))
                 return true;
@@ -49,7 +56,7 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
             String loginIp=BaseController.getIpAddr(request);
             String token= StringUtils.defaultString(BaseController.getRequestParam(request,null,"token"));
             if (StringUtils.isEmpty(token)) {
-                token = request.getHeader("Postman-Token");
+                token = request.getHeader("AjaxToken");
                 enterType = 1; //Ajax进入
             }
             try {
@@ -60,27 +67,25 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
                 pfBusinessComponent.checkRequestModule(oi,request.getServletPath());
                 return true;
             }catch (BusiException be){
-                if (be.getExpCode().equals(1010)) {
-                    BaseNnte.setRetFalse(retMap, 1010, be.getMessage());
+                if (enterType==0) {
+                    BaseNnte.setRetFalse(retMap, be.getExpCode(), be.getMessage());
                     retMap.put("message", be.getMessage());
-                    if (enterType==0)
-                        BaseController.ResponsByFtl(request, response, retMap, "/templates/front/moduleFailed.ftl");
-                        //    BaseController.ResponsByFtl(request, response, retMap, "/templates/front/jumplogin.ftl");
-                    else
-                        BaseController.printJsonObject(response,retMap);
-                    return false;
+                    BaseController.ResponsByFtl(request, response, retMap, "/templates/front/moduleFailed.ftl");
                 }
-                BaseNnte.setRetFalse(retMap,1001,be.getMessage());
+                else
+                    BaseController.printJsonObject(response,BaseController.error(be.getExpCode().toString(),be.getMessage()));
+                return false;
             }catch (Exception e){
                 BaseNnte.setRetFalse(retMap,1001,"身份验证错误");
+                if (enterType==0) {
+                    BaseNnte.setRetFalse(retMap, 1001, e.getMessage());
+                    retMap.put("message", e.getMessage());
+                    BaseController.ResponsByFtl(request, response, retMap, "/templates/front/moduleFailed.ftl");
+                }
+                else
+                    BaseController.printJsonObject(response,BaseController.error("1001",e.getMessage()));
+                return false;
             }
-            retMap.put("message",retMap.get("msg"));
-            request.setAttribute("map",retMap);
-            if (enterType==0)
-                BaseController.ResponsByFtl(request, response, retMap, "/templates/front/jumplogin.ftl");
-            else
-                BaseController.printJsonObject(response,retMap);
-            return false;
         }
         return false;        //有的话就继续操作
     }
