@@ -14,12 +14,19 @@ public class RequestFunc {
     private String funCode;
     @StringCheck(colName = "功能名称",maxLen = 50)
     private String funName;
-    @StringCheck(colName = "功能路径",maxLen = 200)
-    private String funPath;
+    @StringCheck(colName = "权限代码",maxLen = 30)
+    private String authCode;
     @StringCheck(colName = "功能参数",maxLen = 200)
     private String funParam;
     @IntegerCheck(colName = "功能状态")
     private Integer funState;
+    @StringCheck(colName = "功能组件",maxLen = 200)
+    private String funComponent;
+    @StringCheck(colName = "功能路径",maxLen = 128)
+    private String funPath;
+    @StringCheck(colName = "功能图标",maxLen = 64)
+    private String funIcon;
+
     private Integer opeFunction;        //0或null表示非操作员功能，1表示操作员功能
     private Integer roleFunction;       //0或null表示非角色功能，1表示角色功能
     private Integer sysRoleFunction;    //0或null表示非系统角色功能，1表示系统角色功能

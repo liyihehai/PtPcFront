@@ -18,4 +18,8 @@ public class RequestMenu {
     private String parentMenuCode;
     @IntegerCheck(colName = "菜单状态")
     private Integer menuState;
+    @StringCheck(colName = "菜单路径",maxLen = 128)
+    private String menuPath;
+    @StringCheck(colName = "菜单图标",maxLen = 64)
+    private String menuIcon;
 }

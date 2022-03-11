@@ -171,15 +171,21 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             nodeMenu.put(routePath,parentNodeMenu.get(routePath).textValue()+"/"+menu.getMenuName());
             if (menu.getSubMenuList() != null && menu.getSubMenuList().size() > 0) {
                 loadMenuNodeSub(menu.getSubMenuList(), nodeMenu,isForEdit);
-            } else if (menu.getFunctionList() != null && menu.getFunctionList().size() > 0) {
+            }
+            if (menu.getFunctionList() != null && menu.getFunctionList().size() > 0) {
                 loadMenuNodeFunc(menu.getFunctionList(), nodeMenu,isForEdit);
             }
+            childrenMenuArray.add(nodeMenu);
         }
         parentNodeMenu.put("children",childrenMenuArray);
     }
 
     private void loadMenuNodeFunc(List<PlateformFunctions> menuFuncList,ObjectNode parentNodeMenu,boolean isForEdit) throws BusiException{
-        ArrayNode childrenFuncArray = JsonUtil.newJsonNode().arrayNode();
+        ArrayNode childrenFuncArray;
+        if (parentNodeMenu.get("children")!=null)
+            childrenFuncArray=(ArrayNode)parentNodeMenu.get("children");
+        else
+            childrenFuncArray = JsonUtil.newJsonNode().arrayNode();
         for(PlateformFunctions func:menuFuncList){
             ObjectNode nodeFunc;
             if (isForEdit){
@@ -227,7 +233,8 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             nodeMenu.put(routePath,menu.getMenuName());
             if (menu.getSubMenuList()!=null && menu.getSubMenuList().size()>0) {
                 loadMenuNodeSub(menu.getSubMenuList(),nodeMenu,isForEdit);
-            }else if (menu.getFunctionList()!=null && menu.getFunctionList().size()>0){
+            }
+            if (menu.getFunctionList()!=null && menu.getFunctionList().size()>0){
                 loadMenuNodeFunc(menu.getFunctionList(),nodeMenu,isForEdit);
             }
             childrenMenuArray.add(nodeMenu);
@@ -297,49 +304,39 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             throw new BusiException(1010, "模块权限校验失败(" + e.getMessage() + ")", BusiException.ExpLevel.WARN);
         }
     }
+    /**
+     * 取得父菜单对象
+     * */
+    private PFMenu getParenMenu(List<PFMenu> root,String parentMenuCode){
+        for(PFMenu menu:root){
+            if (menu.getMenuCode().equals(parentMenuCode))
+                return menu;
+            if (menu.getSubMenuList()!=null && menu.getSubMenuList().size()>0){
+                PFMenu subMenu=getParenMenu(menu.getSubMenuList(),parentMenuCode);
+                if (subMenu!=null)
+                    return subMenu;
+            }
+        }
+        return null;
+    }
 
     /**
-     * 装载菜单定义
+     * 按菜单等级顺序装载菜单定义，并将功能挂载到菜单
      */
-    private void loadAllMenus(List<PFMenu> root, List<PlateformMenus> list,
+    private void loadMenuAndFunction(List<PFMenu> root, List<PlateformMenus> list,
                               Map<String, List<PlateformFunctions>> funcMap) {
-        while (list.size() > 0) {
-            PFMenu pfMenu = new PFMenu(list.get(0));
-            if (root.size() == 0) {
+        for(PlateformMenus menu:list){
+            if (menu.getMenuClass().equals(1)){
+                //如果菜单等级为1，表示是顶级菜单
+                PFMenu pfMenu = new PFMenu(menu);
                 mountFunctionToMenu(funcMap, pfMenu);
                 root.add(pfMenu);
-                list.remove(0);
-            } else {
-                PFMenu lastBroMenu = root.get(root.size() - 1);
-                if (lastBroMenu.getParentMenuCode().equals(pfMenu.getParentMenuCode())) {
-                    //如果和最后的菜单有相同父菜单，表示是要么是兄弟菜单，要么是子菜单
-                    if (lastBroMenu.getMenuClass().equals(pfMenu.getMenuClass())) {
-                        //如果是兄弟菜单
-                        mountFunctionToMenu(funcMap, pfMenu);
-                        root.add(pfMenu);
-                        list.remove(0);
-                        continue;
-                    } else {
-                        //如果是下级菜单(不可能是上级菜单)
-                        loadAllMenus(lastBroMenu.getSubMenuList(), list, funcMap);
-                        continue;
-                    }
-                } else {
-                    //如果父菜单不同，判断是否是同级菜单
-                    if (pfMenu.getMenuClass().equals(lastBroMenu.getMenuClass())) {
-                        //如果是同级菜单，表示是兄弟菜单
-                        mountFunctionToMenu(funcMap, pfMenu);
-                        root.add(pfMenu);
-                        list.remove(0);
-                        continue;
-                    } else {
-                        //如果不是同级菜单，判断是否是子菜单，否则应返回上级处理
-                        if (pfMenu.getParentMenuCode().equals(lastBroMenu.getMenuCode())) {
-                            loadAllMenus(lastBroMenu.getSubMenuList(), list, funcMap);
-                            continue;
-                        }
-                        return;
-                    }
+            }else{
+                PFMenu parentMenu = getParenMenu(root,menu.getParentMenuCode());
+                if (parentMenu!=null){
+                    PFMenu pfMenu = new PFMenu(menu);
+                    mountFunctionToMenu(funcMap, pfMenu);
+                    parentMenu.getSubMenuList().add(pfMenu);
                 }
             }
         }
@@ -355,12 +352,12 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             PlateformMenus paramMenu = new PlateformMenus();
             if (menuState != null)
                 paramMenu.setMenuState(menuState);
-            List<PlateformMenus> list = plateformMenusService.queryAllPlateformMenus(paramMenu);
+            List<PlateformMenus> list = plateformMenusService.queryPMenusOrderByClass(paramMenu);
             if (list == null || list.size() <= 0)
                 return null;
             List<PFMenu> menuFuncList = new ArrayList();
             Map<String, List<PlateformFunctions>> funcMap = loadOperatorFunctions(ope, null);//菜单装载功能
-            loadAllMenus(menuFuncList, list, funcMap);
+            loadMenuAndFunction(menuFuncList,list,funcMap);
             return menuFuncList;
         }
         return null;

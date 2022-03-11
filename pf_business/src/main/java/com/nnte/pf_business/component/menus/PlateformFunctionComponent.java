@@ -5,9 +5,7 @@ import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.framework.base.BaseNnte;
-import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.StringUtils;
-import com.nnte.pf_business.entertity.PFFunction;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
 import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
@@ -78,6 +76,8 @@ public class PlateformFunctionComponent implements WatchInterface {
             newMenu.setMenuName(menu.getMenuName());
             newMenu.setCreateTime(new Date());
             newMenu.setMenuState(menu.getMenuState());
+            newMenu.setMenuPath(menu.getMenuPath());
+            newMenu.setMenuIcon(menu.getMenuIcon());
             Integer count=plateformMenusService.addModel(newMenu);
             if (count!=null && count.equals(1)){
                 BaseNnte.setRetTrue(retMap,"新增菜单信息成功");
@@ -118,6 +118,8 @@ public class PlateformFunctionComponent implements WatchInterface {
             updateMenu.setId(srcMenu.getId());
             updateMenu.setMenuName(menu.getMenuName());
             updateMenu.setMenuState(menu.getMenuState());
+            updateMenu.setMenuPath(menu.getMenuPath());
+            updateMenu.setMenuIcon(menu.getMenuIcon());
             Integer count=plateformMenusService.updateModel(updateMenu);
             if (count!=null && count.equals(1)){
                 BaseNnte.setRetTrue(retMap,"更改菜单信息成功");
@@ -320,6 +322,8 @@ public class PlateformFunctionComponent implements WatchInterface {
             newFunc.setFunParam(func.getFunParam());
             newFunc.setCreateTime(new Date());
             newFunc.setFunState(func.getFunState());
+            newFunc.setFunPath(func.getFunPath());
+            newFunc.setFunIcon(func.getFunIcon());
             Integer count=plateformFunctionsService.addModel(newFunc);
             if (count!=null && count.equals(1)){
                 BaseNnte.setRetTrue(retMap,"新增功能信息成功");
@@ -338,6 +342,8 @@ public class PlateformFunctionComponent implements WatchInterface {
             updateFunc.setAuthCode(menter.getRoleRuler());
             updateFunc.setFunParam(func.getFunParam());
             updateFunc.setFunState(func.getFunState());
+            updateFunc.setFunPath(func.getFunPath());
+            updateFunc.setFunIcon(func.getFunIcon());
             Integer count=plateformFunctionsService.updateModel(updateFunc);
             if (count!=null && count.equals(1)){
                 BaseNnte.setRetTrue(retMap,"更改功能菜单信息成功");
@@ -350,20 +356,13 @@ public class PlateformFunctionComponent implements WatchInterface {
     /**
      * 查询指定状态的功能列表，如果状态为null,查询所有状态的功能列表
      * */
-    public List<PFFunction> queryPlateformFunctionList(Integer funState){
+    public List<PlateformFunctions> queryPlateformFunctionList(Integer funState){
         PlateformFunctions func = new PlateformFunctions();
         func.setFunState(funState);
         List<PlateformFunctions> list= plateformFunctionsService.queryAllPlateformFunctions(func);
         if (list==null || list.size()<=0)
             return null;
-        List<PFFunction> retList = new ArrayList<>();
-        list.stream().forEach(e->{
-            PFFunction pff = new PFFunction();
-            BeanUtils.copyFromSrc(e,pff);
-            pff.setFunPath(BaseBusiComponent.getPathByRuler(e.getAuthCode()));
-            retList.add(pff);
-        });
-        return retList;
+        return list;
     }
 
     @Override

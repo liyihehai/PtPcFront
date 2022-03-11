@@ -11,11 +11,11 @@ public class PlateformMenusService extends BaseService<PlateformMenusDao,Platefo
         super(PlateformMenusDao.class);
     }
     /**
-     * 查询平台所有菜单
+     * 按菜单等级查询所有菜单
      * */
-    public List<PlateformMenus> queryAllPlateformMenus(PlateformMenus paramMenu){
+    public List<PlateformMenus> queryPMenusOrderByClass(PlateformMenus paramMenu){
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
-            return cds.getSqlSession().selectList("queryAllPlateformMenus",paramMenu);
+            return cds.getSqlSession().selectList("queryPMenusOrderByClass",paramMenu);
         }catch (Exception e){
             e.printStackTrace();
             return null;
