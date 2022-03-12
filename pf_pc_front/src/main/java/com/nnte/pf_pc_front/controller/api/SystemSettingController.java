@@ -119,7 +119,6 @@ public class SystemSettingController extends BaseController {
                 return error("1002", "菜单代码不合法");
             }
             Map<String, Object> retMap = plateformFunctionComponent.deleteMenuByCode(rMenu.getMenuCode());
-            ;
             if (BaseNnte.getRetSuc(retMap))
                 return success("删除菜单信息成功!");
             throw new BusiException(NumberDefUtil.getDefInteger(retMap.get("code")),

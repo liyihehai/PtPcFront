@@ -172,7 +172,12 @@ public class PlateformFunctionComponent implements WatchInterface {
         List<PlateformMenus> list=getSubMenusByParentCode(parentMenuCode);
         if (list==null || list.size()<=0)
             return 0;
-        return list.size();
+        int count=0;
+        for(PlateformMenus menu:list){
+            if (!menu.getMenuCode().equals(parentMenuCode))
+                count++;
+        }
+        return count;
     }
     /**
      * 查询子功能列表
