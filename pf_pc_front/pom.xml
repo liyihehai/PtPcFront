@@ -5,7 +5,7 @@
     <groupId>com.nnte.PlateForm</groupId>
     <artifactId>pf_pc_front</artifactId>
     <version>1.0.1</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>pf_pc_front</name>
     <description>nnte PlateForm pf_pc_front model for Spring Boot</description>
 
@@ -34,9 +34,28 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.0</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <mainClass>api.ProviderApplication</mainClass>
+                    <fork>true</fork>
+                    <!--增加jvm参数-->
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                    <!--指定入口类-->
+                    <mainClass>com.nnte.pf_pc_front.PcPlateformApplication</mainClass>
+
+                </configuration>
             </plugin>
             <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
             <plugin>

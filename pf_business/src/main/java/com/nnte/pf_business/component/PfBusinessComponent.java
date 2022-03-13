@@ -1,8 +1,5 @@
 package com.nnte.pf_business.component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
@@ -12,6 +9,7 @@ import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
+import com.nnte.framework.annotation.MybatisXmlMapper;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.utils.*;
@@ -36,6 +34,7 @@ import java.util.*;
 @Component
 @BusiLogAttr("Pf_Business")
 @WatchAttr(value = 102)
+@MybatisXmlMapper("com.nnte.pf_business.mapper.workdb")
 public class PfBusinessComponent extends BaseBusiComponent implements WatchInterface {
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;

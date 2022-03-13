@@ -88,8 +88,7 @@ public class PcPlateformConfig extends BaseBusiComponent
         }
         //------------------------
         BaseBusiComponent.logInfo(this,"初始化工作数据库连接数据源......");
-        BaseBusiComponent.createDataBaseSource(PfBusinessComponent.class,
-                dbSchemaPostgreSQL, WorkDBConfig.DB_NAME,WorkDBConfig.MAPPER_PATH,
+        BaseBusiComponent.createDataBaseSource(dbSchemaPostgreSQL, WorkDBConfig.DB_NAME,
                 true,workDBConfig);
         //--------装载系统模块入口--------------
         BaseBusiComponent.loadSystemFuntionEnters();

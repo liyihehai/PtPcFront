@@ -11,5 +11,4 @@ import org.springframework.stereotype.Component;
 @Component
 public class WorkDBConfig extends DBSrcConfig {
     public final static String DB_NAME = DBPlateform.DB_NAME; //定义数据源名称
-    public final static String MAPPER_PATH = DBPlateform.MAPPER_PATH;    //扫描路径
 }

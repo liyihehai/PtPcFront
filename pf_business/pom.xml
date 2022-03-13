@@ -66,12 +66,14 @@
                     <include>**/*.xml</include>
                 </includes>
             </resource>
+            <!--
             <resource>
                 <directory>classpath</directory>
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
             </resource>
+            -->
         </resources>
         <plugins>
             <plugin>
