@@ -4,6 +4,7 @@ import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseBusiComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.NumberUtil;
 import com.nnte.framework.utils.StringUtils;
@@ -53,6 +54,21 @@ public class PlateformRoleComponent extends BaseBusiComponent {
         }
         return retList;
     }
+
+    public PageData<RequestRole> queryRoleListPage(Map<String,Object> paramMap, Integer pageNo, Integer pageSize){
+        PageData<RequestRole> retPd = new PageData<>();
+        PageData<PlateformRole> pageData=plateformRoleService.findRoleListPage(paramMap,pageNo,pageSize);
+        retPd.setSuccess(pageData.isSuccess());
+        retPd.setTotal(pageData.getTotal());
+        List<RequestRole> rList = new ArrayList<>();
+        for(PlateformRole pfr:pageData.getData()){
+            RequestRole rr = getRequestRoleByPR(pfr);
+            rList.add(rr);
+        }
+        retPd.setData(rList);
+        return retPd;
+    }
+
     private RequestRole getRequestRoleByPR(PlateformRole pr){
         RequestRole rr = new RequestRole();
         BeanUtils.copyFromSrc(pr,rr);

@@ -44,9 +44,6 @@ public class RoleController extends BaseController {
     /**
      * 显示用户角色设置页面
      * */
-    @ModuleEnter(path = "/role/roleset", name="角色设置页面", desc = "平台系统角色设置，系统管理员功能",
-            sysRole = SysRoleConfig.SYS_MANAGER,roleRuler = "pf-roleset",
-            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_SYSSETTING)
     @RequestMapping(value = "/roleset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map=refreshRoles(request);

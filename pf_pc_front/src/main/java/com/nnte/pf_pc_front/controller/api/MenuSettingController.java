@@ -34,8 +34,8 @@ import java.util.Map;
 
 @CrossOrigin
 @Controller
-@RequestMapping(value = "/api/systemSetting")
-public class SystemSettingController extends BaseController {
+@RequestMapping(value = "/api/menuSetting")
+public class MenuSettingController extends BaseController {
 
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
@@ -44,7 +44,7 @@ public class SystemSettingController extends BaseController {
     @Autowired
     private PlateformOperatorComponent plateformOperatorComponent;
 
-    public SystemSettingController() {
+    public MenuSettingController() {
         this.setLoggerName("pf_business");
     }
 

@@ -6,4 +6,6 @@
         select * from plateform_role
         where role_code in (select role_code from plateform_ope_role where ope_code=#{_parameter})
     </select>
+
+
 </mapper>
