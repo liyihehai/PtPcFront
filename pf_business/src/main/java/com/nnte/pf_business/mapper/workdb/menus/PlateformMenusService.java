@@ -1,6 +1,7 @@
 package com.nnte.pf_business.mapper.workdb.menus;
 
 import com.nnte.framework.base.BaseService;
+import com.nnte.framework.utils.LogUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class PlateformMenusService extends BaseService<PlateformMenusDao,Platefo
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryPMenusOrderByClass",paramMenu);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }

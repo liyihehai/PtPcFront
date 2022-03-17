@@ -1,6 +1,7 @@
 package com.nnte.pf_business.mapper.workdb.merchantapply;
 
 import com.nnte.framework.base.BaseService;
+import com.nnte.framework.utils.LogUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findPlateformMerchanApplysCustmerList",paramMap);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -25,7 +26,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findPlateformMerchanApplysCustmerCount",paramMap);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }

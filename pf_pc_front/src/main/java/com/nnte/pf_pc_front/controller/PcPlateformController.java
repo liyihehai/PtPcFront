@@ -197,7 +197,7 @@ public class PcPlateformController extends BaseController {
             ret.put("bytes",bytes);
             BaseNnte.setRetTrue(ret,  "取得上传的文件内容成功");
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.logExp(e);
             BaseNnte.setRetFalse(ret, 1003, "不能取得上传的文件内容");
             return ret;
         }

@@ -1,6 +1,7 @@
 package com.nnte.pf_business.mapper.workdb.functions;
 
 import com.nnte.framework.base.BaseService;
+import com.nnte.framework.utils.LogUtil;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryAllPlateformFunctions",param);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -32,7 +33,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteFunctionsByOpeCode",opeCode);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -46,7 +47,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
             map.put("functions",functions);
             return cds.getSqlSession().insert("insertFunctionsByOpeCode",map);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -58,7 +59,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findFunctionsByOpeCode",ope);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -70,7 +71,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findFunctionsByRoleCode",role);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -81,7 +82,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteFunctionsByRoleCode",roleCode);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -95,7 +96,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
             map.put("functions",functions);
             return cds.getSqlSession().insert("insertFunctionsByRoleCode",map);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -106,7 +107,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findFunctionsBySysRoleCode",sysRoleCodeList);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -117,7 +118,7 @@ public class PlateformFunctionsService extends BaseService<PlateformFunctionsDao
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findFunctionsByOpeRoles",ope);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }

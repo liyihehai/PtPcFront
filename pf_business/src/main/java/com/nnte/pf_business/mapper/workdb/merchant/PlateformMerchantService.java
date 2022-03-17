@@ -1,6 +1,7 @@
 package com.nnte.pf_business.mapper.workdb.merchant;
 
 import com.nnte.framework.base.BaseService;
+import com.nnte.framework.utils.LogUtil;
 import com.nnte.pf_business.mapper.workdb.merchantapply.PlateformMerchanApply;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findMaxMerchantCode");
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -28,7 +29,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findPlateformMerchansCustmerList",paramMap);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }
@@ -37,7 +38,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findPlateformMerchansCustmerCount",paramMap);
         }catch (Exception e){
-            e.printStackTrace();
+            LogUtil.logExp(e);
             return null;
         }
     }

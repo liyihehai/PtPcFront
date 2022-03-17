@@ -158,7 +158,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             BaseNnte.setRetFalse(ret, 1002, be.getMessage());
         } catch (Exception e) {
             BaseNnte.setRetFalse(ret, 9999, e.getMessage());
-            e.printStackTrace();
+            LogUtil.logExp(e);
         }
         return ret;
     }
@@ -190,7 +190,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             if (isForEdit){
                 nodeFunc = JsonUtil.getObjectNodefromBean(func);
                 if (nodeFunc==null)
-                    throw new BusiException(1003,"菜单对象生成节点信息错误", BusiException.ExpLevel.ERROR);
+                    throw new BusiException(1003,"菜单对象生成节点信息错误");
             }else {
                 nodeFunc = JsonUtil.newJsonNode();
                 nodeFunc.put("name", func.getFunName());
@@ -210,7 +210,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             BeanUtils.copyProperties(menu,pm);
             nodeMenu = JsonUtil.getObjectNodefromBean(pm);
             if (nodeMenu==null)
-                throw new BusiException(1003,"菜单对象生成节点信息错误", BusiException.ExpLevel.ERROR);
+                throw new BusiException(1003,"菜单对象生成节点信息错误");
         }else {
             nodeMenu = JsonUtil.newJsonNode();
             nodeMenu.put("name", menu.getMenuName());
@@ -267,7 +267,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             }
             ret.put("OperatorInfo", opeInfo);
         } catch (Exception e) {
-            throw new BusiException(e,1009, BusiException.ExpLevel.WARN);
+            throw new BusiException(e,1009, LogUtil.LogLevel.error);
         }
         return ret;
     }
@@ -300,7 +300,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
                 }
             }
         } catch (Exception e) {
-            throw new BusiException(1010, "模块权限校验失败(" + e.getMessage() + ")", BusiException.ExpLevel.WARN);
+            throw new BusiException(1010, "模块权限校验失败(" + e.getMessage() + ")", LogUtil.LogLevel.error);
         }
     }
     /**

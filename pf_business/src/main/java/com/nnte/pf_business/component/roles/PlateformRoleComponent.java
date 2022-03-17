@@ -57,7 +57,7 @@ public class PlateformRoleComponent extends BaseBusiComponent {
 
     public PageData<RequestRole> queryRoleListPage(Map<String,Object> paramMap, Integer pageNo, Integer pageSize){
         PageData<RequestRole> retPd = new PageData<>();
-        PageData<PlateformRole> pageData=plateformRoleService.findRoleListPage(paramMap,pageNo,pageSize);
+        PageData<PlateformRole> pageData=plateformRoleService.getListPageData(paramMap,pageNo,pageSize);
         retPd.setSuccess(pageData.isSuccess());
         retPd.setTotal(pageData.getTotal());
         List<RequestRole> rList = new ArrayList<>();

@@ -44,9 +44,6 @@ public class MenuSettingController extends BaseController {
     @Autowired
     private PlateformOperatorComponent plateformOperatorComponent;
 
-    public MenuSettingController() {
-        this.setLoggerName("pf_business");
-    }
 
     @ModuleEnter(path = "/sysset/menuList", name = "菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能",
             roleRuler = "pf-menuset", appCode = PcPlateformApplication.App_Code,
@@ -99,7 +96,7 @@ public class MenuSettingController extends BaseController {
             if (BaseNnte.getRetSuc(retMap))
                 return success("保存菜单信息成功!");
             throw new BusiException(NumberDefUtil.getDefInteger(retMap.get("code")),
-                    StringUtils.defaultString(retMap.get("msg")), BusiException.ExpLevel.ERROR);
+                    StringUtils.defaultString(retMap.get("msg")));
         } catch (Exception e) {
             return onException(e);
         }
@@ -122,7 +119,7 @@ public class MenuSettingController extends BaseController {
             if (BaseNnte.getRetSuc(retMap))
                 return success("删除菜单信息成功!");
             throw new BusiException(NumberDefUtil.getDefInteger(retMap.get("code")),
-                    StringUtils.defaultString(retMap.get("msg")), BusiException.ExpLevel.ERROR);
+                    StringUtils.defaultString(retMap.get("msg")));
         } catch (Exception e) {
             return onException(e);
         }
@@ -145,7 +142,7 @@ public class MenuSettingController extends BaseController {
             if (BaseNnte.getRetSuc(retMap))
                 return success("保存菜单功能信息成功!");
             throw new BusiException(NumberDefUtil.getDefInteger(retMap.get("code")),
-                    StringUtils.defaultString(retMap.get("msg")), BusiException.ExpLevel.ERROR);
+                    StringUtils.defaultString(retMap.get("msg")));
         } catch (Exception e) {
             return onException(e);
         }
@@ -168,7 +165,7 @@ public class MenuSettingController extends BaseController {
             if (BaseNnte.getRetSuc(retMap))
                 return success("删除菜单功能信息成功!");
             throw new BusiException(NumberDefUtil.getDefInteger(retMap.get("code")),
-                    StringUtils.defaultString(retMap.get("msg")), BusiException.ExpLevel.ERROR);
+                    StringUtils.defaultString(retMap.get("msg")));
         } catch (Exception e) {
             return onException(e);
         }

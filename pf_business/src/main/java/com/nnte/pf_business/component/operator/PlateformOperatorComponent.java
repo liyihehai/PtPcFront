@@ -116,12 +116,12 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
     public PlateformOperator getOpeByCodeValid(String code,boolean needSupper) throws BusiException{
         PlateformOperator operator = getOperatorByCode(code);
         if (operator == null)
-            throw new BusiException(2001,"未找到编号为["+code+"]的操作员信息", BusiException.ExpLevel.ERROR);
+            throw new BusiException(2001,"未找到编号为["+code+"]的操作员信息");
         if (operator.getOpeState()==null || !operator.getOpeState().equals(PlateformOperatorComponent.OperatorState.VALID.getValue()))
-            throw new BusiException(2002,"编号为["+code+"]的操作员状态不合法", BusiException.ExpLevel.ERROR);
+            throw new BusiException(2002,"编号为["+code+"]的操作员状态不合法");
         if (needSupper){
             if (operator.getOpeType()==null || !operator.getOpeType().equals(PlateformOperatorComponent.OperatorType.SupperMgr.getValue()))
-                throw new BusiException(2002,"编号为["+code+"]的操作员不是超级管理员", BusiException.ExpLevel.ERROR);
+                throw new BusiException(2002,"编号为["+code+"]的操作员不是超级管理员");
         }
         return operator;
     }
@@ -288,11 +288,11 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
     private PlateformOperator getAndCheckOperator(String opeCode,PlateformOperator curOpe) throws BusiException{
         PlateformOperator ope = queryOperatorByCode(opeCode);
         if (ope == null) {
-            throw new BusiException(1002,"没找到指定编号的操作员", BusiException.ExpLevel.ERROR);
+            throw new BusiException(1002,"没找到指定编号的操作员");
         }
         if (ope.getOpeType().equals(OperatorType.SupperMgr.getValue())) {
             if (curOpe == null || !curOpe.getOpeType().equals(OperatorType.SupperMgr.getValue())) {
-                throw new BusiException(1002,"当前操作员不是超级管理员，不能操作", BusiException.ExpLevel.ERROR);
+                throw new BusiException(1002,"当前操作员不是超级管理员，不能操作");
             }
         }
         return ope;
