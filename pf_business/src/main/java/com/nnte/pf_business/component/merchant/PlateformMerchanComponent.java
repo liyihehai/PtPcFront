@@ -2,7 +2,7 @@ package com.nnte.pf_business.component.merchant;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.DBSrcTranc;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.WorkDBAspect;
 import com.nnte.framework.base.BaseNnte;
@@ -32,7 +32,7 @@ import java.util.Map;
  * 日志打印位置：MerchantManager 商户管理
  * */
 @BusiLogAttr(value = "MerchantManager")
-public class PlateformMerchanComponent extends BaseBusiComponent {
+public class PlateformMerchanComponent extends BaseComponent {
     @Autowired
     private PlateformMerchantService plateformMerchantService;
     @Autowired

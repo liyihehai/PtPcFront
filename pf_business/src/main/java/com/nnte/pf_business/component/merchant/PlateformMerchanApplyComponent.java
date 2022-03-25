@@ -2,7 +2,7 @@ package com.nnte.pf_business.component.merchant;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.JedisComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
@@ -31,7 +31,7 @@ import java.util.Map;
  * 日志打印位置：MerchantManager 商户管理
  * */
 @BusiLogAttr(value = "MerchantManager")
-public class PlateformMerchanApplyComponent extends BaseBusiComponent {
+public class PlateformMerchanApplyComponent extends BaseComponent {
 
     @Autowired
     private PlateformMerchanApplyService plateformMerchanApplyService;
@@ -169,10 +169,10 @@ public class PlateformMerchanApplyComponent extends BaseBusiComponent {
             jedisComponent.setObj(key,seconds,sm);
             String msg = "短信验证码发送成功["+sm.getPhoneNo()+":"+sm.getContent()+"]";
             BaseNnte.setRetTrue(ret,msg);
-            logFileMsg(msg);
+            outLogInfo(msg);
         }catch (BusiException be){
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
-            logException(be);
+            outLogExp(be);
         }
         return ret;
     }

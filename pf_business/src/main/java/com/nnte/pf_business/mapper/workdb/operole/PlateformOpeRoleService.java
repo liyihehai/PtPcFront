@@ -20,7 +20,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findRoleListByOpeCode",param);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -31,7 +31,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteRoleListByOpeCode",opeCode);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -42,7 +42,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().delete("deleteRoleListByRoleCode",roleCode);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -56,7 +56,7 @@ public class PlateformOpeRoleService extends BaseService<PlateformOpeRoleDao,Pla
             map.put("userRoles",userRoles);
             return cds.getSqlSession().insert("insertRoleListByOpeCode",map);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

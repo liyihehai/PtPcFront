@@ -2,7 +2,7 @@ package com.nnte.pf_business.component.menus;
 
 import com.nnte.basebusi.annotation.WatchAttr;
 import com.nnte.basebusi.annotation.WatchInterface;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.StringUtils;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Component
 @WatchAttr(value = 101,execTimes = 1)
-public class PlateformFunctionComponent implements WatchInterface {
+public class PlateformFunctionComponent extends BaseComponent implements WatchInterface {
     @Autowired
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
@@ -305,7 +305,7 @@ public class PlateformFunctionComponent implements WatchInterface {
                 return retMap;
             }
         }
-        MEnter menter=BaseBusiComponent.getSystemMEnter(funcPath);
+        MEnter menter=BaseComponent.getSystemMEnter(funcPath);
         if (menter==null){
             BaseNnte.setRetFalse(retMap,1002,"功能路径不合法:"+funcPath);
             return retMap;

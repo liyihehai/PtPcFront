@@ -1,8 +1,7 @@
 package com.nnte.pf_pc_front.controller.sysset;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nnte.basebusi.annotation.ModuleEnter;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.excption.BusiException;
@@ -12,15 +11,11 @@ import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.FreeMarkertUtil;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
-import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
-import com.nnte.pf_pc_front.PcPlateformApplication;
-import com.nnte.pf_pc_front.config.AppModelConfig;
-import com.nnte.pf_pc_front.config.SysRoleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -82,7 +77,7 @@ public class RoleController extends BaseController {
         Map<String,Object> ret=BaseNnte.newMapRetObj();
         RequestRole rRole= JsonUtil.jsonToBean(json.toString(),RequestRole.class);
         try {
-            BaseBusiComponent.checkModelFields(rRole);
+            BaseComponent.checkModelFields(rRole);
         }catch (BusiException be){
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
             return ret;

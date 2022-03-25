@@ -1,14 +1,13 @@
 package com.nnte.pf_business.component.roles;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.NumberUtil;
 import com.nnte.framework.utils.StringUtils;
-import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleService;
@@ -26,7 +25,7 @@ import java.util.*;
  * 平台角色组件
  * */
 @BusiLogAttr(value = "SystemManager")
-public class PlateformRoleComponent extends BaseBusiComponent {
+public class PlateformRoleComponent extends BaseComponent {
     @Autowired
     private PlateformRoleService plateformRoleService;
     @Autowired
@@ -57,7 +56,7 @@ public class PlateformRoleComponent extends BaseBusiComponent {
 
     public PageData<RequestRole> queryRoleListPage(Map<String,Object> paramMap, Integer pageNo, Integer pageSize){
         PageData<RequestRole> retPd = new PageData<>();
-        PageData<PlateformRole> pageData=plateformRoleService.getListPageData(paramMap,pageNo,pageSize);
+        PageData<PlateformRole> pageData=plateformRoleService.getListPageData("findModelListByMap",paramMap,pageNo,pageSize);
         retPd.setSuccess(pageData.isSuccess());
         retPd.setTotal(pageData.getTotal());
         List<RequestRole> rList = new ArrayList<>();
@@ -236,7 +235,15 @@ public class PlateformRoleComponent extends BaseBusiComponent {
         Map<String,Object> retMap = BaseNnte.newMapRetObj();
         plateformFunctionsService.deleteFunctionsByRoleCode(roleCode);
         if (StringUtils.isNotEmpty(functions)){
-            plateformFunctionsService.insertFunctionsByRoleCode(roleCode,functions);
+            String[] fs = functions.split(",");
+            StringBuilder fsBuilder = new StringBuilder();
+            for(String fcode:fs){
+                if (fsBuilder.length()>0){
+                    fsBuilder.append(",");
+                }
+                fsBuilder.append("'").append(fcode).append("'");
+            }
+            plateformFunctionsService.insertFunctionsByRoleCode(roleCode,fsBuilder.toString());
         }
         BaseNnte.setRetTrue(retMap,"设置角色功能成功");
         return retMap;

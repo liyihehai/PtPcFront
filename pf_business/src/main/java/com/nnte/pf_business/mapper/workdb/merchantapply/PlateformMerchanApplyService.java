@@ -17,7 +17,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findPlateformMerchanApplysCustmerList",paramMap);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -26,7 +26,7 @@ public class PlateformMerchanApplyService extends BaseService<PlateformMerchanAp
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findPlateformMerchanApplysCustmerCount",paramMap);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

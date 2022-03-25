@@ -2,12 +2,11 @@ package com.nnte.pf_pc_front.controller.merchant;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.*;
-import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.component.merchant.PlateformMerchanApplyComponent;
 import com.nnte.pf_business.component.merchant.PlateformMerchanComponent;
 import com.nnte.pf_business.entertity.OperatorInfo;
@@ -127,7 +126,7 @@ public class ApplyController extends BaseController {
             RequestApply rApply = JsonUtil.jsonToBean(json.toString(), RequestApply.class);
             if (rApply == null)
                 throw new BusiException("未取得商户申请信息");
-            BaseBusiComponent.checkModelFields(rApply);
+            BaseComponent.checkModelFields(rApply);
             setParamMapDataEnv(request,ret);
             Map<String, Object> envData = (Map)ret.get("envData");
             OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");

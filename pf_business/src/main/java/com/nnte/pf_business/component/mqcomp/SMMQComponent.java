@@ -1,7 +1,7 @@
 package com.nnte.pf_business.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.RocketmqMsgListener;
 import com.nnte.framework.base.RocketMqComponent;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "smmq")
 @PropertySource(value = "classpath:smmq.properties")
 @BusiLogAttr("MqComponent")
-public class SMMQComponent extends BaseBusiComponent implements RocketmqMsgListener<SMContent> {
+public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<SMContent> {
     public static RocketMqComponent.RocketMQProducer producer  = null;
 
     @Getter @Setter
@@ -49,7 +49,7 @@ public class SMMQComponent extends BaseBusiComponent implements RocketmqMsgListe
         try {
             if (producer!=null) {
                 producer.producerSendMessage(sm.getSmTag(),sm);
-                logFileMsg("发送短信到号码："+sm.getPhoneNo());
+                outLogInfo("发送短信到号码："+sm.getPhoneNo());
             }
         } catch (Exception e) {
             throw new BusiException(e);
@@ -67,7 +67,7 @@ public class SMMQComponent extends BaseBusiComponent implements RocketmqMsgListe
 
     @Override
     public void onConsumeMessage(String msgId, String keys, SMContent bodyObject) {
-        logFileMsg("收到发送短信请求，phone："+bodyObject.getPhoneNo()+",content:"+bodyObject.getContent());
+        outLogInfo("收到发送短信请求，phone："+bodyObject.getPhoneNo()+",content:"+bodyObject.getContent());
     }
 
     public void initConsumer() throws BusiException {

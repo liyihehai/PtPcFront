@@ -19,7 +19,7 @@ public class PlateformOperatorService extends BaseService<PlateformOperatorDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryPlateformOperators",param);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

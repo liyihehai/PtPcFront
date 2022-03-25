@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.WatchAttr;
 import com.nnte.basebusi.annotation.WatchInterface;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
@@ -35,7 +35,7 @@ import java.util.*;
 @BusiLogAttr("Pf_Business")
 @WatchAttr(value = 102)
 @MybatisXmlMapper("com.nnte.pf_business.mapper.workdb")
-public class PfBusinessComponent extends BaseBusiComponent implements WatchInterface {
+public class PfBusinessComponent extends BaseComponent implements WatchInterface {
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
     @Autowired
@@ -158,7 +158,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             BaseNnte.setRetFalse(ret, 1002, be.getMessage());
         } catch (Exception e) {
             BaseNnte.setRetFalse(ret, 9999, e.getMessage());
-            LogUtil.logExp(e);
+            outLogExp(e);
         }
         return ret;
     }
@@ -267,7 +267,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
             }
             ret.put("OperatorInfo", opeInfo);
         } catch (Exception e) {
-            throw new BusiException(e,1009, LogUtil.LogLevel.error);
+            throw new BusiException(e,1009);
         }
         return ret;
     }
@@ -277,7 +277,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
      */
     public void checkRequestModule(OperatorInfo opeInfo, String path) throws BusiException {
         try {
-            MEnter me = BaseBusiComponent.getSystemMEnter(path);
+            MEnter me = BaseComponent.getSystemMEnter(path);
             if (me != null) {
                 PlateformOperator pfo = plateformOperatorComponent.getOperatorByCode(opeInfo.getOperatorCode());
                 if (!pfo.getOpeState().equals(PlateformOperatorComponent.OperatorState.VALID.getValue())) {
@@ -300,7 +300,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
                 }
             }
         } catch (Exception e) {
-            throw new BusiException(1010, "模块权限校验失败(" + e.getMessage() + ")", LogUtil.LogLevel.error);
+            throw new BusiException(1010, "模块权限校验失败(" + e.getMessage() + ")");
         }
     }
     /**
@@ -464,7 +464,7 @@ public class PfBusinessComponent extends BaseBusiComponent implements WatchInter
                 }
             }
         }catch (BusiException be){
-            logException(be);
+            outLogExp(be);
         }
     }
     /**

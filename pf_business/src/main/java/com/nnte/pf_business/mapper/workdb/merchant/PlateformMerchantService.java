@@ -20,7 +20,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findMaxMerchantCode");
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -29,7 +29,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findPlateformMerchansCustmerList",paramMap);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }
@@ -38,7 +38,7 @@ public class PlateformMerchantService extends BaseService<PlateformMerchantDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectOne("findPlateformMerchansCustmerCount",paramMap);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

@@ -1,5 +1,6 @@
 package com.nnte.pf_pc_front.interceptor;
 
+import com.nnte.basebusi.base.BaseBusi;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.ConfigLoad;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
-public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
+public class PfPcFrontNormalInterceptor extends BaseBusi implements HandlerInterceptor {
     @ConfigLoad
     private ConfigInterface appconfig;
     @Autowired
@@ -49,7 +50,7 @@ public class PfPcFrontNormalInterceptor implements HandlerInterceptor {
             return true;
         //请求进入这个拦截器
         Map<String, Object> envData = (Map)request.getAttribute("envData");
-        BaseNnte.outConsoleLog(request.getServletPath());
+        outLogInfo(request.getServletPath());
         int enterType = 0; //页面进入
         if (envData!=null) {
             Map<String,Object> retMap=BaseNnte.newMapRetObj();

@@ -1,7 +1,7 @@
 package com.nnte.pf_pc_front.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.FException;
@@ -69,7 +69,7 @@ public class PcPlateformController extends BaseController {
                 menuBody.append("<ul class=\"treeview-menu\">");
                 for(PlateformFunctions func:menu.getFunctionList()){
                     menuBody.append("<li>")
-                                .append("<a href=\"javascript:void(0);\" data-menuName=\""+func.getFunName()+"\" data-menukey=\""+func.getFunCode()+"\" data-link=\""+contextPath+ BaseBusiComponent.getPathByRuler(func.getAuthCode())+"\" class=\"u_a\">")
+                                .append("<a href=\"javascript:void(0);\" data-menuName=\""+func.getFunName()+"\" data-menukey=\""+func.getFunCode()+"\" data-link=\""+contextPath+ BaseComponent.getPathByRuler(func.getAuthCode())+"\" class=\"u_a\">")
                                 .append("<i class=\"fa fa-c fa-circle-o\"></i>"+func.getFunName())
                                 .append("</a>")
                             .append("</li>");
@@ -104,7 +104,7 @@ public class PcPlateformController extends BaseController {
         if (BaseNnte.getRetSuc(checkMap)) {
             OperatorInfo opeInfo = (OperatorInfo)checkMap.get("OperatorInfo");
             String token=StringUtils.defaultString(opeInfo.getToken());
-            BaseNnte.outConsoleLog("用户登录成功["+userCode+"]"+token);
+            outLogInfo("用户登录成功["+userCode+"]"+token);
             map.put("OperatorInfo",opeInfo);
             Map<String,Object> envData=(Map)map.get("envData");
             List<PFMenu> menuFuncList=(List<PFMenu>)checkMap.get("menuFuncList");
@@ -197,7 +197,7 @@ public class PcPlateformController extends BaseController {
             ret.put("bytes",bytes);
             BaseNnte.setRetTrue(ret,  "取得上传的文件内容成功");
         } catch (IOException e) {
-            LogUtil.logExp(e);
+            outLogExp(e);
             BaseNnte.setRetFalse(ret, 1003, "不能取得上传的文件内容");
             return ret;
         }

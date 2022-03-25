@@ -2,7 +2,7 @@ package com.nnte.pf_pc_front.controller.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
@@ -72,7 +72,7 @@ public class MenuSettingController extends BaseController {
     @ResponseBody
     public Object getFEnter() {
         try {
-            List<MEnter> FEnterList = BaseBusiComponent.getSystemModuleEnters();
+            List<MEnter> FEnterList = BaseComponent.getSystemModuleEnters();
             return BaseController.success("success", FEnterList);
         } catch (Exception e) {
             return onException(e);
@@ -89,7 +89,7 @@ public class MenuSettingController extends BaseController {
             if (json == null)
                 return error("参数为空");
             RequestMenu rMenu = JsonUtil.jsonToBean(json.toString(), RequestMenu.class);
-            BaseBusiComponent.checkModelFields(rMenu);
+            BaseComponent.checkModelFields(rMenu);
             PlateformMenus menu = new PlateformMenus();
             BeanUtils.copyFromSrc(rMenu, menu);
             Map<String, Object> retMap = plateformFunctionComponent.saveMenuModify(menu);
@@ -135,7 +135,7 @@ public class MenuSettingController extends BaseController {
             if (json == null)
                 return error("参数为空");
             RequestFunc rFunc = JsonUtil.jsonToBean(json.toString(), RequestFunc.class);
-            BaseBusiComponent.checkModelFields(rFunc);
+            BaseComponent.checkModelFields(rFunc);
             PlateformFunctions func = new PlateformFunctions();
             BeanUtils.copyFromSrc(rFunc, func);
             Map<String, Object> retMap = plateformFunctionComponent.saveFunctionModify(func, rFunc.getFunPath());

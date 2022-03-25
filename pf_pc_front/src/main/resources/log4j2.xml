@@ -6,11 +6,10 @@
 <Configuration status="ERROR" monitorInterval="30">
     <Properties>
         <!-- 配置日志文件输出目录 -->
-        <Property name="LOG_HOME">/D:/github/Plateform/logs/pf_pc_front/logs</Property>
+        <Property name="LOG_HOME">${sys:LogHomeRoot}</Property>
         <property name="DEBUG_LOG_FILE_NAME">${LOG_HOME}/debug</property>
         <property name="INFO_LOG_FILE_NAME">${LOG_HOME}/info</property>
         <property name="WARN_LOG_FILE_NAME">${LOG_HOME}/warn</property>
-        <property name="ERROR_MQ_LOG_FNAME">${LOG_HOME}/mq/error</property>
         <property name="ERROR_LOG_FILE_NAME">${LOG_HOME}/error</property>
     </Properties>
     <Appenders>
@@ -126,31 +125,21 @@
             </Policies>
             <DefaultRolloverStrategy max="100" />
         </RollingFile>
-        <RollingFile name="RocketmqClientAppender"
-                     fileName="${ERROR_MQ_LOG_FNAME}/error.log"
-                     filePattern="${ERROR_MQ_LOG_FNAME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}.log">
-            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
-            <PatternLayout
-                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}:%L [%t] - %msg%n" />
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-            </Policies>
-            <DefaultRolloverStrategy max="100" />
-        </RollingFile>
     </Appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <Loggers>
         <!--过滤掉spring的一些无用的DEBUG信息-->
         <logger name="org.springframework" level="INFO"></logger>
+        <logger name="RocketmqRemoting" level="ERROR"></logger>
         <logger name="RocketmqClient" level="ERROR"></logger>
+        <logger name="RocketmqCommon" level="WARN"></logger>
         <!-- 配置日志的根节点 -->
         <!-- level="all" 只能够输出level级别是all及all以上的-->
-        <root level="WARN">
+        <root level="DEBUG">
             <appender-ref ref="Console" />
             <appender-ref ref="RollingFileDebug" />
             <!--<appender-ref ref="RollingFileInfo" />-->
             <appender-ref ref="RollingFileWarn" />
-            <appender-ref ref="RocketmqClientAppender" />
             <appender-ref ref="RollingFileError" />
         </root>
     </Loggers>

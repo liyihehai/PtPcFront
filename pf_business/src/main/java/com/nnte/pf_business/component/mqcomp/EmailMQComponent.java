@@ -1,7 +1,8 @@
 package com.nnte.pf_business.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
+import com.nnte.basebusi.base.BaseLog;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.RocketmqMsgListener;
 import com.nnte.framework.base.RocketMqComponent;
@@ -27,7 +28,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "emailmq.merchant.apply")
 @PropertySource(value = "classpath:emailmq.properties")
 @BusiLogAttr("MqComponent")
-public class EmailMQComponent extends BaseBusiComponent implements RocketmqMsgListener<EmailContent> {
+public class EmailMQComponent extends BaseComponent implements RocketmqMsgListener<EmailContent> {
     public static RocketMqComponent.RocketMQProducer producer  = null;
 
     @Getter @Setter
@@ -70,7 +71,7 @@ public class EmailMQComponent extends BaseBusiComponent implements RocketmqMsgLi
         try {
             if (producer!=null) {
                 producer.producerSendMessage("",ec);
-                logFileMsg("发送邮件到地址："+ec.getEmail());
+                outLogInfo("发送邮件到地址："+ec.getEmail());
             }
         } catch (Exception e) {
             throw new BusiException(e);
@@ -89,20 +90,20 @@ public class EmailMQComponent extends BaseBusiComponent implements RocketmqMsgLi
 
     @Override
     public void onConsumeMessage(String msgId, String keys, EmailContent bodyObject) {
-        logFileMsg("收到发送商户确认邮件请求，email："+bodyObject.getEmail());
+        outLogInfo("收到发送商户确认邮件请求，email："+bodyObject.getEmail());
         try {
             String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSingleParamVText(PlateformSysParamComponent.SYS_SMTP_ACCOUNT_JSON));
             SysSmtpAccount ssa = JsonUtil.jsonToBean(smtpJson, SysSmtpAccount.class);
             if (ssa == null)
-                throw new FException("邮件账户JSON数据定义不合法");
+                throw new BusiException("邮件账户JSON数据定义不合法");
             JavaMailSenderImpl sender=MailUtils.setInitData(ssa.getSmtp_host(), ssa.getPort(), ssa.getUsername(), ssa.getPasswd(),
                         ssa.isTsl());
             MailUtils.richContentSend(sender,bodyObject.getEmail(),bodyObject.getTitle(),
                     bodyObject.getContent(),null);
-            logFileMsg("发送商户确认邮件请求成功，email："+bodyObject.getEmail());
-        }catch (FException fe){
-            logFileMsg("发送商户确认邮件请求失败，email："+bodyObject.getEmail()+",err:"+fe.getMessage());
-            BaseBusiComponent.logError(this,fe);
+            outLogInfo("发送商户确认邮件请求成功，email："+bodyObject.getEmail());
+        }catch (Exception e){
+            outLogWarn("发送商户确认邮件请求失败，email："+bodyObject.getEmail()+",err:"+e.getMessage());
+            BaseLog.outLogExp(e);
         }
     }
 

@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /*
- * 自动代码 请勿更改 <2020-04-22 11:07:53>
+ * 自动代码 请勿更改 <2022-03-25 08:27:40>
  */
 public class PlateformOperator extends BaseModel {
     @DBPKColum private Integer id;

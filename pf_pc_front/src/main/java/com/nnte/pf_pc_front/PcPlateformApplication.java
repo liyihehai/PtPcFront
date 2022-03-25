@@ -1,5 +1,6 @@
 package com.nnte.pf_pc_front;
 
+import com.nnte.framework.utils.FileUtil;
 import org.apache.rocketmq.client.log.ClientLogger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,11 @@ public class PcPlateformApplication
     //------------------------------------------------------------
     public static void main(String[] args)
     {
+        String jarPath=FileUtil.toUNIXpath(System.getProperty("user.dir"));
+        System.out.println("jarPath="+jarPath);
+        String logHomeRoot = "/"+jarPath+"/logs/pf_pc_front/logs/";
+        System.out.println("LogHomeRoot="+logHomeRoot);
+        System.setProperty("LogHomeRoot", logHomeRoot);
         System.setProperty(ClientLogger.CLIENT_LOG_USESLF4J, "true");
         /*
         System.setProperty(ClientLogger.CLIENT_LOG_USESLF4J, "false");

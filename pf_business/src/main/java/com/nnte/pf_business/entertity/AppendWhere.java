@@ -1,16 +1,23 @@
 package com.nnte.pf_business.entertity;
 
+import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.utils.DateUtils;
 
 import java.util.Date;
 
 public class AppendWhere {
-    private static final String Type_Direct = "direct";
-    private static final String Type_like = "like";
+    public static final String Type_Direct = "direct";
+    public static final String Type_like = "like";
     private String whereTxt;
     private String whereType = Type_Direct;
     private String colName;
     private Object whereVal;
+
+    public AppendWhere(String type) throws BusiException {
+        if (Type_Direct.equals(type) && Type_like.equals(type))
+            throw new BusiException(100101,"条件类型设置不正确");
+        whereType = type;
+    }
 
     public String getWhereType() {
         return whereType;

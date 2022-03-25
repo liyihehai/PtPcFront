@@ -1,8 +1,7 @@
 package com.nnte.pf_pc_front.controller.sysset;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nnte.basebusi.annotation.ModuleEnter;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.excption.BusiException;
@@ -19,8 +18,6 @@ import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestMenu;
-import com.nnte.pf_pc_front.PcPlateformApplication;
-import com.nnte.pf_pc_front.config.AppModelConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,7 +51,7 @@ public class SyssetController extends BaseController {
         opeInfo.setOperatorCode("admin");
         //-------------------------------------
         List<PFMenu> pFMenuList=pfBusinessComponent.loadOperatorMenuFunctions(opeInfo,null);//显示所有状态的菜单
-        List<MEnter> FEnterList=BaseBusiComponent.getSystemModuleEnters();
+        List<MEnter> FEnterList= BaseComponent.getSystemModuleEnters();
         Map<String,Object> envData=(Map)map.get("envData");
         String menuTreeRows=applyMenuTable(request,pFMenuList,
                 StringUtils.defaultString(envData.get("staticRoot")),
@@ -96,7 +93,7 @@ public class SyssetController extends BaseController {
         paramMap.put("func",func);
         paramMap.put("staticRoot",staticRoot);
         paramMap.put("contextPath",contextPath);
-        paramMap.put("funcPath",BaseBusiComponent.getPathByRuler(func.getAuthCode()));
+        paramMap.put("funcPath",BaseComponent.getPathByRuler(func.getAuthCode()));
         return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap, "/templates/front/sysset/menu/function.ftl");
     }
     /**
@@ -150,7 +147,7 @@ public class SyssetController extends BaseController {
         Map<String,Object> ret=BaseNnte.newMapRetObj();
         RequestMenu rMenu= JsonUtil.jsonToBean(json.toString(),RequestMenu.class);
         try {
-            BaseBusiComponent.checkModelFields(rMenu);
+            BaseComponent.checkModelFields(rMenu);
         }catch (BusiException be){
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
             return ret;
@@ -196,7 +193,7 @@ public class SyssetController extends BaseController {
         Map<String,Object> ret=BaseNnte.newMapRetObj();
         RequestFunc rFunc= JsonUtil.jsonToBean(json.toString(), RequestFunc.class);
         try {
-            BaseBusiComponent.checkModelFields(rFunc);
+            BaseComponent.checkModelFields(rFunc);
         }catch (BusiException be){
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
             return ret;

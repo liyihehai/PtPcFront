@@ -1,7 +1,6 @@
 package com.nnte.pf_business.mapper.workdb.sysparam;
 
 import com.nnte.framework.base.BaseService;
-import com.nnte.framework.utils.LogUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class PlateformSysparamService extends BaseService<PlateformSysparamDao,P
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryPlateformParamsByKeys",keys);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }	
     }

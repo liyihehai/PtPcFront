@@ -18,7 +18,7 @@ public class PlateformMenusService extends BaseService<PlateformMenusDao,Platefo
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("queryPMenusOrderByClass",paramMenu);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

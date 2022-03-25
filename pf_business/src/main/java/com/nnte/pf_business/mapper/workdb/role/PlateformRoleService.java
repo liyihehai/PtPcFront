@@ -19,7 +19,7 @@ public class PlateformRoleService extends BaseService<PlateformRoleDao,Plateform
         try (ConnDaoSession cds=this.getDefaultConnDaoSession()){
             return cds.getSqlSession().selectList("findOpeRoleList",opeCode);
         }catch (Exception e){
-            LogUtil.logExp(e);
+            outLogExp(e);
             return null;
         }
     }

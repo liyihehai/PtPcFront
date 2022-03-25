@@ -1,10 +1,11 @@
 package com.nnte.pf_business.component.operator;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
+import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
@@ -17,6 +18,7 @@ import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRoleService;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestOpe;
+import com.nnte.pf_business.request.RequestRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +31,7 @@ import java.util.*;
  * 日志打印位置：SystemManager 系统管理
  * */
 @BusiLogAttr(value = "SystemManager")
-public class PlateformOperatorComponent extends BaseBusiComponent {
+public class PlateformOperatorComponent extends BaseComponent {
     @Autowired
     private PlateformOperatorService plateformOperatorService;
     @Autowired
@@ -143,6 +145,19 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
         return plateformOperatorService.queryPlateformOperators(dto);
     }
 
+    public PageData<RequestOpe> operatorSetList(Map<String,Object> paramMap, Integer pageNo, Integer pageSize){
+        PageData<RequestOpe> retPd = new PageData<>();
+        PageData<PlateformOperator> pageData=plateformOperatorService.getListPageData("findModelListByMap",paramMap,pageNo,pageSize);
+        retPd.setSuccess(pageData.isSuccess());
+        retPd.setTotal(pageData.getTotal());
+        List<RequestOpe> rList = new ArrayList<>();
+        for(PlateformOperator ope:pageData.getData()){
+            RequestOpe ro = getRequestOpeByPO(ope);
+            rList.add(ro);
+        }
+        retPd.setData(rList);
+        return retPd;
+    }
     /**
      * 按条件查询操作员列表
      * */
@@ -191,7 +206,7 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
             retOpe.setOpeStateName(OperatorState.fromInt(retOpe.getOpeState()).getName());
             retOpe.setOpeTypeName(OperatorType.fromInt(retOpe.getOpeType()).getName());
         }catch (BusiException be){
-            logException(be);
+            outLogExp(be);
         }
         return retOpe;
     }
@@ -324,11 +339,11 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
         catch (UnsupportedEncodingException uee){
             BusiException be = new BusiException(uee);
             BaseNnte.setRetFalse(retMap, 1002, "设置操作员密码错误："+be.getMessage());
-            logException(be);
+            outLogExp(be);
         }
         catch (BusiException be){
             BaseNnte.setRetFalse(retMap, 1002, "设置操作员密码错误："+be.getMessage());
-            logException(be);
+            outLogExp(be);
         }
         return retMap;
     }
@@ -362,7 +377,7 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
             BaseNnte.setRetTrue(retMap,"设置操作员角色成功");
         }catch (BusiException be){
             BaseNnte.setRetFalse(retMap, 1002, "设置操作员角色错误："+be.getMessage());
-            logException(be);
+            outLogExp(be);
         }
         return retMap;
     }
@@ -410,7 +425,7 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
                     if (keyType==0)
                         map.put(fun.getFunCode(), fun);
                     else if (keyType==1) {
-                        map.put(BaseBusiComponent.getPathByRuler(fun.getAuthCode()), fun);
+                        map.put(BaseComponent.getPathByRuler(fun.getAuthCode()), fun);
                     }
                 }
         }
@@ -520,7 +535,7 @@ public class PlateformOperatorComponent extends BaseBusiComponent {
             BaseNnte.setRetTrue(retMap,"设置操作员功能成功");
         }catch (BusiException be){
             BaseNnte.setRetFalse(retMap, 1002, "设置操作员功能错误："+be.getMessage());
-            logException(be);
+            outLogExp(be);
         }
         return retMap;
     }

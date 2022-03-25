@@ -64,7 +64,7 @@ public class LoginController extends BaseController {
             if (BaseNnte.getRetSuc(checkMap)) {
                 OperatorInfo opeInfo = (OperatorInfo) checkMap.get("OperatorInfo");
                 String token = StringUtils.defaultString(opeInfo.getToken());
-                BaseNnte.outConsoleLog("用户登录成功[" + userCode + "]" + token);
+                outLogInfo("用户登录成功[" + userCode + "]" + token);
                 dataMap.put("OperatorInfo", opeInfo);
                 List<PFMenu> menuFuncList = (List<PFMenu>) checkMap.get("menuFuncList");
                 dataMap.put("MenuFunctions", pfBusinessComponent.loadMenuFuncNode(menuFuncList, false));

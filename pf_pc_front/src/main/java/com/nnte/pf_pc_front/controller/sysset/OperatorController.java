@@ -2,7 +2,7 @@ package com.nnte.pf_pc_front.controller.sysset;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
-import com.nnte.basebusi.base.BaseBusiComponent;
+import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
@@ -48,9 +48,6 @@ public class OperatorController extends BaseController {
     /**
      * 显示操作员设置页面
      * */
-    @ModuleEnter(path = "/operator/operatorset", name="操作员设置", desc = "平台系统操作员设置，系统管理员功能",
-            sysRole = SysRoleConfig.SYS_MANAGER,roleRuler = "pf-operatorset",
-            appCode = PcPlateformApplication.App_Code,moduleCode = AppModelConfig.MODULE_SYSSETTING)
     @RequestMapping(value = "/operatorset")
     public ModelAndView operatorset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map= BaseNnte.newMapRetObj();
@@ -139,7 +136,7 @@ public class OperatorController extends BaseController {
         Map<String,Object> ret=BaseNnte.newMapRetObj();
         RequestOpe rOpe= JsonUtil.jsonToBean(json.toString(),RequestOpe.class);
         try {
-            BaseBusiComponent.checkModelFields(rOpe);
+            BaseComponent.checkModelFields(rOpe);
         }catch (BusiException be){
             BaseNnte.setRetFalse(ret,1002,be.getMessage());
             return ret;

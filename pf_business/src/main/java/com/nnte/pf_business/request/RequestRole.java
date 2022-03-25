@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class RequestRole {
+    private Integer id;
     @StringCheck(colName = "角色代码",maxLen = 20,nullValid = false)
     private String roleCode;
     @StringCheck(colName = "角色名称",maxLen = 50,nullValid = false)
