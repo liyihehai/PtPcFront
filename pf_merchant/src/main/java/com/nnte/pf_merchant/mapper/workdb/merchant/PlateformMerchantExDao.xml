@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchantDao">
+    <select id="findMaxMerchantCode" resultType="java.lang.String">
+        select max(pm_code) from plateform_merchant
+    </select>
+
+    <sql id="findPlateformMerchansCustmerSql">
+        select * from plateform_merchant t
+        <where>
+            <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+            <if test="pmCode!= null"><![CDATA[and t.pm_code like '%${pmCode}%']]></if>
+            <if test="pmName!= null"><![CDATA[and t.pm_name like '%${pmName}%']]></if>
+            <if test="pmShortName!= null"><![CDATA[and t.pm_short_name like '%${pmShortName}%']]></if>
+            <if test="pmCompanyPerson!= null"><![CDATA[and t.pm_company_person = #{pmCompanyPerson}]]></if>
+            <if test="pmState!= null"><![CDATA[and t.pm_state = #{pmState}]]></if>
+            <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+            <if test="applyEmail!= null"><![CDATA[and t.apply_email = #{applyEmail}]]></if>
+            <if test="createTimeStart!= null"><![CDATA[and t.create_time >= #{createTimeStart}]]></if>
+            <if test="createTimeEnd!= null"><![CDATA[and t.create_time <= #{createTimeEnd}]]></if>
+        </where>
+    </sql>
+
+    <select id="findPlateformMerchansCustmerList" parameterType="java.util.Map" resultMap="PlateformMerchantResult">
+        <include refid="findPlateformMerchansCustmerSql"/>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+
+    <select id="findPlateformMerchansCustmerCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformMerchansCustmerSql" />
+        ) m
+    </select>
+</mapper>
