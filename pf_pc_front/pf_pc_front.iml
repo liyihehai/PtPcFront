@@ -23,6 +23,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="plateform" />
+    <orderEntry type="module" module-name="pf_basic" />
     <orderEntry type="library" name="Maven: com.nnte:nnte_BaseBusi:1.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.12" level="project" />
     <orderEntry type="library" name="Maven: com.nnte:nnte_Framework:1.0.1-SNAPSHOT" level="project" />
@@ -117,5 +118,6 @@
     <orderEntry type="library" name="Maven: com.github.jsqlparser:jsqlparser:0.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.nnte.kservice:fdfs_client_mgr:1.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.csource:fastdfs-client-java:1.29-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="pf_merchant" />
   </component>
 </module>
