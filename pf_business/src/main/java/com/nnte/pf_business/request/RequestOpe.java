@@ -5,9 +5,12 @@ import com.nnte.basebusi.annotation.StringCheck;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Setter
 @Getter
 public class RequestOpe {
+    private Integer id;
     @IntegerCheck(colName = "操作员类型",inVals = {1,2,3},nullValid = false)
     private Integer opeType;
     private String opeTypeName;
@@ -20,6 +23,8 @@ public class RequestOpe {
     @IntegerCheck(colName = "操作员状态",inVals = {0,1,2,3},nullValid = false)
     private Integer opeState;
     private String opeStateName;
+    private Date createTime;
+    private String[] createTimeRange;
     @IntegerCheck(colName = "操作类型",inVals = {1,2},nullValid = false)
     private Integer actionType;
     private String setAimPwd;   //设置目标密码

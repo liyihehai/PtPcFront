@@ -43,7 +43,7 @@
         <if test="appendWhereList!=null">
             <foreach collection="appendWhereList" item="item">
                 <if test="item!=null and item.whereType=='direct'">
-                    <![CDATA[ ${item.whereTxt}]]>
+                    <![CDATA[ and ${item.whereTxt}]]>
                 </if>
                 <if test="item!=null and item.whereType=='like'">
                     <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>

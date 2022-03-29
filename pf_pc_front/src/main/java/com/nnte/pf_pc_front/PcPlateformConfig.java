@@ -6,14 +6,14 @@ import com.nnte.basebusi.base.JedisComponent;
 import com.nnte.basebusi.base.WatchComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
-import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.base.*;
+import com.nnte.framework.base.ConfigInterface;
+import com.nnte.framework.base.DBSchemaPostgreSQL;
+import com.nnte.framework.base.DynamicDatabaseSourceHolder;
+import com.nnte.framework.base.SpringContextHolder;
 import com.nnte.framework.utils.BaiduMapUtil;
+import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.component.mqcomp.EmailMQComponent;
-import com.nnte.pf_business.component.mqcomp.SMMQComponent;
 import com.nnte.pf_pc_front.config.AppRootConfig;
-import com.nnte.pf_pc_front.config.WorkDBConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -33,7 +33,7 @@ public class PcPlateformConfig extends BaseComponent
     @Autowired
     private AppRootConfig appRootConfig;
     @Autowired
-    private WorkDBConfig workDBConfig;
+    private AppBasicConfig appBasicConfig;
     @Autowired
     private DBSchemaPostgreSQL dbSchemaPostgreSQL;
 
@@ -60,35 +60,11 @@ public class PcPlateformConfig extends BaseComponent
         //--初始化文件服务器连接--
 
         //------------------------
-        //--初始短信MQ-------------
-        SMMQComponent smmq=SpringContextHolder.getBean(SMMQComponent.class);
-        if (smmq!=null){
-            try {
-                smmq.initProducer();
-                outLogInfo("SMMQComponent initProducer suc");
-                smmq.initConsumer();
-                outLogInfo("SMMQComponent initConsumer suc");
-            }catch (BusiException be){
-                outLogInfo("SMMQComponent init err:"+be.getMessage());
-            }
-        }
-        //------------------------
-        //--初始邮件MQ-------------
-        EmailMQComponent emailapplymq=SpringContextHolder.getBean(EmailMQComponent.class);
-        if (emailapplymq!=null){
-            try {
-                emailapplymq.initProducer();
-                outLogInfo("EmailMQComponent initProducer suc");
-                emailapplymq.initConsumer();
-                outLogInfo("EmailMQComponent initConsumer suc");
-            }catch (BusiException be){
-                outLogInfo("EmailMQComponent init err:"+be.getMessage());
-            }
-        }
+
         //------------------------
         outLogInfo("初始化工作数据库连接数据源......");
-        BaseComponent.createDataBaseSource(dbSchemaPostgreSQL, WorkDBConfig.DB_NAME,
-                true,workDBConfig);
+        BaseComponent.createDataBaseSource(dbSchemaPostgreSQL, AppBasicConfig.DB_Name,
+                true,appBasicConfig);
         //--------装载系统模块入口--------------
         BaseComponent.loadSystemFuntionEnters();
         //-------------------------------------

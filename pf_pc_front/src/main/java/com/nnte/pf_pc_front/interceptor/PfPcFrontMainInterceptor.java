@@ -3,7 +3,7 @@ package com.nnte.pf_pc_front.interceptor;
 import com.nnte.framework.annotation.ConfigLoad;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.utils.StringUtils;
-import com.nnte.pf_business.component.PlateformSysParamComponent;
+import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

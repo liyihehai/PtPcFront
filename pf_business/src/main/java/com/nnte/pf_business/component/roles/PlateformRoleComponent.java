@@ -37,6 +37,7 @@ public class PlateformRoleComponent extends BaseComponent {
      * */
     public List<PlateformRole> queryRoleList(){
         PlateformRole dto = new PlateformRole();
+        dto.setRoleState(1);//只查询出有效的角色
         return plateformRoleService.findModelList(dto);
     }
     /**

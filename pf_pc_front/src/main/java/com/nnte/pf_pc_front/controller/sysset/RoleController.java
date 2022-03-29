@@ -32,13 +32,13 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/role")
 public class RoleController extends BaseController {
+    /*
     @Autowired
     private PlateformRoleComponent plateformRoleComponent;
     @Autowired
     private PlateformFunctionComponent plateformFunctionComponent;
-    /**
-     * 显示用户角色设置页面
-     * */
+
+    //显示用户角色设置页面
     @RequestMapping(value = "/roleset")
     public ModelAndView roleset(HttpServletRequest request, ModelAndView modelAndView){
         Map<String,Object> map=refreshRoles(request);
@@ -47,9 +47,8 @@ public class RoleController extends BaseController {
         modelAndView.setViewName("front/sysset/role/roleset");
         return modelAndView;
     }
-    /**
-     * 通过编码查询特定角色信息
-     * */
+
+    //通过编码查询特定角色信息
     @RequestMapping(value = "/queryRole")
     @ResponseBody
     public Map<String,Object> queryRole(HttpServletRequest request, @RequestBody JsonNode json){
@@ -68,9 +67,8 @@ public class RoleController extends BaseController {
         BaseNnte.setRetTrue(ret,"查找角色信息成功");
         return ret;
     }
-    /**
-     * 保存角色信息更改，含新增和更改
-     * */
+
+    //保存角色信息更改，含新增和更改
     @RequestMapping(value = "/saveRoleModify")
     @ResponseBody
     public Map<String,Object> saveRoleModify(HttpServletRequest request, @RequestBody JsonNode json){
@@ -87,9 +85,7 @@ public class RoleController extends BaseController {
         return plateformRoleComponent.saveRoleModify(role,rRole.getActionType());
     }
 
-    /**
-     * 删除角色定义（物理删除）
-     * */
+    //删除角色定义（物理删除）
     @RequestMapping(value = "/deleteRoleByCode")
     @ResponseBody
     public Map<String,Object> deleteRoleByCode(HttpServletRequest request, @RequestBody JsonNode json){
@@ -101,16 +97,13 @@ public class RoleController extends BaseController {
         }
         return plateformRoleComponent.deleteRoleByCode(rRole.getRoleCode());
     }
-    /**
-     * 在服务器端渲染角色列表
-     * */
+
+    //在服务器端渲染角色列表
     private String applyRoleRows(HttpServletRequest request,Map<String,Object> map){
         return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),
                 FreeMarkertUtil.pathType.cls,map,"/templates/front/sysset/role/rolerows.ftl");
     }
-    /**
-     * 删除菜单定义（物理删除）
-     * */
+    //删除菜单定义（物理删除）
     @RequestMapping(value = "/refreshRoles")
     @ResponseBody
     public Map<String,Object> refreshRoles(HttpServletRequest request){
@@ -125,9 +118,8 @@ public class RoleController extends BaseController {
         BaseNnte.setRetTrue(map,"刷新角色列表成功");
         return map;
     }
-    /**
-     * 通过角色编码查询角色功能信息
-     * */
+
+    //通过角色编码查询角色功能信息
     @RequestMapping(value = "/queryRoleFunctions")
     @ResponseBody
     public Map<String,Object> queryRoleFunctions(HttpServletRequest request, @RequestBody JsonNode json){
@@ -146,9 +138,8 @@ public class RoleController extends BaseController {
         BaseNnte.setRetTrue(ret,"查询角色功能信息成功");
         return ret;
     }
-    /**
-     * 设置角色的功能
-     * */
+
+    //设置角色的功能
     @RequestMapping(value = "/saveRoleFunctions")
     @ResponseBody
     public Map<String,Object> saveRoleFunctions(HttpServletRequest request, @RequestBody JsonNode json){
@@ -164,4 +155,5 @@ public class RoleController extends BaseController {
         }
         return plateformRoleComponent.saveRoleFunctions(rRole.getRoleCode(),rRole.getFunctions());
     }
+    */
 }

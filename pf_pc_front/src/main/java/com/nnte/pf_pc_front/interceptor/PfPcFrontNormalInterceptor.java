@@ -2,14 +2,13 @@ package com.nnte.pf_pc_front.interceptor;
 
 import com.nnte.basebusi.base.BaseBusi;
 import com.nnte.basebusi.base.BaseController;
+import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.ConfigLoad;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
-import com.nnte.framework.utils.FreeMarkertUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.entertity.OperatorInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -50,7 +49,7 @@ public class PfPcFrontNormalInterceptor extends BaseBusi implements HandlerInter
             return true;
         //请求进入这个拦截器
         Map<String, Object> envData = (Map)request.getAttribute("envData");
-        outLogInfo(request.getServletPath());
+        outLogTrace(request.getServletPath());
         int enterType = 0; //页面进入
         if (envData!=null) {
             Map<String,Object> retMap=BaseNnte.newMapRetObj();

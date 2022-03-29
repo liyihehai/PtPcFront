@@ -133,6 +133,7 @@
         <logger name="RocketmqRemoting" level="ERROR"></logger>
         <logger name="RocketmqClient" level="ERROR"></logger>
         <logger name="RocketmqCommon" level="WARN"></logger>
+        <logger name="com.zaxxer.hikari.pool.HikariPool" level="INFO"></logger>
         <!-- 配置日志的根节点 -->
         <!-- level="all" 只能够输出level级别是all及all以上的-->
         <root level="DEBUG">

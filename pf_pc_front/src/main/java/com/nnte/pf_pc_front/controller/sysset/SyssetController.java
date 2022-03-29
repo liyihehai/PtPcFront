@@ -1,47 +1,21 @@
 package com.nnte.pf_pc_front.controller.sysset;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
-import com.nnte.basebusi.entity.MEnter;
-import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.base.BaseNnte;
-import com.nnte.framework.utils.BeanUtils;
-import com.nnte.framework.utils.FreeMarkertUtil;
-import com.nnte.framework.utils.JsonUtil;
-import com.nnte.framework.utils.StringUtils;
-import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
-import com.nnte.pf_business.entertity.OperatorInfo;
-import com.nnte.pf_business.entertity.PFMenu;
-import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
-import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
-import com.nnte.pf_business.request.RequestFunc;
-import com.nnte.pf_business.request.RequestMenu;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @Controller
 @RequestMapping(value = "/sysset")
 public class SyssetController extends BaseController {
+    /*
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
     @Autowired
     private PlateformFunctionComponent plateformFunctionComponent;
-    /**
-     * 显示菜单设置页面
-     * */
+
+    //显示菜单设置页面
     @RequestMapping(value = "/menuset")
     public ModelAndView menuset(HttpServletRequest request,ModelAndView modelAndView){
         Map<String,Object> map=new HashMap<>();
@@ -63,8 +37,6 @@ public class SyssetController extends BaseController {
         return modelAndView;
     }
 
-
-
     @RequestMapping(value = "/refreshMenus")
     @ResponseBody
     public Map<String,Object> refreshMenus(HttpServletRequest request){
@@ -84,9 +56,8 @@ public class SyssetController extends BaseController {
         BaseNnte.setRetTrue(ret,"刷新成功");
         return ret;
     }
-    /**
-     * 通过FTL渲染一个特定的功能
-     * */
+
+    //通过FTL渲染一个特定的功能
     private String applyPFunctionByFtl(HttpServletRequest request,PlateformFunctions func,
                                     String staticRoot,String contextPath){
         Map<String,Object> paramMap=new HashMap<>();
@@ -96,9 +67,8 @@ public class SyssetController extends BaseController {
         paramMap.put("funcPath",BaseComponent.getPathByRuler(func.getAuthCode()));
         return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap, "/templates/front/sysset/menu/function.ftl");
     }
-    /**
-     * 通过FTL渲染一个特定的菜单
-     * */
+
+    //通过FTL渲染一个特定的菜单
     private String applyPFMenuByFtl(HttpServletRequest request,PFMenu menu,
                                     String staticRoot,String contextPath){
         Map<String,Object> paramMap=new HashMap<>();
@@ -107,9 +77,8 @@ public class SyssetController extends BaseController {
         paramMap.put("contextPath",contextPath);
         return FreeMarkertUtil.getFreemarkerFtl(request,request.getServletContext(),FreeMarkertUtil.pathType.cls,paramMap, "/templates/front/sysset/menu/menu.ftl");
     }
-    /**
-     * 渲染菜单，如果有子菜单或功能，需要
-     * */
+
+    //渲染菜单，如果有子菜单或功能，需要
     private String applyPFMenu(HttpServletRequest request,PFMenu menu,
                                String staticRoot,String contextPath){
         StringBuffer menuBody = new StringBuffer();
@@ -125,9 +94,8 @@ public class SyssetController extends BaseController {
         }
         return menuBody.toString();
     }
-    /**
-     * 在服务器端渲染菜单及功能树
-     * */
+
+    //在服务器端渲染菜单及功能树
     private String applyMenuTable(HttpServletRequest request,List<PFMenu> pfMenuList ,
                                   String staticRoot,String contextPath){
         if (pfMenuList==null || pfMenuList.size()<=0)
@@ -138,9 +106,8 @@ public class SyssetController extends BaseController {
         }
         return menuBody.toString();
     }
-    /**
-     * 保存菜单信息更改，含新增和更改
-     * */
+
+    //保存菜单信息更改，含新增和更改
     @RequestMapping(value = "/saveMenuModify")
     @ResponseBody
     public Map<String,Object> saveMenuModify(HttpServletRequest request, @RequestBody JsonNode json){
@@ -156,9 +123,8 @@ public class SyssetController extends BaseController {
         BeanUtils.copyFromSrc(rMenu,menu);
         return plateformFunctionComponent.saveMenuModify(menu);
     }
-    /**
-     * 删除菜单定义（物理删除）
-     * */
+
+    //删除菜单定义（物理删除）
     @RequestMapping(value = "/deleteMenuByCode")
     @ResponseBody
     public Map<String,Object> deleteMenuByCode(HttpServletRequest request, @RequestBody JsonNode json){
@@ -170,9 +136,8 @@ public class SyssetController extends BaseController {
         }
         return plateformFunctionComponent.deleteMenuByCode(rMenu.getMenuCode());
     }
-    /**
-     * 删除功能菜单定义（物理删除）
-     * */
+
+    //删除功能菜单定义（物理删除）
     @RequestMapping(value = "/deleteFuncByCode")
     @ResponseBody
     public Map<String,Object> deleteFuncByCode(HttpServletRequest request, @RequestBody JsonNode json){
@@ -184,9 +149,8 @@ public class SyssetController extends BaseController {
         }
         return plateformFunctionComponent.deleteFuncByCode(rFunc.getFunCode());
     }
-    /**
-     * 保存菜单功能，含更改及增加
-     * */
+
+    //保存菜单功能，含更改及增加
     @RequestMapping(value = "/saveFunctionModify")
     @ResponseBody
     public Map<String,Object> saveFunctionModify(HttpServletRequest request, @RequestBody JsonNode json){
@@ -202,4 +166,5 @@ public class SyssetController extends BaseController {
         BeanUtils.copyFromSrc(rFunc,func);
         return plateformFunctionComponent.saveFunctionModify(func,rFunc.getFunPath());
     }
+    */
 }

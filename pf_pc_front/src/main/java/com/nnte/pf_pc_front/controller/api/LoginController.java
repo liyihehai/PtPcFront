@@ -2,12 +2,12 @@ package com.nnte.pf_pc_front.controller.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.base.BaseController;
+import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.entity.ResponseResult;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_business.component.PfBusinessComponent;
-import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.entertity.PFMenu;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;

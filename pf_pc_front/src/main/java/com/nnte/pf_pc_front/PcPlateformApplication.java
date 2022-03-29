@@ -19,6 +19,7 @@ public class PcPlateformApplication
     //------------------------------------------------------------
     public static void main(String[] args)
     {
+        //---------
         String jarPath=FileUtil.toUNIXpath(System.getProperty("user.dir"));
         System.out.println("jarPath="+jarPath);
         String logHomeRoot = "/"+jarPath+"/logs/pf_pc_front/logs/";

@@ -29,6 +29,11 @@
             <artifactId>pf_business</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.nnte.plateform</groupId>
+            <artifactId>pf_merchant</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -7,14 +7,14 @@ import com.nnte.basebusi.annotation.WatchAttr;
 import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
+import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
-import com.nnte.framework.annotation.MybatisXmlMapper;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
-import com.nnte.pf_business.entertity.OperatorInfo;
 import com.nnte.pf_business.entertity.PFMenu;
 import com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec;
 import com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRecService;
@@ -34,7 +34,6 @@ import java.util.*;
 @Component
 @BusiLogAttr("Pf_Business")
 @WatchAttr(value = 102)
-@MybatisXmlMapper("com.nnte.pf_business.mapper.workdb")
 public class PfBusinessComponent extends BaseComponent implements WatchInterface {
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
@@ -176,7 +175,7 @@ public class PfBusinessComponent extends BaseComponent implements WatchInterface
             }
             childrenMenuArray.add(nodeMenu);
         }
-        parentNodeMenu.put("children",childrenMenuArray);
+        parentNodeMenu.set("children",childrenMenuArray);
     }
 
     private void loadMenuNodeFunc(List<PlateformFunctions> menuFuncList,ObjectNode parentNodeMenu,boolean isForEdit) throws BusiException{
@@ -200,7 +199,7 @@ public class PfBusinessComponent extends BaseComponent implements WatchInterface
             nodeFunc.put(routePath,parentNodeMenu.get(routePath).textValue()+"/"+func.getFunName());
             childrenFuncArray.add(nodeFunc);
         }
-        parentNodeMenu.put("children",childrenFuncArray);
+        parentNodeMenu.set("children",childrenFuncArray);
     }
 
     private ObjectNode createNodeFromMenu(PFMenu menu,boolean isForEdit) throws BusiException{
@@ -283,6 +282,7 @@ public class PfBusinessComponent extends BaseComponent implements WatchInterface
                 if (!pfo.getOpeState().equals(PlateformOperatorComponent.OperatorState.VALID.getValue())) {
                     throw new Exception("操作员状态不合法");
                 }
+                opeInfo.setOperatorType(pfo.getOpeType());
                 //如果模块或权限没有定义，只能是超级系统管理员才能进入
                 if (StringUtils.isEmpty(me.getSysRole()) || StringUtils.isEmpty(me.getRoleRuler())) {
                     if (pfo.getOpeType().equals(1))

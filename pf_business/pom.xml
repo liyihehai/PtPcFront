@@ -47,15 +47,23 @@
     <dependencies>
         <!--内部依赖-->
         <dependency>
+            <groupId>com.nnte.plateform</groupId>
+            <artifactId>pf_basic</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>com.nnte</groupId>
             <artifactId>nnte_BaseBusi</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
+        -->
         <dependency>
             <groupId>com.nnte.kservice</groupId>
             <artifactId>fdfs_client_mgr</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <build>
