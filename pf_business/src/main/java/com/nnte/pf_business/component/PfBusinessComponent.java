@@ -3,8 +3,6 @@ package com.nnte.pf_business.component;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.annotation.WatchAttr;
-import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.entity.OperatorInfo;
@@ -33,8 +31,7 @@ import java.util.*;
 
 @Component
 @BusiLogAttr("Pf_Business")
-@WatchAttr(value = 102)
-public class PfBusinessComponent extends BaseComponent implements WatchInterface {
+public class PfBusinessComponent extends BaseComponent {
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
     @Autowired
@@ -66,12 +63,6 @@ public class PfBusinessComponent extends BaseComponent implements WatchInterface
         return plateformMenusService;
     }
 
-
-    @Override
-    public void runWatch() {
-        Boolean result=fdfsClientMgrComponent.activeTest();
-        System.out.println("fdfsClientMgrComponent.activeTest......"+result.toString());
-    }
     /**
      * 取得状态可用的单一操作员信息
      */
@@ -467,25 +458,5 @@ public class PfBusinessComponent extends BaseComponent implements WatchInterface
             outLogExp(be);
         }
     }
-    /**
-     * 上传并保存图片文件,为防止垃圾文件需删除原图片文件
-     * */
-    public Map<String, Object> uploadImageFile(String imageGroup,String fileName,
-                                                  String srcFile, byte[] content) {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
-        //替换原有将模板文件保存在应用服务器,模板文件改为保存在文件服务器中
-        String submitName=fdfsClientMgrComponent.uploadFile(imageGroup,content,FileUtil.getExtention(fileName));
-        if (StringUtils.isNotEmpty(submitName)){
-            ret.put("submitName",submitName);
-            BaseNnte.setRetTrue(ret,"保存图片文件成功");
-            if (StringUtils.isNotEmpty(srcFile)){
-                //如果存在被替换的模板文件名，需要在文件服务器端删除原始的模板文件
-                fdfsClientMgrComponent.deleteFile(imageGroup,srcFile);
-            }
-        }else{
-            BaseNnte.setRetTrue(ret,"保存图片文件失败");
-        }
-        //------------------------------------------------------
-        return ret;
-    }
+
 }

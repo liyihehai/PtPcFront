@@ -1,6 +1,7 @@
 package com.nnte.pf_merchant.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
+import com.nnte.basebusi.annotation.RootConfigProperties;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseLog;
 import com.nnte.basebusi.excption.BusiException;
@@ -11,13 +12,12 @@ import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.MailUtils;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.PlateformSysParamComponent;
+import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.entertity.EmailContent;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +25,10 @@ import org.springframework.stereotype.Component;
  * 邮件发送MQ组件
  * */
 @Component
-@ConfigurationProperties(prefix = "emailmq.merchant.apply")
-@PropertySource(value = "classpath:emailmq.properties")
-@BusiLogAttr("MqComponent")
+//@ConfigurationProperties(prefix = "emailmq.merchant.apply")
+//@PropertySource(value = "classpath:emailmq.properties")
+@RootConfigProperties(fileName = "emailmq.properties",prefix = "emailmq.merchant.apply")
+@BusiLogAttr(PFMerchantConfig.loggerName)
 public class EmailMQComponent extends BaseComponent implements RocketmqMsgListener<EmailContent> {
     public static RocketMqComponent.RocketMQProducer producer  = null;
 

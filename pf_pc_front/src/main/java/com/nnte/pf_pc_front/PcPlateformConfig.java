@@ -2,15 +2,16 @@ package com.nnte.pf_pc_front;
 
 import com.nnte.basebusi.annotation.AppInitInterface;
 import com.nnte.basebusi.base.BaseComponent;
-import com.nnte.basebusi.base.JedisComponent;
 import com.nnte.basebusi.base.WatchComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
+import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.base.DBSchemaPostgreSQL;
 import com.nnte.framework.base.DynamicDatabaseSourceHolder;
 import com.nnte.framework.base.SpringContextHolder;
 import com.nnte.framework.utils.BaiduMapUtil;
+import com.nnte.pf_basic.component.JedisComponent;
 import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_pc_front.config.AppRootConfig;
@@ -58,7 +59,8 @@ public class PcPlateformConfig extends BaseComponent
         jedis.initJedisCom();
         //-----------------------
         //--初始化文件服务器连接--
-
+        FdfsClientMgrComponent fdfsClientMgrComponent = SpringContextHolder.getBean(FdfsClientMgrComponent.class);
+        fdfsClientMgrComponent.runFdfsClientMgr(null);
         //------------------------
 
         //------------------------

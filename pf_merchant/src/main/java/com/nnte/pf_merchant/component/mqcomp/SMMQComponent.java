@@ -1,25 +1,26 @@
 package com.nnte.pf_merchant.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
+import com.nnte.basebusi.annotation.RootConfigProperties;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.RocketmqMsgListener;
 import com.nnte.framework.base.RocketMqComponent;
 import com.nnte.framework.entity.FException;
+import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.entertity.SMContent;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
  * 短信发送MQ组件
  * */
 @Component
-@ConfigurationProperties(prefix = "smmq")
-@PropertySource(value = "classpath:smmq.properties")
-@BusiLogAttr("MqComponent")
+//@ConfigurationProperties(prefix = "smmq")
+//@PropertySource(value = "classpath:smmq.properties")
+@RootConfigProperties(fileName = "smmq.properties",prefix = "smmq")
+@BusiLogAttr(PFMerchantConfig.loggerName)
 public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<SMContent> {
     public static RocketMqComponent.RocketMQProducer producer  = null;
 
@@ -38,6 +39,7 @@ public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<
         try {
             producer = RocketMqComponent.instancProducer(getSmMqGroup(),
                     getSmMqNamesrvAddr(), SMContent.class,getSmSendMqInstanceName());
+            producer.setCreateTopicKey(producer.getClassTopic());
         } catch (Exception e) {
             throw new BusiException(e);
         }

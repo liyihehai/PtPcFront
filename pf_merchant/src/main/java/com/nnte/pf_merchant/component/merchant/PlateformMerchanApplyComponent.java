@@ -3,13 +3,15 @@ package com.nnte.pf_merchant.component.merchant;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseComponent;
-import com.nnte.basebusi.base.JedisComponent;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.component.JedisComponent;
 import com.nnte.pf_merchant.component.mqcomp.EmailMQComponent;
 import com.nnte.pf_merchant.component.mqcomp.SMMQComponent;
+import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.entertity.EmailContent;
 import com.nnte.pf_merchant.entertity.SMContent;
 import com.nnte.pf_merchant.mapper.workdb.merchantapply.PlateformMerchanApply;
@@ -28,7 +30,7 @@ import java.util.Map;
  * 商户申请组件
  * 日志打印位置：MerchantManager 商户管理
  * */
-@BusiLogAttr(value = "MerchantManager")
+@BusiLogAttr(PFMerchantConfig.loggerName)
 public class PlateformMerchanApplyComponent extends BaseComponent {
 
     @Autowired
@@ -108,6 +110,14 @@ public class PlateformMerchanApplyComponent extends BaseComponent {
             BaseNnte.setRetTrue(ret, "查询列表成功");
         }
         return ret;
+    }
+
+    /**
+     * 查询申请列表
+     */
+    public PageData<PlateformMerchanApply> applyList(Map<String,Object> paramMap,Integer pageNo,Integer pageSize) throws Exception{
+        return plateformMerchanApplyService.getListPageData(plateformMerchanApplyService.getFullStatementName("findModelListByMap") ,
+                paramMap,pageNo,pageSize);
     }
 
     /**

@@ -12,6 +12,7 @@ import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.MapUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchantService;
 import com.nnte.pf_merchant.mapper.workdb.merchant_expand.PlateformMerchantExpand;
@@ -31,7 +32,7 @@ import java.util.Map;
  * 商户组件
  * 日志打印位置：MerchantManager 商户管理
  * */
-@BusiLogAttr(value = "MerchantManager")
+@BusiLogAttr(PFMerchantConfig.loggerName)
 public class PlateformMerchanComponent extends BaseComponent {
     @Autowired
     private PlateformMerchantService plateformMerchantService;

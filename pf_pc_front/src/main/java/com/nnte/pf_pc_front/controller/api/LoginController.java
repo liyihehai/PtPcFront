@@ -26,8 +26,6 @@ public class LoginController extends BaseController {
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
 
-
-
     @GetMapping(value = "/currentUser")
     @ResponseBody
     public ResponseResult currentUser(@RequestBody JsonNode data){
@@ -68,6 +66,7 @@ public class LoginController extends BaseController {
                 dataMap.put("OperatorInfo", opeInfo);
                 List<PFMenu> menuFuncList = (List<PFMenu>) checkMap.get("menuFuncList");
                 dataMap.put("MenuFunctions", pfBusinessComponent.loadMenuFuncNode(menuFuncList, false));
+                dataMap.put("envData",request.getAttribute("envData"));
                 return BaseController.success("登录成功!", dataMap);
             } else {
                 return BaseController.error(StringUtils.defaultString(checkMap.get("msg")));

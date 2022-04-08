@@ -5,6 +5,8 @@ import com.nnte.basebusi.annotation.StringCheck;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class RequestApply {
@@ -31,16 +33,23 @@ public class RequestApply {
     @IntegerCheck(colName = "申请状态",inVals = {-1,0,1,2,3,4},nullValid = false)
     private Integer applyState;
 
+    private String creatorCode;      //创建人代码
+    private String creatorName;      //创建人姓名
+    private Date createTime;
+
     @StringCheck(colName = "短信验证码",maxLen = 6)
     private String smRandomCode;
 
     private String opeCode;
     private String opeName;
     private String pmCode;
+    private Integer checkResult;    //审核结果:1审核通过，0审核不通过
     private String checkDesc;
     private String checkerCode;
     private String pmShortName;
     private String checkerName;
+    private String confirmCode;
+    private String confirmName;
     private String createTimeRange;
     private String lockTimeRange;
     private String checkTimeRange;

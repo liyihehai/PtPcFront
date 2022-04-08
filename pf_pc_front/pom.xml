@@ -17,8 +17,12 @@
 
     <repositories>
         <repository>
-            <id>snapshots</id>
-            <url>http://39.99.191.134:8999/repository/maven-snapshots/</url>
+            <id>bd-nexus-snapshots</id>
+            <name>maven-snapshots</name>
+            <url>http://120.48.2.149:8999/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -41,7 +45,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
+                <version>2.2.6.RELEASE</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -50,7 +54,6 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
                     <mainClass>api.ProviderApplication</mainClass>
@@ -59,68 +62,23 @@
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                     <!--指定入口类-->
                     <mainClass>com.nnte.pf_pc_front.PcPlateformApplication</mainClass>
-
                 </configuration>
-            </plugin>
-            <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-            <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
         <resources>
+            <!-- 所有配置文件都不打包 -->
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
-                <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.*</include>
+                    <include>**/*.ftl</include>
+                    <!--<include>**/*.properties</include>-->
                 </includes>
-                <!--
-                <excludes>
-                    <exclude>**/*.properties</exclude>
-                </excludes>
-                -->
-                <filtering>true</filtering>
             </resource>
         </resources>
     </build>

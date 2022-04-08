@@ -1,5 +1,6 @@
 package com.nnte.pf_basic.component;
 
+import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.WatchAttr;
 import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.framework.annotation.WorkDBAspect;
@@ -8,6 +9,7 @@ import com.nnte.framework.base.BaseService;
 import com.nnte.framework.base.DataLibrary;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_basic.mapper.workdb.sysparam.PlateformSysparam;
 import com.nnte.pf_basic.mapper.workdb.sysparam.PlateformSysparamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.*;
  * 平台系统参数组件
  * */
 @WatchAttr(value = 100)
+@BusiLogAttr(AppBasicConfig.JarLoggerName)
 public class PlateformSysParamComponent implements WatchInterface {
 
     /**

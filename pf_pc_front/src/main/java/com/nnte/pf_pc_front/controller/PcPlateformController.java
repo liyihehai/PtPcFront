@@ -7,6 +7,7 @@ import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.FException;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.component.PFBasicComponent;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.entertity.PFMenu;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
@@ -33,6 +34,8 @@ public class PcPlateformController extends BaseController {
 
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
+    @Autowired
+    private PFBasicComponent pfBasicComponent;
 
     private static String IMAGE_UPLOAD_GROUP="webstatic";
 
@@ -210,39 +213,43 @@ public class PcPlateformController extends BaseController {
     @ResponseBody
     public Map<String, Object> uploadImage(HttpServletRequest request,String uploadtype,String appendJson){
         Map<String,Object> ret = BaseNnte.newMapRetObj();
-        JsonUtil.JNode node=JsonUtil.createJNode(JsonUtil.jsonToNode(UrlEncodeUtil.UrlDecode(appendJson)));
-        if (node==null){
-            BaseNnte.setRetFalse(ret,1003,"不能取得上传的附加数据");
+        try {
+            JsonUtil.JNode node = JsonUtil.createJNode(JsonUtil.jsonToNode(UrlEncodeUtil.UrlDecode(appendJson)));
+            if (node == null) {
+                BaseNnte.setRetFalse(ret, 1003, "不能取得上传的附加数据");
+                return ret;
+            }
+            setParamMapDataEnv(request, ret);
+            Map<String, Object> envData = (Map) ret.get("envData");
+            String httpname = StringUtils.defaultString(envData.get("uploadStaticRoot")) + "/";
+            String srcUrl = node.getText("srcUrl");
+            String srcFile = null;
+            if (!StringUtils.isEmpty(srcUrl) && srcUrl.indexOf(httpname) >= 0) {
+                String t = srcUrl.replace(httpname, "");
+                int findex = t.indexOf("/");
+                if (findex >= 0) {
+                    srcFile = t.substring(findex, t.length());
+                }
+            }
+            Map<String, Object> contentMap;
+            if (NumberUtil.getDefaultInteger(uploadtype).equals(1)) {
+                contentMap = getUploadFileContent(request);
+            } else {//如果不是文件上传，按裁剪上传处理
+                contentMap = getUploadCropperContent(request);
+            }
+            if (!BaseNnte.getRetSuc(contentMap))
+                return contentMap;
+            String filename = (String) contentMap.get("filename");
+            byte[] bytes = (byte[]) contentMap.get("bytes");
+            String url = pfBasicComponent.uploadImageFile(IMAGE_UPLOAD_GROUP, filename, srcFile, bytes);
+            String file = url.replaceAll(":", "/");
+            ret.put("fileUrl", httpname + file);
+            BaseNnte.setRetTrue(ret, "上传文件成功");
+            return ret;
+        }catch (Exception e){
+            BaseNnte.setRetFalse(ret, 1003, e.getMessage());
             return ret;
         }
-        setParamMapDataEnv(request,ret);
-        Map<String, Object> envData = (Map)ret.get("envData");
-        String httpname=StringUtils.defaultString(envData.get("uploadStaticRoot"))+"/";
-        String srcUrl=node.getText("srcUrl");
-        String srcFile=null;
-        if (!StringUtils.isEmpty(srcUrl) && srcUrl.indexOf(httpname)>=0){
-            String t = srcUrl.replace(httpname,"");
-            int findex = t.indexOf("/");
-            if (findex>=0){
-                srcFile = t.substring(findex,t.length());
-            }
-        }
-        Map<String,Object> contentMap;
-        if (NumberUtil.getDefaultInteger(uploadtype).equals(1)) {
-            contentMap = getUploadFileContent(request);
-        }else{//如果不是文件上传，按裁剪上传处理
-            contentMap = getUploadCropperContent(request);
-        }
-        if (!BaseNnte.getRetSuc(contentMap))
-            return contentMap;
-        String filename=(String)contentMap.get("filename");
-        byte[] bytes = (byte[])contentMap.get("bytes");
-        Map<String,Object> uploadRet=pfBusinessComponent.uploadImageFile(IMAGE_UPLOAD_GROUP,filename,srcFile,bytes);
-        String submitName=StringUtils.defaultString(uploadRet.get("submitName"));
-        String file=submitName.replaceAll(":","/");
-        ret.put("fileUrl",httpname+file);
-        BaseNnte.setRetTrue(ret,"上传文件成功");
-        return ret;
     }
 
     /**
