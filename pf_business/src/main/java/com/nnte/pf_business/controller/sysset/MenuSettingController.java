@@ -44,8 +44,10 @@ public class MenuSettingController extends BaseController {
     private PlateformOperatorComponent plateformOperatorComponent;
 
 
-    @ModuleEnter(path = "/sysset/menuList", name = "菜单设置页面", desc = "平台系统菜单设置，系统超级管理员功能",
-            roleRuler = "pf-menuset", moduleCode = PFBusinessConfig.MODULE_SYSTEM_SETTING)
+    @ModuleEnter(path = "/sysset/menuList", name = "菜单设置页面",
+            desc = "平台系统菜单设置，系统超级管理员功能",
+            roleRuler = "pf-menuset",
+            moduleCode = PFBusinessConfig.MODULE_SYSTEM_SETTING)
     @RequestMapping(value = "/allMenuTree", method = {RequestMethod.GET})
     @ResponseBody
     public Object allMenuTree(HttpServletRequest request, @Nullable @RequestBody JsonNode data) {

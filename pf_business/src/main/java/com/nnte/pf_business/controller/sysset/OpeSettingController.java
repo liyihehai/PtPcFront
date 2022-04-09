@@ -12,10 +12,11 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_basic.config.AppBasicSysRole;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
 import com.nnte.pf_business.config.PFBusinessConfig;
-import com.nnte.pf_business.config.PFBusinessSysRole;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.request.RequestFunc;
@@ -47,8 +48,10 @@ public class OpeSettingController extends BaseController {
     /**
      * 取得操作员设置页面列表
      */
-    @ModuleEnter(path = "/sysset/operatorSetList", name = "操作员设置", desc = "平台系统操作员设置，系统管理员功能",
-            sysRole = PFBusinessSysRole.SYS_MANAGER, roleRuler = "pf-operatorset",
+    @ModuleEnter(path = "/sysset/operatorSetList", name = "操作员设置",
+            desc = "平台系统操作员设置，系统管理员功能",
+            sysRole = AppBasicSysRole.SYS_MANAGER,
+            roleRuler = "pf-operatorset",
             moduleCode = PFBusinessConfig.MODULE_SYSTEM_SETTING)
     @RequestMapping(value = "/operatorSetList")
     @ResponseBody

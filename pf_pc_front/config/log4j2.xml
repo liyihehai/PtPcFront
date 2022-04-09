@@ -9,7 +9,7 @@
         <Property name="LOG_HOME">${sys:LogHomeRoot}</Property>
         <property name="DEBUG_LOG_FILE_NAME">${LOG_HOME}/debug</property>
         <property name="INFO_LOG_FILE_NAME">${LOG_HOME}/info</property>
-        <property name="WARN_LOG_FILE_NAME">${LOG_HOME}/warn</property>
+        <property name="WARN_LOG_FILE_NAME">${LOG_HOME}warn</property>
         <property name="ERROR_LOG_FILE_NAME">${LOG_HOME}/error</property>
     </Properties>
     <Appenders>
@@ -35,8 +35,7 @@
                 %n 是换行符
                 eg:"2017-04-17 16:04:02.312 INFO  com.zte.lucene.tools.DateUtils2Joda:424 [main] - Info Message!"
             -->
-            <PatternLayout
-                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}:%L [%t] - %msg%n" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}:%L [%t] - %msg%n" />
         </Console>
         <!-- RollingFileAppender 定义输出滚动文件格式。（FileAppender 定义输出到文件）
             name ： RollingFileAppender的名字，用于与Loggers模块的绑定
@@ -72,8 +71,7 @@
         <RollingFile name="RollingFileInfo" fileName="${INFO_LOG_FILE_NAME}/info.log"
                      filePattern="${INFO_LOG_FILE_NAME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
             <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
-            <PatternLayout
-                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}:%L [%t] - %msg%n" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}:%L [%t] - %msg%n" />
             <!-- Policies定义相关策略：-->
             <Policies>
                 <!--TimeBasedTriggeringPolicy 基于时间的滚动策略:该策略主要是完成周期性的log文件封存工作。
@@ -139,7 +137,7 @@
         <root level="DEBUG">
             <appender-ref ref="Console" />
             <appender-ref ref="RollingFileDebug" />
-            <!--<appender-ref ref="RollingFileInfo" />-->
+            <appender-ref ref="RollingFileInfo" />
             <appender-ref ref="RollingFileWarn" />
             <appender-ref ref="RollingFileError" />
         </root>

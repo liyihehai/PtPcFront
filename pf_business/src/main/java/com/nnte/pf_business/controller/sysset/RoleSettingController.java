@@ -14,10 +14,10 @@ import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.NumberDefUtil;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_basic.config.AppBasicSysRole;
 import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
 import com.nnte.pf_business.config.PFBusinessConfig;
-import com.nnte.pf_business.config.PFBusinessSysRole;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import com.nnte.pf_business.request.RequestFunc;
 import com.nnte.pf_business.request.RequestRole;
@@ -46,7 +46,7 @@ public class RoleSettingController extends BaseController {
      * 获取角色设置列表
      */
     @ModuleEnter(path = "/sysset/roleSetList", name = "角色设置页面", desc = "平台系统角色设置，系统管理员功能",
-            sysRole = PFBusinessSysRole.SYS_MANAGER, roleRuler = "pf-roleset",
+            sysRole = AppBasicSysRole.SYS_MANAGER, roleRuler = "pf-roleset",
             moduleCode = PFBusinessConfig.MODULE_SYSTEM_SETTING)
     @RequestMapping(value = "/roleSetList", method = {RequestMethod.POST})
     @ResponseBody
