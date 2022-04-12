@@ -2,12 +2,10 @@ package com.nnte.pf_merchant.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.RootConfigProperties;
-import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseLog;
+import com.nnte.basebusi.base.PulsarComponent;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.annotation.RocketmqMsgListener;
-import com.nnte.framework.base.RocketMqComponent;
-import com.nnte.framework.entity.FException;
+import com.nnte.framework.utils.IpUtil;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.MailUtils;
 import com.nnte.framework.utils.StringUtils;
@@ -25,13 +23,12 @@ import org.springframework.stereotype.Component;
  * 邮件发送MQ组件
  * */
 @Component
-//@ConfigurationProperties(prefix = "emailmq.merchant.apply")
-//@PropertySource(value = "classpath:emailmq.properties")
 @RootConfigProperties(fileName = "emailmq.properties",prefix = "emailmq.merchant.apply")
 @BusiLogAttr(PFMerchantConfig.loggerName)
-public class EmailMQComponent extends BaseComponent implements RocketmqMsgListener<EmailContent> {
-    public static RocketMqComponent.RocketMQProducer producer  = null;
-
+public class EmailMQComponent extends PulsarComponent<EmailContent> {
+    public EmailMQComponent(){
+        setContentClazz(EmailContent.class);
+    }
     @Getter @Setter
     private String emailApplyGroup;
     @Getter @Setter
@@ -43,6 +40,25 @@ public class EmailMQComponent extends BaseComponent implements RocketmqMsgListen
 
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
+
+    @Override
+    public void onConsumerMessageReceived(EmailContent bodyObject) {
+        outLogInfo("收到发送商户确认邮件请求，email："+bodyObject.getEmail());
+        try {
+            String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSingleParamVText(PlateformSysParamComponent.SYS_SMTP_ACCOUNT_JSON));
+            SysSmtpAccount ssa = JsonUtil.jsonToBean(smtpJson, SysSmtpAccount.class);
+            if (ssa == null)
+                throw new BusiException("邮件账户JSON数据定义不合法");
+            JavaMailSenderImpl sender=MailUtils.setInitData(ssa.getSmtp_host(), ssa.getPort(), ssa.getUsername(), ssa.getPasswd(),
+                    ssa.isTsl());
+            MailUtils.richContentSend(sender,bodyObject.getEmail(),bodyObject.getTitle(),
+                    bodyObject.getContent(),null);
+            outLogInfo("发送商户确认邮件请求成功，email："+bodyObject.getEmail());
+        }catch (Exception e){
+            outLogWarn("发送商户确认邮件请求失败，email："+bodyObject.getEmail()+",err:"+e.getMessage());
+            BaseLog.outLogExp(e);
+        }
+    }
 
     @Data
     public static class SysSmtpAccount{
@@ -58,8 +74,10 @@ public class EmailMQComponent extends BaseComponent implements RocketmqMsgListen
      * */
     public void initProducer() throws BusiException {
         try {
-            producer = RocketMqComponent.instancProducer(getEmailApplyGroup(),
-                    getEmailApplyNamesrvAddr(), EmailContent.class,getEmailSendApplyInstanceName());
+            String ipport = getEmailApplyNamesrvAddr();
+            String[] s=ipport.split(":");
+            initPulsarClient(s[0],s[1]);
+            createProducer(getEmailApplyGroup());
         } catch (Exception e) {
             throw new BusiException(e);
         }
@@ -70,50 +88,21 @@ public class EmailMQComponent extends BaseComponent implements RocketmqMsgListen
      * */
     public synchronized void send2MQ(EmailContent ec) throws BusiException{
         try {
-            if (producer!=null) {
-                producer.producerSendMessage("",ec);
-                outLogInfo("发送邮件到地址："+ec.getEmail());
-            }
+            sendAsyncMessage(ec);
+            outLogInfo("发送邮件到地址："+ec.getEmail());
         } catch (Exception e) {
             throw new BusiException(e);
         }
     }
 
-    /**
-     * MQ消息接收部分
-     * */
-    private static RocketMqComponent.RocketMQConsumer consumer = null;
-
-    @Override
-    public Class getBodyClass() {
-        return EmailContent.class;
-    }
-
-    @Override
-    public void onConsumeMessage(String msgId, String keys, EmailContent bodyObject) {
-        outLogInfo("收到发送商户确认邮件请求，email："+bodyObject.getEmail());
-        try {
-            String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSingleParamVText(PlateformSysParamComponent.SYS_SMTP_ACCOUNT_JSON));
-            SysSmtpAccount ssa = JsonUtil.jsonToBean(smtpJson, SysSmtpAccount.class);
-            if (ssa == null)
-                throw new BusiException("邮件账户JSON数据定义不合法");
-            JavaMailSenderImpl sender=MailUtils.setInitData(ssa.getSmtp_host(), ssa.getPort(), ssa.getUsername(), ssa.getPasswd(),
-                        ssa.isTsl());
-            MailUtils.richContentSend(sender,bodyObject.getEmail(),bodyObject.getTitle(),
-                    bodyObject.getContent(),null);
-            outLogInfo("发送商户确认邮件请求成功，email："+bodyObject.getEmail());
-        }catch (Exception e){
-            outLogWarn("发送商户确认邮件请求失败，email："+bodyObject.getEmail()+",err:"+e.getMessage());
-            BaseLog.outLogExp(e);
-        }
-    }
-
     public void initConsumer() throws BusiException {
         try {
-            consumer = RocketMqComponent.instancConsumer(getEmailApplyGroup(),
-                    getEmailApplyNamesrvAddr(),getEmailListenApplyInstanceName(),
-                    EmailContent.class,null,this);
-        } catch (FException e) {
+            String ipport = getEmailApplyNamesrvAddr();
+            String[] s=ipport.split(":");
+            initPulsarClient(s[0],s[1]);
+            String localIp=IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
+            createCustmou(getEmailApplyGroup(),getEmailApplyGroup()+"-"+localIp,3,20);
+        } catch (Exception e) {
             throw new BusiException(e);
         }
     }

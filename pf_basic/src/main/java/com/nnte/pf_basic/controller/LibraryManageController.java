@@ -114,7 +114,8 @@ public class LibraryManageController extends BaseController {
             OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
             dataLibraryComponent.saveLibraryItem(libraryItem.getId(),libraryItem.getLibTypeCode(),
                     libraryItem.getTypeItemCode(), libraryItem.getTypeItemName(),
-                    libraryItem.getItemSort(),libraryItem.getRemark(),oi.getOperatorName());
+                    libraryItem.getItemSort(),libraryItem.getRemark(),oi.getOperatorName(),
+                    AppBasicConfig.App_Code,DataLibraryConfig.Lib_ModelName);
             return success("保存数据字典分类成功");
         }catch (Exception e) {
             return onException(e);
@@ -133,6 +134,22 @@ public class LibraryManageController extends BaseController {
             Integer id = jNode.getInteger("id");
             dataLibraryComponent.delLibraryItem(id,oi.getOperatorName());
             return success("保存数据字典分类成功");
+        }catch (Exception e) {
+            return onException(e);
+        }
+    }
+
+    /**
+     * 分类代码取得有效的分项集合
+     * */
+    @RequestMapping(value = "/getValidLibItems", method = RequestMethod.POST)
+    @ResponseBody
+    public Object getValidLibItems(@NonNull @RequestBody JsonNode data) {
+        try {
+            JsonUtil.JNode jNode = new JsonUtil.JNode(data);
+            String libTypeCode = jNode.getText("libTypeCode");
+            return success("取得有效的分项集合",dataLibraryComponent.getValidLibItems(libTypeCode,
+                    AppBasicConfig.App_Code,DataLibraryConfig.Lib_ModelName));
         }catch (Exception e) {
             return onException(e);
         }

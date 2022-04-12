@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 @RootConfigProperties(fileName = "work-dbsrc-config.properties",prefix = "work.dbsrc",superSet = true)
 @MybatisXmlMapper("com.nnte.pf_basic.mapper.workdb")
 public class AppBasicConfig extends DBSrcConfig implements ModuleInterface {
+    public final static String App_Code = "PF-PC-MANAGER";
+    public final static String App_Name = "平台PC管理端应用";
+
     public static final String DB_Name = "PfWorkDB";
     public static final String JarLoggerName = "PfBasic";
     public static final String jarName = "pf_basic.jar";

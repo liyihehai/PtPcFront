@@ -43,24 +43,12 @@ public class DataLibraryComponent extends BaseComponent {
     }
 
     /**
-     * 分类代码+分项代码取得特定的分项
-     */
-    public PlateformLibrary getSpectTypeItem(String libTypeCode, String typeItemCode) {
-        PlateformLibrary dto = new PlateformLibrary();
-        dto.setLibTypeCode(libTypeCode);
-        dto.setTypeItemCode(typeItemCode);
-        List<PlateformLibrary> list = plateformLibraryService.findModelList(dto);
-        if (list == null || list.size() <= 0)
-            return null;
-        return list.get(0);
-    }
-
-    /**
      * 保存数据字典分项
      */
     public void saveLibraryItem(Integer id, String libTypeCode,
                                 String typeItemCode, String typeItemName,
-                                Integer itemSort, String remark, String employeeName) throws BusiException {
+                                Integer itemSort, String remark, String employeeName,
+                                String appCode,String modelName) throws BusiException {
         boolean doNew = false; //确定是否是新增操作
         if (id == null || id <= 0)
             doNew = true;
@@ -74,8 +62,8 @@ public class DataLibraryComponent extends BaseComponent {
             throw new BusiException("分类代码不能找到具体的分类定义");
         if (doNew) {
             //如果是新增操作，需要判断分项代码是否重复
-            PlateformLibrary srcItem = getSpectTypeItem(libTypeCode, typeItemCode);
-            if (srcItem != null)
+            PlateformLibrary srcItem = getValidSpectItem(typeItemCode, appCode,modelName);
+            if (srcItem!=null)
                 throw new BusiException("分类下该编码的分项已经存在");
             PlateformLibrary newItem = new PlateformLibrary();
             newItem.setLibTypeCode(libTypeCode);
@@ -84,6 +72,7 @@ public class DataLibraryComponent extends BaseComponent {
             newItem.setTypeItemName(typeItemName);
             newItem.setItemSort(itemSort);
             newItem.setItemState(1);//默认为有效
+            newItem.setAppCode(AppBasicConfig.App_Code);//设置应用代码
             newItem.setModelCode(DataLibraryConfig.Lib_ModelName);
             newItem.setCanModify(1);//可以增加的为可编辑项
             newItem.setRemark(remark);
@@ -139,12 +128,37 @@ public class DataLibraryComponent extends BaseComponent {
     }
 
     /**
-     * 分类代码取得分项集合
+     * 按分项代码取得有效的分项单项
      */
-    public List<PlateformLibrary> getSpectTypeItem(String libTypeCode) {
+    public PlateformLibrary getValidSpectItem(String typeItemCode,String appCode,String modelName) {
+        PlateformLibrary dto = new PlateformLibrary();
+        dto.setTypeItemCode(typeItemCode);
+        dto.setItemState(1);
+        dto.setAppCode(appCode);
+        dto.setModelCode(modelName);
+        List<PlateformLibrary> list = plateformLibraryService.findModelList(dto);
+        if (list!=null && list.size()>0)
+            return list.get(0);
+        return null;
+    }
+    /**
+     * 分类代码取得有效的分项集合
+     */
+    public List<KeyValue> getValidLibItems(String libTypeCode,String appCode,String modelName) {
         PlateformLibrary dto = new PlateformLibrary();
         dto.setLibTypeCode(libTypeCode);
+        dto.setSort("item_sort");
+        dto.setDir("asc");
+        dto.setItemState(1);
+        dto.setAppCode(appCode);
+        dto.setModelCode(modelName);
         List<PlateformLibrary> list = plateformLibraryService.findModelList(dto);
-        return list;
+        List<KeyValue> retList = new ArrayList<>();
+        if (list!=null && list.size()>0){
+            for(PlateformLibrary lib:list){
+                retList.add(new KeyValue(lib.getTypeItemCode(),lib.getTypeItemName()));
+            }
+        }
+        return retList;
     }
 }

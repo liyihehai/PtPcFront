@@ -40,8 +40,8 @@ public class PcPlateformConfig extends BaseComponent
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        AppRegistry.registry(PcPlateformApplication.App_Code,
-                PcPlateformApplication.App_Name,this);
+        AppRegistry.registry(AppBasicConfig.App_Code,
+                AppBasicConfig.App_Name,this);
         appInit();
     }
 

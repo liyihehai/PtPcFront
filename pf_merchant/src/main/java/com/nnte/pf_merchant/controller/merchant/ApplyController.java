@@ -176,22 +176,25 @@ public class ApplyController extends BaseController {
     /**
      * 保存商户申请信息
      */
-    @RequestMapping(value = "/saveApplyModify")
+    @RequestMapping(value = "/saveMerchantApply")
     @ResponseBody
-    public Map<String, Object> saveApplyModify(HttpServletRequest request, @RequestBody JsonNode json) {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
+    public Object saveMerchantApply(HttpServletRequest request, @RequestBody JsonNode json) {
         try {
             RequestApply rApply = JsonUtil.jsonToBean(json.toString(), RequestApply.class);
             if (rApply == null)
                 throw new BusiException("未取得商户申请信息");
             BaseComponent.checkModelFields(rApply);
+            Map<String, Object> ret = new HashedMap();
             setParamMapDataEnv(request, ret);
             Map<String, Object> envData = (Map) ret.get("envData");
             OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
-            return plateformMerchanApplyComponent.saveApplyModify(rApply, oi, envData);
+            Map<String, Object> retMap = plateformMerchanApplyComponent.saveApplyModify(rApply, oi, envData);
+            if (BaseNnte.getRetSuc(retMap))
+            return success("保存商户申请信息成功");
+            else
+                return error(StringUtils.defaultString(retMap.get("msg")));
         } catch (BusiException be) {
-            BaseNnte.setRetFalse(ret, 1002, be.getMessage());
-            return ret;
+            return onException(be);
         }
     }
 

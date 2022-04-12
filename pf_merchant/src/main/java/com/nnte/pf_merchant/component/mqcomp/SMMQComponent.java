@@ -2,11 +2,9 @@ package com.nnte.pf_merchant.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.RootConfigProperties;
-import com.nnte.basebusi.base.BaseComponent;
+import com.nnte.basebusi.base.PulsarComponent;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.annotation.RocketmqMsgListener;
-import com.nnte.framework.base.RocketMqComponent;
-import com.nnte.framework.entity.FException;
+import com.nnte.framework.utils.IpUtil;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.entertity.SMContent;
 import lombok.Getter;
@@ -17,12 +15,17 @@ import org.springframework.stereotype.Component;
  * 短信发送MQ组件
  * */
 @Component
-//@ConfigurationProperties(prefix = "smmq")
-//@PropertySource(value = "classpath:smmq.properties")
 @RootConfigProperties(fileName = "smmq.properties",prefix = "smmq")
 @BusiLogAttr(PFMerchantConfig.loggerName)
-public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<SMContent> {
-    public static RocketMqComponent.RocketMQProducer producer  = null;
+public class SMMQComponent extends PulsarComponent<SMContent> {
+    public SMMQComponent(){
+        setContentClazz(SMContent.class);
+    }
+
+    @Override
+    public void onConsumerMessageReceived(SMContent bodyObject) {
+        outLogInfo("收到发送短信请求，phone："+bodyObject.getPhoneNo()+",content:"+bodyObject.getContent());
+    }
 
     @Getter @Setter
     private String smMqGroup;
@@ -37,9 +40,10 @@ public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<
      * */
     public void initProducer() throws BusiException {
         try {
-            producer = RocketMqComponent.instancProducer(getSmMqGroup(),
-                    getSmMqNamesrvAddr(), SMContent.class,getSmSendMqInstanceName());
-            producer.setCreateTopicKey(producer.getClassTopic());
+            String ipport = getSmMqNamesrvAddr();
+            String[] s=ipport.split(":");
+            initPulsarClient(s[0],s[1]);
+            createProducer(getSmMqGroup());
         } catch (Exception e) {
             throw new BusiException(e);
         }
@@ -49,35 +53,21 @@ public class SMMQComponent extends BaseComponent implements RocketmqMsgListener<
      * */
     public synchronized void send2MQ(SMContent sm) throws BusiException{
         try {
-            if (producer!=null) {
-                producer.producerSendMessage(sm.getSmTag(),sm);
-                outLogInfo("发送短信到号码："+sm.getPhoneNo());
-            }
+            sendAsyncMessage(sm);
+            outLogInfo("发送短信到号码："+sm.getPhoneNo());
         } catch (Exception e) {
             throw new BusiException(e);
         }
     }
-    /**
-     * MQ消息接收部分
-     * */
-    private static RocketMqComponent.RocketMQConsumer consumer = null;
-
-    @Override
-    public Class getBodyClass() {
-        return SMContent.class;
-    }
-
-    @Override
-    public void onConsumeMessage(String msgId, String keys, SMContent bodyObject) {
-        outLogInfo("收到发送短信请求，phone："+bodyObject.getPhoneNo()+",content:"+bodyObject.getContent());
-    }
 
     public void initConsumer() throws BusiException {
         try {
-            consumer = RocketMqComponent.instancConsumer(getSmMqGroup(),
-                    getSmMqNamesrvAddr(),getSmListenMqInstanceName(),
-                    SMContent.class,null,this);
-        } catch (FException e) {
+            String ipport = getSmMqNamesrvAddr();
+            String[] s=ipport.split(":");
+            initPulsarClient(s[0],s[1]);
+            String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
+            createCustmou(getSmMqGroup(),getSmMqGroup()+"-"+localIp,3,20);
+        } catch (Exception e) {
             throw new BusiException(e);
         }
     }

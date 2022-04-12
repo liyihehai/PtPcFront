@@ -128,9 +128,10 @@
     <Loggers>
         <!--过滤掉spring的一些无用的DEBUG信息-->
         <logger name="org.springframework" level="INFO"></logger>
-        <logger name="RocketmqRemoting" level="ERROR"></logger>
-        <logger name="RocketmqClient" level="ERROR"></logger>
-        <logger name="RocketmqCommon" level="WARN"></logger>
+        <logger name="org.apache.pulsar.common.protocol.PulsarHandler" level="INFO"></logger>
+        <logger name="org.apache.pulsar.common.protocol.PulsarDecoder" level="INFO"></logger>
+        <logger name="org.apache.pulsar.client.impl.ClientCnx" level="INFO"></logger>
+        <logger name="org.apache.pulsar.shade.io.netty.buffer.PooledByteBufAllocator" level="INFO"></logger>
         <logger name="com.zaxxer.hikari.pool.HikariPool" level="INFO"></logger>
         <!-- 配置日志的根节点 -->
         <!-- level="all" 只能够输出level级别是all及all以上的-->
