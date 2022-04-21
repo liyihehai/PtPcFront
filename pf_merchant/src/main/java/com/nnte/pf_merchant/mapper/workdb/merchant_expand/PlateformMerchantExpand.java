@@ -3,8 +3,8 @@ import com.nnte.framework.base.BaseModel;
 import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
-/*
- * 自动代码 请勿更改 <2022-03-28 13:16:25>
+/**
+ * auto code,do not modify <2022-04-21 09:55:04>
  */
 public class PlateformMerchantExpand extends BaseModel {
     @DBPKColum private String pmCode;
@@ -13,6 +13,7 @@ public class PlateformMerchantExpand extends BaseModel {
     private String pmProvince;
     private String pmCity;
     private String pmArea;
+    private String pmPcazh;
     private String pmAddress;
     private String pmZipcode;
     private String pmCoordinate;
@@ -35,6 +36,9 @@ public class PlateformMerchantExpand extends BaseModel {
     private String pmCertificatePic3;
     private String pmCertificatePic4;
     private Date createTime;
+    private String createBy;
+    private String updateBy;
+    private Date updateTime;
 
     public PlateformMerchantExpand(){}
 
@@ -50,6 +54,8 @@ public class PlateformMerchantExpand extends BaseModel {
     public void setPmCity(String  pmCity){ this.pmCity = pmCity;}
     public String  getPmArea(){ return pmArea;}
     public void setPmArea(String  pmArea){ this.pmArea = pmArea;}
+    public String  getPmPcazh(){ return pmPcazh;}
+    public void setPmPcazh(String  pmPcazh){ this.pmPcazh = pmPcazh;}
     public String  getPmAddress(){ return pmAddress;}
     public void setPmAddress(String  pmAddress){ this.pmAddress = pmAddress;}
     public String  getPmZipcode(){ return pmZipcode;}
@@ -94,4 +100,10 @@ public class PlateformMerchantExpand extends BaseModel {
     public void setPmCertificatePic4(String  pmCertificatePic4){ this.pmCertificatePic4 = pmCertificatePic4;}
     public Date  getCreateTime(){ return createTime;}
     public void setCreateTime(Date  createTime){ this.createTime = createTime;}
+    public String  getCreateBy(){ return createBy;}
+    public void setCreateBy(String  createBy){ this.createBy = createBy;}
+    public String  getUpdateBy(){ return updateBy;}
+    public void setUpdateBy(String  updateBy){ this.updateBy = updateBy;}
+    public Date  getUpdateTime(){ return updateTime;}
+    public void setUpdateTime(Date  updateTime){ this.updateTime = updateTime;}
 }
