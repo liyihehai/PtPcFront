@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.menus.PlateformMenusDao">
+    <select id="queryPMenusOrderByClass" parameterType="com.nnte.pf_business.mapper.workdb.menus.PlateformMenus" resultMap="PlateformMenusResult">
+        select * from plateform_menus
+        where 1=1 <if test="menuState!=null">and menu_state=#{menuState}</if>
+        order by menu_class asc,menu_code asc
+    </select>
+</mapper>

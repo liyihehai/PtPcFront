@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.nnte.PlateForm</groupId>
+    <artifactId>pf_pc_front</artifactId>
+    <version>1.0.1</version>
+    <packaging>jar</packaging>
+    <name>pf_pc_front</name>
+    <description>nnte PlateForm pf_pc_front model for Spring Boot</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>bd-nexus-snapshots</id>
+            <name>maven-snapshots</name>
+            <url>http://120.48.2.149:8999/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--内部依赖-->
+		<dependency>
+            <groupId>com.nnte.plateform</groupId>
+            <artifactId>pf_business</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nnte.plateform</groupId>
+            <artifactId>pf_merchant</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.2.6.RELEASE</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <mainClass>api.ProviderApplication</mainClass>
+                    <fork>true</fork>
+                    <!--增加jvm参数-->
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                    <!--指定入口类-->
+                    <mainClass>com.nnte.pf_pc_front.PcPlateformApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <!-- 所有配置文件都不打包 -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.ftl</include>
+                    <!--<include>**/*.properties</include>-->
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+</project>

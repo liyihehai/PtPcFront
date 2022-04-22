@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorDao">
+    <select id="queryPlateformOperators" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformOperatorResult">
+        select * from plateform_operator
+        where 1=1 <if test="opeState!=null and opeState>=0">and ope_state=#{opeState}</if>
+                  <if test="opeCode!=null">and ope_code like '%${opeCode}%'</if>
+                  <if test="opeName!=null">and ope_name like '%${opeName}%'</if>
+                  <if test="opeType!=null and opeType>=0">and ope_type=#{opeType}</if>
+                  <if test="opeMobile!=null">and ope_mobile like '%${opeMobile}%'</if>
+        order by create_time desc
+    </select>
+</mapper>

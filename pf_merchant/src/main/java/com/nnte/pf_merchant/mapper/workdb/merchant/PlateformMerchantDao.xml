@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchantDao">
+    <resultMap id="PlateformMerchantResult" type="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant">
+        <result column="id" property="id"/>
+        <result column="pm_code" property="pmCode"/>
+        <result column="pm_name" property="pmName"/>
+        <result column="pm_short_name" property="pmShortName"/>
+        <result column="pm_company_person" property="pmCompanyPerson"/>
+        <result column="pm_logo" property="pmLogo"/>
+        <result column="pm_state" property="pmState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="apply_email" property="applyEmail"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant">
+        insert into plateform_merchant (pm_code ,pm_name ,pm_short_name ,pm_company_person ,pm_logo ,pm_state ,create_time ,apply_email ,create_by ,update_by ,update_time )
+        values (#{pmCode} ,#{pmName} ,#{pmShortName} ,#{pmCompanyPerson} ,#{pmLogo} ,#{pmState} ,#{createTime} ,#{applyEmail} ,#{createBy} ,#{updateBy} ,#{updateTime} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformMerchantResult" parameterType="java.lang.Integer">
+        select * from plateform_merchant where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_merchant where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant">
+        update plateform_merchant
+        <set>
+            <trim suffixOverrides=",">
+        <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
+        <if test="pmName!= null"><![CDATA[pm_name=#{pmName},]]></if>
+        <if test="pmShortName!= null"><![CDATA[pm_short_name=#{pmShortName},]]></if>
+        <if test="pmCompanyPerson!= null"><![CDATA[pm_company_person=#{pmCompanyPerson},]]></if>
+        <if test="pmLogo!= null"><![CDATA[pm_logo=#{pmLogo},]]></if>
+        <if test="pmState!= null"><![CDATA[pm_state=#{pmState},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="applyEmail!= null"><![CDATA[apply_email=#{applyEmail},]]></if>
+        <if test="createBy!= null"><![CDATA[create_by=#{createBy},]]></if>
+        <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
+        <if test="updateTime!= null"><![CDATA[update_time=#{updateTime},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
+                <if test="pmName!= null"><![CDATA[and t.pm_name = #{pmName}]]></if>
+                <if test="pmShortName!= null"><![CDATA[and t.pm_short_name = #{pmShortName}]]></if>
+                <if test="pmCompanyPerson!= null"><![CDATA[and t.pm_company_person = #{pmCompanyPerson}]]></if>
+                <if test="pmLogo!= null"><![CDATA[and t.pm_logo = #{pmLogo}]]></if>
+                <if test="pmState!= null"><![CDATA[and t.pm_state = #{pmState}]]></if>
+                <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+                <if test="applyEmail!= null"><![CDATA[and t.apply_email = #{applyEmail}]]></if>
+                <if test="createBy!= null"><![CDATA[and t.create_by = #{createBy}]]></if>
+                <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>
+                <if test="updateTime!= null"><![CDATA[and t.update_time = #{updateTime}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformMerchantListSql">
+        select * from plateform_merchant t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant" resultMap="PlateformMerchantResult">
+        <include refid="findPlateformMerchantListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformMerchantListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant" resultMap="PlateformMerchantResult">
+        <include refid="findPlateformMerchantListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformMerchantResult">
+        select * from plateform_merchant t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformMerchantResult">
+        select * from plateform_merchant
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>

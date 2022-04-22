@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.library.PlateformLibraryDao">
+    <resultMap id="PlateformLibraryResult" type="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary">
+        <result column="id" property="id"/>
+        <result column="lib_type_code" property="libTypeCode"/>
+        <result column="lib_type_name" property="libTypeName"/>
+        <result column="type_item_code" property="typeItemCode"/>
+        <result column="type_item_name" property="typeItemName"/>
+        <result column="item_sort" property="itemSort"/>
+        <result column="item_state" property="itemState"/>
+        <result column="app_code" property="appCode"/>
+        <result column="model_code" property="modelCode"/>
+        <result column="can_modify" property="canModify"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary">
+        insert into plateform_library (lib_type_code ,lib_type_name ,type_item_code ,type_item_name ,item_sort ,item_state ,app_code ,model_code ,can_modify ,remark ,create_by ,create_date ,update_by ,update_date )
+        values (#{libTypeCode} ,#{libTypeName} ,#{typeItemCode} ,#{typeItemName} ,#{itemSort} ,#{itemState} ,#{appCode} ,#{modelCode} ,#{canModify} ,#{remark} ,#{createBy} ,#{createDate} ,#{updateBy} ,#{updateDate} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformLibraryResult" parameterType="java.lang.Integer">
+        select * from plateform_library where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_library where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary">
+        update plateform_library
+        <set>
+            <trim suffixOverrides=",">
+        <if test="libTypeCode!= null"><![CDATA[lib_type_code=#{libTypeCode},]]></if>
+        <if test="libTypeName!= null"><![CDATA[lib_type_name=#{libTypeName},]]></if>
+        <if test="typeItemCode!= null"><![CDATA[type_item_code=#{typeItemCode},]]></if>
+        <if test="typeItemName!= null"><![CDATA[type_item_name=#{typeItemName},]]></if>
+        <if test="itemSort!= null"><![CDATA[item_sort=#{itemSort},]]></if>
+        <if test="itemState!= null"><![CDATA[item_state=#{itemState},]]></if>
+        <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
+        <if test="modelCode!= null"><![CDATA[model_code=#{modelCode},]]></if>
+        <if test="canModify!= null"><![CDATA[can_modify=#{canModify},]]></if>
+        <if test="remark!= null"><![CDATA[remark=#{remark},]]></if>
+        <if test="createBy!= null"><![CDATA[create_by=#{createBy},]]></if>
+        <if test="createDate!= null"><![CDATA[create_date=#{createDate},]]></if>
+        <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
+        <if test="updateDate!= null"><![CDATA[update_date=#{updateDate},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="libTypeCode!= null"><![CDATA[and t.lib_type_code = #{libTypeCode}]]></if>
+                <if test="libTypeName!= null"><![CDATA[and t.lib_type_name = #{libTypeName}]]></if>
+                <if test="typeItemCode!= null"><![CDATA[and t.type_item_code = #{typeItemCode}]]></if>
+                <if test="typeItemName!= null"><![CDATA[and t.type_item_name = #{typeItemName}]]></if>
+                <if test="itemSort!= null"><![CDATA[and t.item_sort = #{itemSort}]]></if>
+                <if test="itemState!= null"><![CDATA[and t.item_state = #{itemState}]]></if>
+                <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
+                <if test="modelCode!= null"><![CDATA[and t.model_code = #{modelCode}]]></if>
+                <if test="canModify!= null"><![CDATA[and t.can_modify = #{canModify}]]></if>
+                <if test="remark!= null"><![CDATA[and t.remark = #{remark}]]></if>
+                <if test="createBy!= null"><![CDATA[and t.create_by = #{createBy}]]></if>
+                <if test="createDate!= null"><![CDATA[and t.create_date = #{createDate}]]></if>
+                <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>
+                <if test="updateDate!= null"><![CDATA[and t.update_date = #{updateDate}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformLibraryListSql">
+        select * from plateform_library t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary" resultMap="PlateformLibraryResult">
+        <include refid="findPlateformLibraryListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformLibraryListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_basic.mapper.workdb.library.PlateformLibrary" resultMap="PlateformLibraryResult">
+        <include refid="findPlateformLibraryListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformLibraryResult">
+        select * from plateform_library t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformLibraryResult">
+        select * from plateform_library
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>
