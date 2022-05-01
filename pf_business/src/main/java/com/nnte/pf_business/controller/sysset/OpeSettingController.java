@@ -5,14 +5,15 @@ import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.AppendWhere;
-import com.nnte.basebusi.entity.AppendWhereLike;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.entity.PageData;
-import com.nnte.framework.utils.*;
-import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.framework.utils.BeanUtils;
+import com.nnte.framework.utils.JsonUtil;
+import com.nnte.framework.utils.NumberDefUtil;
+import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.config.AppBasicSysRole;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.component.roles.PlateformRoleComponent;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,22 +69,10 @@ public class OpeSettingController extends BaseController {
             AppendWhere whereState = new AppendWhere(AppendWhere.Type_Direct);
             whereState.setWhereTxt("t.ope_state!=3");
             appendWhereList.add(whereState);
-            if (StringUtils.isNotEmpty(queryOpe.getOpeCode()))
-                appendWhereList.add(new AppendWhereLike("t.ope_code", queryOpe.getOpeCode()));
-            if (StringUtils.isNotEmpty(queryOpe.getOpeName()))
-                appendWhereList.add(new AppendWhereLike("t.ope_name", queryOpe.getOpeName()));
-            if (StringUtils.isNotEmpty(queryOpe.getOpeMobile()))
-                appendWhereList.add(new AppendWhereLike("t.ope_mobile", queryOpe.getOpeMobile()));
-            if (queryOpe.getCreateTimeRange() != null && queryOpe.getCreateTimeRange().length > 0) {
-                AppendWhere dateWhere = new AppendWhere(AppendWhere.Type_Direct);
-                Date startTime = DateUtils.todayZeroTime(DateUtils.stringToDate(queryOpe.getCreateTimeRange()[0]));
-                Date endTime = null;
-                if (queryOpe.getCreateTimeRange().length > 1) {
-                    endTime = DateUtils.todayNightZeroTime(DateUtils.stringToDate(queryOpe.getCreateTimeRange()[1]));
-                }
-                AppendWhere.andDateRange(dateWhere, "t.create_time", startTime, endTime);
-                appendWhereList.add(dateWhere);
-            }
+            AppendWhere.addLikeStringToWhereList(queryOpe.getOpeCode(),"t.ope_code",appendWhereList);
+            AppendWhere.addLikeStringToWhereList(queryOpe.getOpeName(),"t.ope_name",appendWhereList);
+            AppendWhere.addLikeStringToWhereList(queryOpe.getOpeMobile(),"t.ope_mobile",appendWhereList);
+            AppendWhere.addDataRangeToWhereList(queryOpe.getCreateTimeRange(),"t.create_time",appendWhereList);
             //-----------------------------------------------
             if (appendWhereList.size() > 0)
                 paramMap.put("appendWhereList", appendWhereList);
@@ -241,12 +229,8 @@ public class OpeSettingController extends BaseController {
     public Object queryOperatorFunctions(HttpServletRequest request, @RequestBody JsonNode json) {
         try {
             RequestOpe rOpe = JsonUtil.jsonToBean(json.toString(), RequestOpe.class);
-            if (rOpe == null) {
-                throw new BusiException(1002, "操作员代码不合法");
-            }
-            if (StringUtils.isEmpty(rOpe.getOpeCode())) {
-                throw new BusiException(1002, "操作员代码不合法");
-            }
+            if (rOpe == null) throw new BusiException(1002, "操作员代码不合法");
+            if (StringUtils.isEmpty(rOpe.getOpeCode()))throw new BusiException(1002, "操作员代码不合法");
             PlateformOperator ope = new PlateformOperator();
             ope.setOpeCode(rOpe.getOpeCode());
             List<RequestFunc> opeFunctions = plateformOperatorComponent.getOpeFunctionsList(ope);

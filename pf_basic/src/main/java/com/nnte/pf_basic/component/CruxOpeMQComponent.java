@@ -55,10 +55,11 @@ public class CruxOpeMQComponent extends PulsarComponent<CruxOpeContent> {
     /**
      * 发送操作到日志
      * */
-    public void sendCruxOperate(String no,String name,Object srcObject,Object newObject) throws BusiException{
+    public void sendCruxOperate(String operator,String no,String name,Object srcObject,Object newObject) throws BusiException{
         CruxOpeContent content = new CruxOpeContent();
         content.setTypeNO(no);
         content.setTypeName(name);
+        content.setOperatorName(operator);
         if (srcObject!=null) {
             if (srcObject instanceof String)
                 content.setSrcJson((String)srcObject);

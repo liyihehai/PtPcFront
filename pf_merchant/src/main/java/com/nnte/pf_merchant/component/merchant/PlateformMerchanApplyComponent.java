@@ -535,7 +535,7 @@ public class PlateformMerchanApplyComponent extends BaseComponent {
      * 商户申请通过操作
      */
     public Map applyPass(Integer applyId, String pmCode, String pmShortName, String checkDesc, OperatorInfo oi)
-            throws BusiException {
+            throws Exception {
         Map<String, Object> ret = BaseNnte.newMapRetObj();
         PlateformMerchanApply apply = getMerchantApplyById(applyId);
         if (apply == null || apply.getId() == null || apply.getId() <= 0)

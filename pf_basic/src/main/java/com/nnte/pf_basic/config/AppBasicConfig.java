@@ -8,12 +8,12 @@ import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.MybatisXmlMapper;
 import com.nnte.framework.base.SpringContextHolder;
 import com.nnte.pf_basic.component.CruxOpeMQComponent;
+import com.nnte.pf_basic.component.PFServiceCommonMQ;
 import org.springframework.stereotype.Component;
 
 @Component
-@RootConfigProperties(fileName = "work-dbsrc-config.properties",prefix = "work.dbsrc",superSet = true)
 @MybatisXmlMapper("com.nnte.pf_basic.mapper.workdb")
-public class AppBasicConfig extends DBSrcConfig implements ModuleInterface {
+public class AppBasicConfig implements ModuleInterface {
     public final static String App_Code = "PF-PC-MANAGER";
     public final static String App_Name = "平台PC管理端应用";
 
@@ -28,13 +28,22 @@ public class AppBasicConfig extends DBSrcConfig implements ModuleInterface {
 
     @Override
     public void initModule() {
+        /*
         CruxOpeMQComponent mqComponent = SpringContextHolder.getBean(CruxOpeMQComponent.class);
         if (mqComponent!=null){
             try {
                 mqComponent.initProducer();
-                mqComponent.initConsumer();
             }catch (BusiException be){}
         }
+        PFServiceCommonMQ pfServiceCommonMQ = SpringContextHolder.getBean(PFServiceCommonMQ.class);
+        if (pfServiceCommonMQ!=null){
+            try{
+                pfServiceCommonMQ.initProducer();
+                pfServiceCommonMQ.scanRegisterProcess();
+            }catch (Exception e){
+            }
+        }
+        */
     }
 
     @Override

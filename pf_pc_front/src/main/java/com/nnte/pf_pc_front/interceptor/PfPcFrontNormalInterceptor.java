@@ -8,6 +8,7 @@ import com.nnte.framework.annotation.ConfigLoad;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_basic.component.PFBasicComponent;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class PfPcFrontNormalInterceptor extends BaseBusi implements HandlerInter
     private ConfigInterface appconfig;
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
+    @Autowired
+    private PFBasicComponent pfBasicComponent;
 
     private boolean excludePathPatterns(String path) {
         String[] excludes = {".*/applyVerify.*",
@@ -70,7 +73,7 @@ public class PfPcFrontNormalInterceptor extends BaseBusi implements HandlerInter
                 enterType = 1; //Ajax进入
             }
             try {
-                Map checkMap = pfBusinessComponent.checkRequestToken(token, loginIp);
+                Map checkMap = pfBasicComponent.checkRequestToken(token, loginIp);
                 OperatorInfo oi = (OperatorInfo) checkMap.get("OperatorInfo");
                 request.setAttribute("OperatorInfo", oi);
                 //如果是进入模块，还需要验证操作员模块权限

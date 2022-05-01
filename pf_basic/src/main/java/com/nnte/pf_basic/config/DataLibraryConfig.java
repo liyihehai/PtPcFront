@@ -24,6 +24,7 @@ public class DataLibraryConfig {
     @Getter
     private static List<LibType> libTypeList = new ArrayList<>();
     {
+        libTypeList.add(new LibType("0000","系统应用"));
         libTypeList.add(new LibType("0001","行业分类"));//classification of professions
         libTypeList.add(new LibType("0002","证件类型"));
 

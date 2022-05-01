@@ -11,6 +11,7 @@ import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.component.PFBasicComponent;
 import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.entertity.PFMenu;
@@ -22,7 +23,6 @@ import com.nnte.pf_business.mapper.workdb.menus.PlateformMenus;
 import com.nnte.pf_business.mapper.workdb.menus.PlateformMenusService;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorService;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,6 @@ import java.util.*;
 @BusiLogAttr("Pf_Business")
 public class PfBusinessComponent extends BaseComponent {
     @Autowired
-    private PlateformSysParamComponent plateformSysParamComponent;
-    @Autowired
     private PlateformOperatorService plateformOperatorService;
     @Autowired
     private PlateformOperatorComponent plateformOperatorComponent;
@@ -44,20 +42,11 @@ public class PfBusinessComponent extends BaseComponent {
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
     private PlateformFunctionRecService plateformFunctionRecService;
-    @Autowired
-    private FdfsClientMgrComponent fdfsClientMgrComponent;
 
     public final static String TOKEN_MERCHANT_CODE = "PlateformPCFront";
     private final String routePath = "routePath";
-
-    public JwtUtils createTokenJwt() {
-        String secretKey = plateformSysParamComponent.getSingleParamV100("SYS_SECRETKEY");
-        String sign = plateformSysParamComponent.getSingleParamV100("SYS_SIGNATUREALGORITHM");
-        String expireTime = plateformSysParamComponent.getSingleParamV100("SYS_TOKENEXPIRETIME");
-        JwtUtils jwt = new JwtUtils();
-        jwt.initJwtParams(SignatureAlgorithm.forName(sign), secretKey, expireTime);
-        return jwt;
-    }
+    @Autowired
+    private PFBasicComponent pfBasicComponent;
 
     public PlateformMenusService getPlateformMenusService() {
         return plateformMenusService;
@@ -131,7 +120,7 @@ public class PfBusinessComponent extends BaseComponent {
             atd.setUserName(srcOpe.getOpeName());
             atd.setMerchantCode(TOKEN_MERCHANT_CODE);//固定为平台PC前端系统
             atd.setLoginIp(loginIp);
-            JwtUtils jwt = createTokenJwt();
+            JwtUtils jwt = pfBasicComponent.createTokenJwt();
             String token = jwt.createJsonWebToken(atd);
             OperatorInfo opeInfo = new OperatorInfo();
             opeInfo.setOperatorCode(opeCode);
@@ -230,38 +219,6 @@ public class PfBusinessComponent extends BaseComponent {
         }
         return childrenMenuArray;
     }
-
-    /**
-     * 校验请求的Token,拦截器调用
-     */
-    public Map<String, Object> checkRequestToken(String token, String loginIp) throws BusiException {
-        Map ret = BaseNnte.newMapRetObj();
-        JwtUtils jwt = createTokenJwt();
-        try {
-            AuthTokenDetailsDTO atd = jwt.parseAndValidate(token);
-            if (!atd.getLoginIp().equals(loginIp))
-                throw new BusiException("Ip地址不合法");
-            OperatorInfo opeInfo = new OperatorInfo();
-            opeInfo.setOperatorCode(atd.getUserCode());
-            opeInfo.setOperatorName(atd.getUserName());
-            Date now = new Date();
-            Date preExpTime = new Date((now.getTime() + 60 * 60 * 1000));//计算当前时间之后1小时的时间
-            if (preExpTime.after(atd.getExpirationDate())) {
-                //如果当前时间向后推1小时Token将要到期，要重新生成Token,此功能实现Token自动延期
-                opeInfo.setLoginTime(DateUtils.dateToString(now, DateUtils.DF_YMDHMS));
-                opeInfo.setToken(jwt.createJsonWebToken(atd));
-            } else {
-                opeInfo.setLoginTime(DateUtils.dateToString(new Date(atd.getExpirationDate().getTime() - jwt.getExpiredTime()),
-                        DateUtils.DF_YMDHMS));
-                opeInfo.setToken(token);
-            }
-            ret.put("OperatorInfo", opeInfo);
-        } catch (Exception e) {
-            throw new BusiException(e,1009);
-        }
-        return ret;
-    }
-
     /**
      * 校验操作员是否具备请求的模块的权限,拦截器调用
      */

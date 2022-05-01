@@ -6,8 +6,6 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component
-//@ConfigurationProperties(prefix = "pf.pc.front")
-//@PropertySource(value = "classpath:pf-pc-front-config.properties")
 @RootConfigProperties(fileName = "pf-pc-front-config.properties",prefix = "pf.pc.front")
 @Data
 public class AppRootConfig implements ConfigInterface {
@@ -17,6 +15,7 @@ public class AppRootConfig implements ConfigInterface {
     private String localHostAbstractName;
     private String staticRoot;
     private String uploadStaticRoot;
+    private String uploadFileServiceURL;    //文件上传服务URL
     //百度API-KEY
     private String baiduApiKey;
 }

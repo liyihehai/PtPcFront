@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.AppendWhere;
-import com.nnte.basebusi.entity.AppendWhereLike;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.entity.PageData;
-import com.nnte.framework.utils.*;
+import com.nnte.framework.utils.BeanUtils;
+import com.nnte.framework.utils.JsonUtil;
+import com.nnte.framework.utils.NumberDefUtil;
 import com.nnte.pf_merchant.component.merchant.PlateformMerchanComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.config.PFMerchantSysRole;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,25 +62,10 @@ public class SettingController extends BaseController {
             }
             //----------------------------------------------
             List<AppendWhere> appendWhereList = new ArrayList<>();
-            if (StringUtils.isNotEmpty(queryMerchant.getPmCode())) {
-                appendWhereList.add(new AppendWhereLike("t.pm_code", queryMerchant.getPmCode()));
-            }
-            if (StringUtils.isNotEmpty(queryMerchant.getPmName())) {
-                appendWhereList.add(new AppendWhereLike("t.pm_name", queryMerchant.getPmName()));
-            }
-            if (StringUtils.isNotEmpty(queryMerchant.getPmShortName())) {
-                appendWhereList.add(new AppendWhereLike("t.pm_short_name", queryMerchant.getPmShortName()));
-            }
-            if (queryMerchant.getCreateTimeRange()!=null && queryMerchant.getCreateTimeRange().length>0){
-                AppendWhere dateWhere = new AppendWhere(AppendWhere.Type_Direct);
-                Date startTime = DateUtils.todayZeroTime(DateUtils.stringToDate(queryMerchant.getCreateTimeRange()[0]));
-                Date endTime = null;
-                if (queryMerchant.getCreateTimeRange().length > 1) {
-                    endTime = DateUtils.todayNightZeroTime(DateUtils.stringToDate(queryMerchant.getCreateTimeRange()[1]));
-                }
-                AppendWhere.andDateRange(dateWhere, "t.create_time", startTime, endTime);
-                appendWhereList.add(dateWhere);
-            }
+            AppendWhere.addLikeStringToWhereList(queryMerchant.getPmCode(),"t.pm_code",appendWhereList);
+            AppendWhere.addLikeStringToWhereList(queryMerchant.getPmName(),"t.pm_name",appendWhereList);
+            AppendWhere.addLikeStringToWhereList(queryMerchant.getPmShortName(),"t.pm_short_name",appendWhereList);
+            AppendWhere.addDataRangeToWhereList(queryMerchant.getCreateTimeRange(),"t.create_time",appendWhereList);
             //----------------------------------------------
             if (appendWhereList.size() > 0)
                 paramMap.put("appendWhereList", appendWhereList);
@@ -131,6 +116,58 @@ public class SettingController extends BaseController {
                 throw new BusiException("未取商户基础信息及扩展信息");
             plateformMerchanComponent.saveMerchantSetting(merchant,merchantExpand,oi);
             return success("设置商户信息成功");
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+
+    /**
+     * 设置商户启动服务
+     * */
+    @RequestMapping(value = "/setMerchantStart")
+    @ResponseBody
+    public Object setMerchantStart(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            RequestMerchant merchant = JsonUtil.jsonToBean(json.toString(), RequestMerchant.class);
+            if (merchant==null)
+                throw new BusiException("未取商户基础信息");
+            plateformMerchanComponent.setMerchantStart(merchant,oi);
+            return success("设置商户启动服务成功");
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+    /**
+     * 设置商户暂停服务
+     * */
+    @RequestMapping(value = "/setMerchantPause")
+    @ResponseBody
+    public Object setMerchantPause(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            RequestMerchant merchant = JsonUtil.jsonToBean(json.toString(), RequestMerchant.class);
+            if (merchant==null)
+                throw new BusiException("未取商户基础信息");
+            plateformMerchanComponent.setMerchantPause(merchant,oi);
+            return success("设置商户暂停服务成功");
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+    /**
+     * 设置商户下架
+     * */
+    @RequestMapping(value = "/setMerchantOffLine")
+    @ResponseBody
+    public Object setMerchantOffLine(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            RequestMerchant merchant = JsonUtil.jsonToBean(json.toString(), RequestMerchant.class);
+            if (merchant==null)
+                throw new BusiException("未取商户基础信息");
+            plateformMerchanComponent.setMerchantOffLine(merchant,oi);
+            return success("设置商户下架成功");
         } catch (Exception e) {
             return onException(e);
         }

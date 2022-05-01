@@ -5,7 +5,6 @@ import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.AppendWhere;
-import com.nnte.basebusi.entity.AppendWhereLike;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
@@ -26,7 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @Controller
@@ -60,28 +62,11 @@ public class ApplyController extends BaseController {
         AppendWhere whereState = new AppendWhere(AppendWhere.Type_Direct);
         whereState.setWhereTxt("t.apply_state!=(-1)");
         appendWhereList.add(whereState);
-        if (StringUtils.isNotEmpty(queryApply.getPmName())) {
-            appendWhereList.add(new AppendWhereLike("t.pm_name", queryApply.getPmName()));
-        }
-        if (StringUtils.isNotEmpty(queryApply.getCreatorName())) {
-            appendWhereList.add(new AppendWhereLike("t.creator_name", queryApply.getCreatorName()));
-        }
-        if (StringUtils.isNotEmpty(queryApply.getConfirmName())) {
-            appendWhereList.add(new AppendWhereLike("t.confirm_name", queryApply.getConfirmName()));
-        }
-        if (StringUtils.isNotEmpty(queryApply.getCheckerName())) {
-            appendWhereList.add(new AppendWhereLike("t.checker_name", queryApply.getCheckerName()));
-        }
-        if (queryApply.getCreateTimeRange()!=null && queryApply.getCreateTimeRange().length>0){
-            AppendWhere dateWhere = new AppendWhere(AppendWhere.Type_Direct);
-            Date startTime = DateUtils.todayZeroTime(DateUtils.stringToDate(queryApply.getCreateTimeRange()[0]));
-            Date endTime = null;
-            if (queryApply.getCreateTimeRange().length > 1) {
-                endTime = DateUtils.todayNightZeroTime(DateUtils.stringToDate(queryApply.getCreateTimeRange()[1]));
-            }
-            AppendWhere.andDateRange(dateWhere, "t.create_time", startTime, endTime);
-            appendWhereList.add(dateWhere);
-        }
+        AppendWhere.addLikeStringToWhereList(queryApply.getPmName(),"t.pm_name",appendWhereList);
+        AppendWhere.addLikeStringToWhereList(queryApply.getCreatorName(),"t.creator_name",appendWhereList);
+        AppendWhere.addLikeStringToWhereList(queryApply.getConfirmName(),"t.confirm_name",appendWhereList);
+        AppendWhere.addLikeStringToWhereList(queryApply.getCheckerName(),"t.checker_name",appendWhereList);
+        AppendWhere.addDataRangeToWhereList(queryApply.getCreateTimeRange(),"t.create_time",appendWhereList);
         //----------------------------------------------
         if (appendWhereList.size() > 0)
             paramMap.put("appendWhereList", appendWhereList);

@@ -209,6 +209,7 @@ public class PcPlateformController extends BaseController {
     /**
      * 处理图片文件上传并保存，上传文件的方式可以是直接上传图片文件或通过裁剪图片方式上传
      * */
+    /*
     @RequestMapping("/uploadImage")
     @ResponseBody
     public Map<String, Object> uploadImage(HttpServletRequest request,String uploadtype,String appendJson){
@@ -251,6 +252,7 @@ public class PcPlateformController extends BaseController {
             return ret;
         }
     }
+    */
 
     /**
      * 打开WEB端裁剪图片对话框界面

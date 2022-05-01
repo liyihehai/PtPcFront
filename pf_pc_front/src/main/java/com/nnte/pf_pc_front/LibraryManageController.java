@@ -1,4 +1,4 @@
-package com.nnte.pf_basic.controller;
+package com.nnte.pf_pc_front;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
@@ -94,7 +94,8 @@ public class LibraryManageController extends BaseController {
                 appendMap.put("appendWhereList", appendWhereList);
             //-------------------------------------------------
             retMap.put("libItemList",dataLibraryComponent.getTypeItemListWithPage(libTypeCode,
-                    DataLibraryConfig.Lib_ModelName,
+                    //DataLibraryConfig.Lib_ModelName,
+                    null,
                     appendMap,pageNo, pageSize));
             return success("取得数据字典列表数据成功",retMap);
         }catch (Exception e){
@@ -149,7 +150,7 @@ public class LibraryManageController extends BaseController {
             JsonUtil.JNode jNode = new JsonUtil.JNode(data);
             String libTypeCode = jNode.getText("libTypeCode");
             return success("取得有效的分项集合",dataLibraryComponent.getValidLibItems(libTypeCode,
-                    AppBasicConfig.App_Code,DataLibraryConfig.Lib_ModelName));
+                    null,null));
         }catch (Exception e) {
             return onException(e);
         }

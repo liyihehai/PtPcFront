@@ -6,7 +6,6 @@ import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.framework.annotation.WorkDBAspect;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.base.BaseService;
-import com.nnte.framework.base.DataLibrary;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.config.AppBasicConfig;
@@ -37,7 +36,8 @@ public class PlateformSysParamComponent implements WatchInterface {
         preprocessParamsBuffer.append("'SYS_REPAIRING'").append(",");           //系统维修参数
         preprocessParamsBuffer.append("'SYS_SECRETKEY'").append(",");           //用于Token生成的secretKey
         preprocessParamsBuffer.append("'SYS_SIGNATUREALGORITHM'").append(",");  //用于Token生成的signatureAlgorithm加密方式
-        preprocessParamsBuffer.append("'SYS_TOKENEXPIRETIME'");                 //生成的Token的超时时间
+        preprocessParamsBuffer.append("'SYS_TOKENEXPIRETIME'").append(",");     //生成的Token的超时时间
+        preprocessParamsBuffer.append("'SYS_IP_WHITE_LIST'");                   //IP地址白名单
     }
 
     /**
@@ -182,12 +182,16 @@ public class PlateformSysParamComponent implements WatchInterface {
     /**
      * 保存商户单值参数（返回为0表示操作成功，失败返回非0）
      */
-    public Integer saveSingleParams(BaseService.ConnDaoSession session, String key, SysparamValCol vc,
+    public Integer saveSingleParams(BaseService.ConnDaoSession session,
+                                    String paramType,String paramName,String paramKeyGroup,
+                                    String key, SysparamValCol vc,
                                     String value, String opeCode, String opeName) {
         PlateformSysparam insertDto = getSingleParamObj(key);
+        insertDto.setParamType(paramType);
+        insertDto.setParamKeyGroup(paramKeyGroup);
+        insertDto.setParamName(paramName);
         if (insertDto == null) {
             insertDto = new PlateformSysparam();
-            insertDto.setParamName(DataLibrary.getSysParamDesc(insertDto.getParamType(), key));
             insertDto.setParamKey(key);             //按分类号查询多键值对
             insertDto.setParamState(1);             //参数状态为有效
             insertDto.setCreateTime(new Date());
@@ -206,9 +210,19 @@ public class PlateformSysParamComponent implements WatchInterface {
                 insertDto.setValueText(value);
         } else
             insertDto.setValue1(value);
-        PlateformSysparam saveDto = plateformSysparamService.save(session, insertDto, false);
+        PlateformSysparam saveDto;
+        if (session==null)
+            saveDto = plateformSysparamService.save(insertDto, false);
+        else
+            saveDto = plateformSysparamService.save(session, insertDto, false);
         if (saveDto != null && saveDto.getId() != null && saveDto.getId() > 0)
             return 0;
         return 9999;
+    }
+
+    public Integer saveSingleParams(String paramType,String paramName,String paramKeyGroup,
+                                    String key, SysparamValCol vc,String value, String opeCode,
+                                    String opeName) {
+        return saveSingleParams(null,paramType,paramName,paramKeyGroup,key,vc,value,opeCode,opeName);
     }
 }

@@ -1,10 +1,10 @@
 package com.nnte.pf_pc_front.interceptor;
 
 import com.nnte.basebusi.base.BaseController;
-import com.nnte.framework.annotation.ConfigLoad;
-import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.PlateformSysParamComponent;
+import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_pc_front.config.AppRootConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 
 @Component
 public class PfPcFrontMainInterceptor implements HandlerInterceptor {
-    @ConfigLoad
-    private ConfigInterface appconfig;
+    @Autowired
+    private AppRootConfig appRootConfig;
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
 
@@ -51,10 +51,13 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
         //请求中添加系统数据环境
         Map<String, Object> envData = new HashMap<>();
         envData.put("contextPath",request.getContextPath());
-        envData.put("debug", appconfig.getConfig("debug").toUpperCase());
-        envData.put("staticRoot", appconfig.getConfig("staticRoot"));
-        envData.put("localHostName", appconfig.getConfig("localHostName"));
-        envData.put("uploadStaticRoot", appconfig.getConfig("uploadStaticRoot"));
+        envData.put("debug", appRootConfig.getDebug().toUpperCase());
+        envData.put("AppCode", AppBasicConfig.App_Code);
+        envData.put("AppName", AppBasicConfig.App_Name);
+        envData.put("staticRoot", appRootConfig.getStaticRoot());
+        envData.put("localHostName", appRootConfig.getLocalHostName());
+        envData.put("uploadStaticRoot", appRootConfig.getUploadStaticRoot());
+        envData.put("uploadFileServiceURL", appRootConfig.getUploadFileServiceURL());
         request.setAttribute("envData",envData);
         return true;
     }

@@ -1,96 +1,168 @@
 package com.nnte.pf_basic.component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.annotation.WatchAttr;
-import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseComponent;
+import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
-import com.nnte.framework.utils.FileUtil;
-import com.nnte.framework.utils.StringUtils;
+import com.nnte.framework.base.BaseNnte;
+import com.nnte.framework.entity.AuthTokenDetailsDTO;
+import com.nnte.framework.entity.KeyValue;
+import com.nnte.framework.utils.*;
 import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_basic.entertity.AppFuncFactory;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.IOException;
-import java.util.Iterator;
+import java.util.*;
 
 @Component
-@WatchAttr(value = 102)
 @BusiLogAttr(AppBasicConfig.JarLoggerName)
-public class PFBasicComponent extends BaseComponent implements WatchInterface {
+public class PFBasicComponent extends BaseComponent {
     @Autowired
-    private FdfsClientMgrComponent fdfsClientMgrComponent;
+    private PlateformSysParamComponent plateformSysParamComponent;
+    @Autowired
+    private DataLibraryComponent dataLibraryComponent;
+    @Autowired
+    private PFServiceCommonMQ pfServiceCommonMQ;
+    @Autowired
+    private CruxOpeMQComponent cruxOpeMQComponent;
 
-    /**
-     * 通过FastDFS返回的groupName（分组名:一般为group1,group2...）
-     * 和storePath(挂载点名称：一般为M00,M01,...)确定静态文件访问
-     * 时应设置的前缀,在nginx中会设置静态文件访问的路径，如：
-     * location / 或  location /api/等，系统中保存文件路径应包含
-     * 前缀部分，如/api/00/00/...，不同的程序应更改本函数的返回
-     * <p>
-     * storePath在FastDFS的配置文件storage.conf中定义，store_path_count = 1
-     * 表示1个挂载点，名称为M00,路径由store_path0定义，如果有两个挂载点，应
-     * 设置store_path_count = 2，同时设置store_path1，此时名称为M01
-     */
-    public String getPathPri(String groupName, String storePath) {
-        return groupName + "/" + storePath; //返回 /group1/M00
+    public void loadFuncPathToFactory(String paramKey,AppFuncFactory factory){
+        String ArrayJson = plateformSysParamComponent.getSingleParamVText(paramKey);
+        if (ArrayJson == null)
+            return;
+        JsonNode jsonNode = JsonUtil.jsonToNode(ArrayJson);
+        if (jsonNode != null && jsonNode.isArray() && jsonNode.size() > 0) {
+            for (int i = 0; i < jsonNode.size(); i++) {
+                AppFuncFactory.AppFuncFilePath af = JsonUtil.jsonToBean(jsonNode.get(i).toString(), AppFuncFactory.AppFuncFilePath.class);
+                if (af != null && af.getAppCode().equals(factory.getAppCode())) {
+                    factory.getFuncPathMap().put(af.getFuncCode(), af);
+                }
+            }
+        }
+    }
+    public String makeParamKey(String appCode){
+        return  "FILEUPLOADAPP_" + appCode;
+    }
+    public Map<String, AppFuncFactory> uploadPathParam(){
+        Map<String, AppFuncFactory> appFuncFactoryMap = new HashedMap();
+        List<KeyValue> kvs = dataLibraryComponent.getValidLibItems("0000", null, null);
+        if (kvs != null && kvs.size() > 0) {
+            for (KeyValue app : kvs) {
+                AppFuncFactory factory = new AppFuncFactory();
+                factory.setAppCode(app.getKey());
+                factory.setAppName(app.getValue().toString());
+                appFuncFactoryMap.put(factory.getAppCode(), factory);
+                String paramKey = makeParamKey(factory.getAppCode());
+                loadFuncPathToFactory(paramKey,factory);
+            }
+        }
+        return appFuncFactoryMap;
     }
 
-    /**
-     * 上传并保存图片文件,为防止垃圾文件需删除原图片文件
-     */
-    public String uploadImageFile(MultipartHttpServletRequest multipartRequest, String groupName) throws BusiException {
-        Iterator<String> Is = multipartRequest.getFileNames();
-        if (!Is.hasNext())
-            throw new BusiException(1003, "没有取得上传的文件内容");
-        String uploadFileName = Is.next();
-        MultipartFile templateFile = multipartRequest.getFile(uploadFileName);
-        if (templateFile == null) {
-            throw new BusiException(1003, "不能取得上传的文件内容");
+    public String isAppCodeValid(String appCode) throws Exception{
+        List<KeyValue> kvs = dataLibraryComponent.getValidLibItems("0000", null, null);
+        if (kvs != null && kvs.size() > 0) {
+            for(KeyValue kv:kvs){
+                if (kv.getKey().equals(appCode)){
+                    return kv.getValue().toString();
+                }
+            }
         }
-        String srcFile=multipartRequest.getParameter("srcFile");
-        String filename = templateFile.getOriginalFilename();
-        byte[] bytes;
+        throw new BusiException("应用代码无效");
+    }
+    public void saveUploadPathFactory(String appCode,List<AppFuncFactory.AppFuncFilePath> appFuncFilePathList,
+                                      String operatorCode,String operatorName) throws Exception{
+        isAppCodeValid(appCode);
+        String paramKey = "FILEUPLOADAPP_" + appCode;
+        if (appFuncFilePathList.size()>0){
+            for(AppFuncFactory.AppFuncFilePath affp:appFuncFilePathList){
+                if (StringUtils.isEmpty(affp.getFuncCode()))
+                    throw new BusiException("应用编号无效");
+                if (StringUtils.isEmpty(affp.getPath()))
+                    throw new BusiException("路径不能为空");
+                if (StringUtils.isEmpty(affp.getPathMask()))
+                    throw new BusiException("路径掩码不能为空");
+            }
+        }
+        String param = JsonUtil.beanToJson(appFuncFilePathList);
+        int result = plateformSysParamComponent.saveSingleParams("APPOPS","文件上传管理应用模块路径",
+                null,paramKey,PlateformSysParamComponent.SysparamValCol.VAL_TXT,
+                param,operatorCode,operatorName);
+        if (result!=0)
+            throw new BusiException("保存参数失败");
+        cruxOpeMQComponent.sendCruxOperate(operatorName,"0002-1","更改文件上传路径参数",paramKey,param);
+    }
+
+    public AppFuncFactory deleteUploadPathItem(String appCode,String funcCode,
+                                     String operatorCode,String operatorName) throws Exception{
+        String appName=isAppCodeValid(appCode);
+        AppFuncFactory factory = new AppFuncFactory();
+        factory.setAppCode(appCode);
+        factory.setAppName(appName);
+        String paramKey = makeParamKey(appCode);
+        loadFuncPathToFactory(paramKey,factory);
+        if (factory.getFuncPathMap()==null || factory.getFuncPathMap().size()<=0)
+            throw new BusiException("没有功能编号为["+funcCode+"]的文件上传路径配置(1)");
+        AppFuncFactory.AppFuncFilePath path=factory.getFuncPathMap().get(funcCode);
+        if (path==null)
+            throw new BusiException("没有功能编号为["+funcCode+"]的文件上传路径配置(2)");
+        factory.getFuncPathMap().remove(funcCode);
+        List<AppFuncFactory.AppFuncFilePath> newList=new ArrayList<>();
+        Set<String> keys=factory.getFuncPathMap().keySet();
+        for(String key:keys){
+            newList.add(factory.getFuncPathMap().get(key));
+        }
+        saveUploadPathFactory(appCode,newList,operatorCode,operatorName);
+        return factory;
+    }
+    //通知服务器重载文件上传地址参数
+    public void notifyReloadUploadPath(String operatorCode,String operatorName) throws Exception{
+        pfServiceCommonMQ.notifyReloadUploadPath();
+        cruxOpeMQComponent.sendCruxOperate(operatorName,"0002-2","通知服务器重载文件上传地址参数",operatorCode,operatorName);
+    }
+
+    public JwtUtils createTokenJwt() {
+        String secretKey = plateformSysParamComponent.getSingleParamV100("SYS_SECRETKEY");
+        String sign = plateformSysParamComponent.getSingleParamV100("SYS_SIGNATUREALGORITHM");
+        String expireTime = plateformSysParamComponent.getSingleParamV100("SYS_TOKENEXPIRETIME");
+        JwtUtils jwt = new JwtUtils();
+        jwt.initJwtParams(SignatureAlgorithm.forName(sign), secretKey, expireTime);
+        return jwt;
+    }
+    /**
+     * 校验请求的Token,拦截器调用
+     */
+    public Map<String, Object> checkRequestToken(String token, String loginIp) throws BusiException {
+        Map<String, Object> ret = BaseNnte.newMapRetObj();
+        JwtUtils jwt = createTokenJwt();
         try {
-            bytes = templateFile.getBytes();
-            if (bytes == null || bytes.length <= 0) {
-                throw new BusiException(1003, "不能取得上传的文件内容");
+            String ipWhileList = plateformSysParamComponent.getSingleParamVText("SYS_IP_WHITE_LIST");
+            AuthTokenDetailsDTO atd = jwt.parseAndValidate(token);
+            if (StringUtils.isNotEmpty(ipWhileList) && IpUtil.isPermited(loginIp,ipWhileList))
+                throw new BusiException("Ip地址不合法");
+            OperatorInfo opeInfo = new OperatorInfo();
+            opeInfo.setOperatorCode(atd.getUserCode());
+            opeInfo.setOperatorName(atd.getUserName());
+            Date now = new Date();
+            Date preExpTime = new Date((now.getTime() + 60 * 60 * 1000));//计算当前时间之后1小时的时间
+            if (preExpTime.after(atd.getExpirationDate())) {
+                //如果当前时间向后推1小时Token将要到期，要重新生成Token,此功能实现Token自动延期
+                opeInfo.setLoginTime(DateUtils.dateToString(now, DateUtils.DF_YMDHMS));
+                opeInfo.setToken(jwt.createJsonWebToken(atd));
+            } else {
+                opeInfo.setLoginTime(DateUtils.dateToString(new Date(atd.getExpirationDate().getTime() - jwt.getExpiredTime()),
+                        DateUtils.DF_YMDHMS));
+                opeInfo.setToken(token);
             }
-        } catch (IOException e) {
-            throw new BusiException(1003, "不能取得上传的文件内容");
+            ret.put("OperatorInfo", opeInfo);
+            BaseNnte.setRetTrue(ret,"token验证成功");
+        } catch (Exception e) {
+            throw new BusiException(e,1009);
         }
-        //String srcFile = null;
-        return uploadImageFile(groupName, filename, srcFile, bytes);
-    }
-
-    public String uploadImageFile(String imageGroup, String fileName,
-                                  String srcFile, byte[] content) throws BusiException {
-        //替换原有将模板文件保存在应用服务器,模板文件改为保存在文件服务器中
-        String submitName = fdfsClientMgrComponent.uploadFile(imageGroup, content, FileUtil.getExtention(fileName));
-        if (StringUtils.isNotEmpty(submitName)) {
-            String[] names = submitName.split(":");
-            String groupName = names[0];
-            String subString = names[1];
-            String subPath = StringUtils.right(subString, subString.length() - subString.indexOf('/'));
-            String fdfs_store_path = StringUtils.leftByChar(subString, "/");
-            if (StringUtils.isNotEmpty(srcFile)) {
-                //如果存在被替换的模板文件名，需要在文件服务器端删除原始的模板文件
-                String srcGroup=StringUtils.left(srcFile,srcFile.indexOf('/'));
-                String noGroupSrcPath = StringUtils.right(srcFile, srcFile.length() - srcFile.indexOf('/')-1);
-                fdfsClientMgrComponent.deleteFile(srcGroup, noGroupSrcPath);
-            }
-            return getPathPri(groupName, fdfs_store_path) + subPath;
-        } else {
-            throw new BusiException(1003, "保存图片文件失败");
-        }
-    }
-
-    @Override
-    public void runWatch() {
-        Boolean result = fdfsClientMgrComponent.activeTest();
-        outLogDebug("fdfsClientMgrComponent.activeTest......" + result.toString());
+        return ret;
     }
 }
