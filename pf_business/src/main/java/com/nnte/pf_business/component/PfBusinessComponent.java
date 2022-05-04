@@ -7,12 +7,10 @@ import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_basic.component.PFBasicComponent;
-import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
 import com.nnte.pf_business.entertity.PFMenu;
 import com.nnte.pf_business.mapper.workdb.functionrec.PlateformFunctionRec;
@@ -198,6 +196,23 @@ public class PfBusinessComponent extends BaseComponent {
         }
         return nodeMenu;
     }
+    private boolean delBlankMenu(List<PFMenu> menuFuncList,int index){
+        PFMenu curMenu=menuFuncList.get(index);
+        if (curMenu.getFunctionList()!=null && curMenu.getFunctionList().size()>0)
+            return false;
+        if (curMenu.getSubMenuList()!=null && curMenu.getSubMenuList().size()>0){
+            while(true){
+                if (curMenu.getSubMenuList()==null || curMenu.getSubMenuList().size()<=0) {
+                    menuFuncList.remove(index);
+                    return true;
+                }
+                if (!delBlankMenu(curMenu.getSubMenuList(),0))
+                    return false;
+            }
+        }else
+            menuFuncList.remove(index);
+        return true;
+    }
     /**
      * 在服务器端将菜单及功能树转化前端需要的菜单结构
      * parentNodeMenu 初始化为 JsonUtil.newJsonNode().arrayNode();
@@ -206,6 +221,12 @@ public class PfBusinessComponent extends BaseComponent {
         ArrayNode childrenMenuArray = JsonUtil.newJsonNode().arrayNode();
         if (menuFuncList==null || menuFuncList.size()<=0)
             return childrenMenuArray;
+        if(!isForEdit){//如果菜单用于前端使用而不是编辑，需要去掉空菜单
+            for(int i=0;i<menuFuncList.size();i++){
+                if (delBlankMenu(menuFuncList,i))
+                    i--;
+            }
+        }
         for(PFMenu menu:menuFuncList){
             ObjectNode nodeMenu= createNodeFromMenu(menu,isForEdit);
             nodeMenu.put(routePath,menu.getMenuName());
@@ -217,6 +238,7 @@ public class PfBusinessComponent extends BaseComponent {
             }
             childrenMenuArray.add(nodeMenu);
         }
+
         return childrenMenuArray;
     }
     /**

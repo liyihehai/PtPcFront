@@ -44,11 +44,6 @@
             <artifactId>communicate-data</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.nnte.kservice</groupId>
-            <artifactId>fdfs_client_mgr</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -89,9 +89,7 @@ public class PFBasicComponent extends BaseComponent {
             }
         }
         String param = JsonUtil.beanToJson(appFuncFilePathList);
-        int result = plateformSysParamComponent.saveSingleParams("APPOPS","文件上传管理应用模块路径",
-                null,paramKey,PlateformSysParamComponent.SysparamValCol.VAL_TXT,
-                param,operatorCode,operatorName);
+        int result = plateformSysParamComponent.saveSingleParams(paramKey,param,operatorCode,operatorName);
         if (result!=0)
             throw new BusiException("保存参数失败");
         cruxOpeMQComponent.sendCruxOperate(operatorName,"0002-1","更改文件上传路径参数",paramKey,param);

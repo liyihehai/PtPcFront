@@ -47,7 +47,7 @@ public class PFBasicController extends BaseController {
     @ModuleEnter(path = "/basicInfo/sysparam/uploadPathParam", name = "上传文件路径设置",
             desc = "设置文件上传在服务器中的路径，系统管理员功能",
             sysRole = AppBasicSysRole.SYS_MANAGER,
-            roleRuler = "pf-sysParam-uploadPath", moduleCode = AppBasicConfig.SYSTEM_BASIC_INFO)
+            roleRuler = "pf-sysParam-uploadPath", moduleCode = AppBasicConfig.Module_Code)
     /**
      * 返回文件上传路径的定义
      * */

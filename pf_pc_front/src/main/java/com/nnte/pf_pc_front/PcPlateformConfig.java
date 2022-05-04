@@ -5,8 +5,6 @@ import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.WatchComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
-import com.nnte.fdfs_client_mgr.FdfsClientMgrComponent;
-import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.base.DBSchemaPostgreSQL;
 import com.nnte.framework.base.DynamicDatabaseSourceHolder;
 import com.nnte.framework.base.SpringContextHolder;
@@ -14,10 +12,12 @@ import com.nnte.framework.utils.BaiduMapUtil;
 import com.nnte.pf_basic.component.CruxOpeMQComponent;
 import com.nnte.pf_basic.component.JedisComponent;
 import com.nnte.pf_basic.component.PFServiceCommonMQ;
+import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_pc_front.config.AppDBSrcConfig;
 import com.nnte.pf_pc_front.config.AppRootConfig;
+import org.apache.pulsar.client.api.ProducerAccessMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -40,6 +40,8 @@ public class PcPlateformConfig extends BaseComponent
     private AppDBSrcConfig appDBSrcConfig;
     @Autowired
     private DBSchemaPostgreSQL dbSchemaPostgreSQL;
+    @Autowired
+    private PlateformSysParamComponent plateformSysParamComponent;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -51,7 +53,6 @@ public class PcPlateformConfig extends BaseComponent
     private void appInit() throws Exception{
         //--------------------------------------------------------------------------------------
         outLogInfo("执行后续初始化功能......日志设置");
-        ConfigInterface.LoadConfigComponent(appRootConfig);
         BaiduMapUtil.setBaiduApiKey(appRootConfig.getBaiduApiKey());
         //--------------------------------------------------------------------------------------
         DynamicDatabaseSourceHolder ddh= SpringContextHolder.getBean(DynamicDatabaseSourceHolder.class);
@@ -64,6 +65,8 @@ public class PcPlateformConfig extends BaseComponent
         outLogInfo("初始化工作数据库连接数据源......");
         BaseComponent.createDataBaseSource(dbSchemaPostgreSQL, AppBasicConfig.DB_Name,
                 true,appDBSrcConfig);
+        //----加载所有系统参数------------------
+        plateformSysParamComponent.initLoadAllSysParams();
         //--------装载系统模块入口--------------
         BaseComponent.loadSystemFuntionEnters();
         //-------------------------------------
@@ -71,7 +74,7 @@ public class PcPlateformConfig extends BaseComponent
         CruxOpeMQComponent mqComponent = SpringContextHolder.getBean(CruxOpeMQComponent.class);
         mqComponent.initProducer();
         PFServiceCommonMQ pfServiceCommonMQ = SpringContextHolder.getBean(PFServiceCommonMQ.class);
-        pfServiceCommonMQ.initProducer();
+        pfServiceCommonMQ.initProducer(false, ProducerAccessMode.Shared);
         //------------------------
         //--启动程序守护线程，注册组件（系统参数）
         watchComponent.startWatch();

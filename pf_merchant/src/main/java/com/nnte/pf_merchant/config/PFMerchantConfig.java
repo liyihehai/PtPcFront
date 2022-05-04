@@ -18,9 +18,9 @@ public class PFMerchantConfig extends BaseComponent implements ModuleInterface {
     public static final String loggerName = "PfMerchant";
     public static final String jarName = "pf_merchant.jar";
 
-    public final static String MODULE_MERCHANT_MANAGE = "merchantManage"; //商户管理
+    public final static String Module_Code = "merchantManage"; //商户管理
     static {
-        AppRegistry.setAppModuleName(MODULE_MERCHANT_MANAGE,"商户管理");
+        AppRegistry.setAppModuleName(Module_Code,"商户管理");
     }
 
     @Override

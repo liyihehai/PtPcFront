@@ -1,7 +1,6 @@
 package com.nnte.pf_business.entertity;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nnte.framework.annotation.DBPKColum;
 import com.nnte.framework.utils.DateUtils;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter

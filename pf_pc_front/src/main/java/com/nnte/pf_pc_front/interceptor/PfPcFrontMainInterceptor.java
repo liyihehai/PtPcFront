@@ -43,7 +43,7 @@ public class PfPcFrontMainInterceptor implements HandlerInterceptor {
         if (excludePathPatterns(request.getServletPath()))
             return true;
         //查询系统参数判断系统是否处于维护状态
-        String sysRepairing=plateformSysParamComponent.getSingleParams("SYS_REPAIRING", PlateformSysParamComponent.SysparamValCol.VAL_100);
+        String sysRepairing=plateformSysParamComponent.getSysRepairing();
         if (StringUtils.isNotEmpty(sysRepairing) && sysRepairing.equals("1")){
             request.getRequestDispatcher("/main/sysRepairing").forward(request,response);
             return false;

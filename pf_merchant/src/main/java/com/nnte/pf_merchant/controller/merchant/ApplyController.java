@@ -78,7 +78,7 @@ public class ApplyController extends BaseController {
      */
     @ModuleEnter(path = "/merchant/applyList", name = "操作员商户申请", desc = "平台商户申请管理，业务操作员功能",
             sysRole = PFMerchantSysRole.PLATEFORM_MERCAHNT_WORKER, roleRuler = "pf-operatorApplyIndex",
-            moduleCode = PFMerchantConfig.MODULE_MERCHANT_MANAGE)
+            moduleCode = PFMerchantConfig.Module_Code)
     @RequestMapping(value = "/applyList", method = {RequestMethod.POST})
     @ResponseBody
     public Object applyList(@Nullable @RequestBody JsonNode data) {
@@ -289,7 +289,7 @@ public class ApplyController extends BaseController {
      */
     @ModuleEnter(path = "/merchant/applyCheckList", name = "商户申请分配及审核", desc = "平台商户申请管理，业务管理员功能",
             sysRole = PFMerchantSysRole.PLATEFORM_MERCAHNT_MANAGER, roleRuler = "pf-applyCheck",
-            moduleCode = PFMerchantConfig.MODULE_MERCHANT_MANAGE)
+            moduleCode = PFMerchantConfig.Module_Code)
     @RequestMapping(value = "/applyCheckList")
     @ResponseBody
     public Object applyCheckList(HttpServletRequest request,@Nullable @RequestBody JsonNode data) {

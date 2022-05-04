@@ -1,14 +1,13 @@
 package com.nnte.pf_pc_front.config;
 
 import com.nnte.basebusi.annotation.RootConfigProperties;
-import com.nnte.framework.base.ConfigInterface;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component
 @RootConfigProperties(fileName = "pf-pc-front-config.properties",prefix = "pf.pc.front")
 @Data
-public class AppRootConfig implements ConfigInterface {
+public class AppRootConfig {
     //本地工作环境
     private String debug;
     private String localHostName;

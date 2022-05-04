@@ -12,6 +12,8 @@ import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_basic.config.MqCommonConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pulsar.client.api.ProducerAccessMode;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +36,8 @@ public class CruxOpeMQComponent extends PulsarComponent<CruxOpeContent> {
     public void initProducer() throws BusiException {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
-            createProducer(CruxOpeContent.TopicName);
+            createProducer(true,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
+                    CruxOpeContent.TopicName, ProducerAccessMode.Shared);
             outLogInfo("CruxOpeMQComponent Producer=CruxOpeMQGroup,...success");
         } catch (Exception e) {
             throw new BusiException(e);
@@ -81,8 +84,10 @@ public class CruxOpeMQComponent extends PulsarComponent<CruxOpeContent> {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
 
-            createCustmou(CruxOpeContent.TopicName,CruxOpeContent.TopicName+"-"+localIp,3,20);
-            outLogInfo("CruxOpeMQComponent Consumer=CruxOpeMQGroup,...success");
+            createCustmou(true,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
+                    CruxOpeContent.TopicName,localIp,"crux",
+                    SubscriptionType.Shared ,3,20);
+            outLogInfo("CruxOpeMQComponent Consumer=crux,...success");
         } catch (Exception e) {
             throw new BusiException(e);
         }

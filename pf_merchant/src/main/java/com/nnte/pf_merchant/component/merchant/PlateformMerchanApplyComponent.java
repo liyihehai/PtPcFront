@@ -11,9 +11,12 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_basic.component.JedisComponent;
+import com.nnte.pf_basic.component.PFServiceCommonMQ;
+import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_merchant.component.mqcomp.EmailMQComponent;
 import com.nnte.pf_merchant.component.mqcomp.SMMQComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
+import com.nnte.pf_merchant.mapper.workdb.merchant_expand.PlateformMerchantExpand;
 import com.nnte.pf_merchant.mapper.workdb.merchantapply.PlateformMerchanApply;
 import com.nnte.pf_merchant.mapper.workdb.merchantapply.PlateformMerchanApplyService;
 import com.nnte.pf_merchant.request.RequestApply;
@@ -43,6 +46,10 @@ public class PlateformMerchanApplyComponent extends BaseComponent {
     private EmailMQComponent emailMQComponent;
     @Autowired
     private PlateformMerchanComponent plateformMerchanComponent;
+    @Autowired
+    private PFServiceCommonMQ pfServiceCommonMQ;
+    @Autowired
+    private PlateformSysParamComponent plateformSysParamComponent;
 
     private static final String MERCHANT_APPLY_SM_KEY = "MERCHANT_APPLY_SM_KEY_";
     private static final String MERCHANT_APPLY_VERIFY_AESKEY = "merchant$Apply%AesKey@2020#05*28";
@@ -200,7 +207,7 @@ public class PlateformMerchanApplyComponent extends BaseComponent {
             node.put("emailRandCode", randomCode);
             String json = node.toString();
             String verifyLink = Base64Utils.encode(AESUtils.encryptECB(json, MERCHANT_APPLY_VERIFY_AESKEY).getBytes());
-            String host = appConfig.getConfig("localHostName");
+            String host = plateformSysParamComponent.getSysStaticUrlRoot();
             String contextPath = StringUtils.defaultString(envData.get("contextPath"));
             String verifyUrl = host + contextPath + "/api/merchant/merchantApply/applyVerify?v=" + verifyLink;
             Map<String, Object> paramMap = new HashMap<>();
@@ -388,6 +395,16 @@ public class PlateformMerchanApplyComponent extends BaseComponent {
             if (apply.getConfirmType().equals(1) && !NumberUtil.getDefaultInteger(apply.getEmailConfirmState()).equals(1)) {
                 sendConfirmEmail(apply, envData);//如果是邮件确认，发送确认邮件消息
             }
+            //---将图片临时文件转为正式文件---------------
+            PlateformMerchantExpand expand = JsonUtil.jsonToBean(apply.getApplyContent(), PlateformMerchantExpand.class);
+            if (expand!=null){
+                String[] files={expand.getPmLogo(),expand.getPmPic1(),expand.getPmPic2(),expand.getPmPic3(),
+                expand.getPmCertificatePic1(),expand.getPmCertificatePic2(),
+                expand.getPmCertificatePic3(),expand.getPmCertificatePic4()};
+                String file=StringUtils.joinEx(files);
+                pfServiceCommonMQ.RemoveTmpFileRecord(file);
+            }
+            //------------------------------------------
             ret.put("apply", apply);
             BaseNnte.setRetTrue(ret, "更改商户申请成功");
         }

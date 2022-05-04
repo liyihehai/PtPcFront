@@ -4,9 +4,7 @@ import com.nnte.basebusi.base.BaseBusi;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.framework.annotation.ConfigLoad;
 import com.nnte.framework.base.BaseNnte;
-import com.nnte.framework.base.ConfigInterface;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.PFBasicComponent;
 import com.nnte.pf_business.component.PfBusinessComponent;
@@ -23,8 +21,6 @@ import java.util.regex.Pattern;
 
 @Component
 public class PfPcFrontNormalInterceptor extends BaseBusi implements HandlerInterceptor {
-    @ConfigLoad
-    private ConfigInterface appconfig;
     @Autowired
     private PfBusinessComponent pfBusinessComponent;
     @Autowired

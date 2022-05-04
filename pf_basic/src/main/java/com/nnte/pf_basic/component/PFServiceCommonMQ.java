@@ -16,6 +16,8 @@ import com.nnte.pf_basic.config.MqCommonConfig;
 import com.nnte.pf_basic.entertity.MethodObject;
 import com.nnte.pf_basic.entertity.TmpUploadFile;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.pulsar.client.api.ProducerAccessMode;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,6 @@ public class PFServiceCommonMQ extends PulsarComponent<CommonContent> {
     public PFServiceCommonMQ(){
         setContentClazz(CommonContent.class);
     }
-
     public interface PFServiceMQInterface{
         default void onMessage(CommonContent content) throws Exception{
             Logger logger = LoggerFactory.getLogger(AppBasicConfig.JarLoggerName);
@@ -82,10 +83,10 @@ public class PFServiceCommonMQ extends PulsarComponent<CommonContent> {
 
     @Autowired
     private MqCommonConfig mqCommonConfig;
-    public void initProducer() throws BusiException {
+    public void initProducer(boolean isPersistent, ProducerAccessMode accessMode) throws BusiException {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
-            createProducer(CommonContent.TopicName);
+            createProducer(isPersistent,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,CommonContent.TopicName,accessMode);
             outLogInfo("PFServiceCommonMQ Producer=CommonContent,...success");
         } catch (Exception e) {
             throw new BusiException(e);
@@ -103,11 +104,13 @@ public class PFServiceCommonMQ extends PulsarComponent<CommonContent> {
         }
     }
 
-    public void initConsumer(int threadCount,int blockSize) throws BusiException {
+    public void initConsumer(boolean isPersistent, SubscriptionType subscriptionType,int threadCount, int blockSize) throws BusiException {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
-            createCustmou(CommonContent.TopicName,CommonContent.TopicName+"-"+localIp,threadCount,blockSize);
+            createCustmou(isPersistent,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
+                    CommonContent.TopicName,localIp,"common",
+                    subscriptionType,threadCount,blockSize);
             outLogDebug("PFServiceCommonMQ Consumer=CommonContent,...success");
             scanRegisterProcess();
             outLogDebug("PFServiceCommonMQ scanRegisterProcess,...success");

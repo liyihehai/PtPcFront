@@ -1,15 +1,15 @@
 package com.nnte.pf_merchant.component.mqcomp;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
-import com.nnte.basebusi.annotation.RootConfigProperties;
 import com.nnte.basebusi.base.PulsarComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.communicate.plateform.SMContent;
 import com.nnte.framework.utils.IpUtil;
+import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_basic.config.MqCommonConfig;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.pulsar.client.api.ProducerAccessMode;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,8 @@ public class SMMQComponent extends PulsarComponent<SMContent> {
     public void initProducer() throws BusiException {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
-            createProducer(SMContent.TopicName);
+            createProducer(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
+                    SMContent.TopicName, ProducerAccessMode.Shared);
         } catch (Exception e) {
             throw new BusiException(e);
         }
@@ -58,7 +59,9 @@ public class SMMQComponent extends PulsarComponent<SMContent> {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
-            createCustmou(SMContent.TopicName,SMContent.TopicName+"-"+localIp,3,20);
+            createCustmou(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
+                    SMContent.TopicName,localIp,"smm",
+                    SubscriptionType.Failover,3,20);
         } catch (Exception e) {
             throw new BusiException(e);
         }

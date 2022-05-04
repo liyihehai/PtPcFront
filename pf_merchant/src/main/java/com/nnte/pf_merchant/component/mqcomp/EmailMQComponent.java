@@ -10,9 +10,12 @@ import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.MailUtils;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.PlateformSysParamComponent;
+import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_basic.config.MqCommonConfig;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import lombok.Data;
+import org.apache.pulsar.client.api.ProducerAccessMode;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,7 @@ public class EmailMQComponent extends PulsarComponent<EmailContent> {
     public void onConsumerMessageReceived(EmailContent bodyObject) {
         outLogInfo("收到发送商户确认邮件请求，email："+bodyObject.getEmail());
         try {
-            String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSingleParamVText(PlateformSysParamComponent.SYS_SMTP_ACCOUNT_JSON));
+            String smtpJson = StringUtils.defaultString(plateformSysParamComponent.getSysSmtpAccountJson());
             SysSmtpAccount ssa = JsonUtil.jsonToBean(smtpJson, SysSmtpAccount.class);
             if (ssa == null)
                 throw new BusiException("邮件账户JSON数据定义不合法");
@@ -66,7 +69,8 @@ public class EmailMQComponent extends PulsarComponent<EmailContent> {
     public void initProducer() throws BusiException {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
-            createProducer(EmailContent.TopicName);
+            createProducer(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
+                    EmailContent.TopicName, ProducerAccessMode.Shared);
         } catch (Exception e) {
             throw new BusiException(e);
         }
@@ -88,7 +92,9 @@ public class EmailMQComponent extends PulsarComponent<EmailContent> {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp=IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
-            createCustmou(EmailContent.TopicName,EmailContent.TopicName+"-"+localIp,3,20);
+            createCustmou(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
+                    EmailContent.TopicName,localIp,"email",
+                    SubscriptionType.Failover, 3,20);
         } catch (Exception e) {
             throw new BusiException(e);
         }

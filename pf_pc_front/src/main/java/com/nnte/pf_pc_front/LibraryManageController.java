@@ -57,7 +57,7 @@ public class LibraryManageController extends BaseController {
     @ModuleEnter(path = "/basicInfo/library", name = "数据字典设置",
             desc = "平台数据字典设置，系统管理员功能",
             sysRole = AppBasicSysRole.SYS_MANAGER,
-            roleRuler = "pf-basic-info", moduleCode = AppBasicConfig.SYSTEM_BASIC_INFO)
+            roleRuler = "pf-basic-info", moduleCode = AppBasicConfig.Module_Code)
     @RequestMapping(value = "/getLibraryItemList", method = RequestMethod.POST)
     @ResponseBody
     public Object getLibraryItemList(@NonNull @RequestBody JsonNode data) {

@@ -43,7 +43,7 @@ public class SettingController extends BaseController {
      * */
     @ModuleEnter(path = "/merchant/settingList", name="商户设置管理", desc = "平台商户基础信息设置管理，业务操作员功能",
             sysRole = PFMerchantSysRole.PLATEFORM_MERCAHNT_WORKER,roleRuler = "pf-MerchantSet",
-            moduleCode = PFMerchantConfig.MODULE_MERCHANT_MANAGE)
+            moduleCode = PFMerchantConfig.Module_Code)
     @RequestMapping(value = "/merchantSettingList")
     @ResponseBody
     public Object merchantSettingList(@Nullable @RequestBody JsonNode data){
