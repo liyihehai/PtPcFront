@@ -41,32 +41,7 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.6.RELEASE</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includeSystemScope>true</includeSystemScope>
-                    <mainClass>api.ProviderApplication</mainClass>
-                    <fork>true</fork>
-                    <!--增加jvm参数-->
-                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
-                    <!--指定入口类-->
-                    <mainClass>com.nnte.pf_pc_front.PcPlateformApplication</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
         <resources>
-            <!-- 所有配置文件都不打包 -->
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -77,10 +52,128 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.ftl</include>
-                    <!--<include>**/*.properties</include>-->
                 </includes>
             </resource>
+            <resource>
+                <directory>config</directory>
+                <targetPath>${project.build.directory}/config</targetPath>
+            </resource>
         </resources>
-    </build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.10</version>
+            </extension>
+        </extensions>
 
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/lib</outputDirectory>
+                            <excludeTransitive>false</excludeTransitive>
+                            <stripVersion>false</stripVersion>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.yml</exclude>
+                        <exclude>static/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.2.6.RELEASE</version>
+                <configuration>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>non-exists</groupId>
+                            <artifactId>non-exists</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>classes</classifier>
+                            <attach>false</attach>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <!-- need version code-->
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="move">
+                                <copy todir="target/bin">
+                                    <fileset dir="target/lib" includes="*SNAPSHOT.jar"></fileset>
+                                </copy>
+                                <copy todir="target">
+                                    <fileset dir="./" includes="start.sh"></fileset>
+                                </copy>
+                                <delete>
+                                    <fileset dir="target/lib" includes="*SNAPSHOT.jar"></fileset>
+                                </delete>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <serverId>bd-bcc</serverId>
+                    <fromDir>target</fromDir>
+                    <includes>*.jar,/bin/*.jar,*.sh</includes>
+                    <url>sftp://120.48.2.149/var/local/pf_pcfront</url>
+                    <commands>
+                        <command>chmod a+x /var/local/pf_pcfront/start.sh</command>
+                        <command>bash /var/local/pf_pcfront/start.sh</command>
+                    </commands>
+                    <displayCommandOutputs>true</displayCommandOutputs>
+                </configuration>
+            </plugin>
+            <!-- mvn package wagon:upload wagon:sshexec -U -->
+        </plugins>
+    </build>
 </project>
