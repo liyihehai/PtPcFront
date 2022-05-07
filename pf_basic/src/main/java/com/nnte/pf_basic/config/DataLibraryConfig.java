@@ -27,6 +27,7 @@ public class DataLibraryConfig {
         libTypeList.add(new LibType("0000","系统应用"));
         libTypeList.add(new LibType("0001","行业分类"));//classification of professions
         libTypeList.add(new LibType("0002","证件类型"));
+        libTypeList.add(new LibType("Y001","商业应用"));
 
         for(LibType libType:libTypeList)
             libTypeMap.put(libType.typeCode,libType);
