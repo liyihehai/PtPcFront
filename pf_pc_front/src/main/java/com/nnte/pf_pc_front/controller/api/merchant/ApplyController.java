@@ -1,4 +1,4 @@
-package com.nnte.pf_merchant.controller.merchant;
+package com.nnte.pf_pc_front.controller.api.merchant;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;

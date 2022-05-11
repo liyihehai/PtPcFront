@@ -1,4 +1,4 @@
-package com.nnte.pf_pc_front;
+package com.nnte.pf_pc_front.controller.api.basicInfo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
