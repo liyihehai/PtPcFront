@@ -1,6 +1,7 @@
 package com.nnte.pf_pc_front.controller.api.merchant;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.ModuleEnter;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.entity.AppendWhere;
@@ -10,13 +11,17 @@ import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.NumberDefUtil;
+import com.nnte.framework.utils.RSAUtils;
 import com.nnte.pf_merchant.component.merchant.PlateformMerchanComponent;
+import com.nnte.pf_merchant.component.utiaccount.PlateformUtiAccountComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.config.PFMerchantSysRole;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant;
+import com.nnte.pf_merchant.mapper.workdb.merchantUtiAccount.PlateformMerchantUtiAccount;
 import com.nnte.pf_merchant.mapper.workdb.merchant_expand.PlateformMerchantExpand;
 import com.nnte.pf_merchant.request.RequestMerchant;
 import com.nnte.pf_merchant.request.RequestMerchantExpand;
+import com.nnte.pf_pc_front.entity.RequestUTIAccount;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -37,6 +42,8 @@ import java.util.Map;
 public class SettingController extends BaseController {
     @Autowired
     private PlateformMerchanComponent plateformMerchanComponent;
+    @Autowired
+    private PlateformUtiAccountComponent plateformUtiAccountComponent;
 
     /**
      * 返回商户列表数据
@@ -172,5 +179,84 @@ public class SettingController extends BaseController {
             return onException(e);
         }
     }
+    /**
+     * 取得商户UTI账户信息
+     * */
+    @RequestMapping(value = "/getUtiAccountByMerchantCode")
+    @ResponseBody
+    public Object getUtiAccountByMerchantCode(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            RequestMerchant merchant = JsonUtil.jsonToBean(json.toString(), RequestMerchant.class);
+            if (merchant==null)
+                throw new BusiException("未取商户基础信息");
+            PlateformMerchantUtiAccount account=plateformUtiAccountComponent.getUtiAccountByMerchantCode(merchant.getPmCode());
+            if (account!=null)
+                return success("取得商户UTI账户信息成功", account);
+            else
+                return success("未取得商户UTI账户信息");
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
 
+    /**
+     * 创建商户UTI账户
+     * */
+    @RequestMapping(value = "/merchantCreateUTIAccount")
+    @ResponseBody
+    public Object merchantCreateUTIAccount(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            RequestUTIAccount utiAccount = JsonUtil.jsonToBean(json.toString(), RequestUTIAccount.class);
+            if (utiAccount==null)
+                throw new BusiException("未取商户基础信息");
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            return success("创建商户UTI账户成功",
+                    plateformUtiAccountComponent.merchantCreateUTIAccount(utiAccount.getPmCode(),oi.getOperatorName(),
+                            utiAccount.getDefBackUrl(),utiAccount.getValidIpList(),utiAccount.getBackId(),
+                            utiAccount.getBackKey(),utiAccount.getAccountMemo()));
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+
+    /**
+     * 商户UTI账户重置
+     * */
+    @RequestMapping(value = "/merchantUTIAccountReset")
+    @ResponseBody
+    public Object merchantUTIAccountReset(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            RequestUTIAccount utiAccount = JsonUtil.jsonToBean(json.toString(), RequestUTIAccount.class);
+            if (utiAccount==null)
+                throw new BusiException("未取商户基础信息");
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            return success("商户UTI账户重置成功",
+                    plateformUtiAccountComponent.merchantUTIAccountReset(utiAccount.getPmCode(),
+                            null,oi.getOperatorName(),
+                            utiAccount.getDefBackUrl(),utiAccount.getValidIpList(),
+                            utiAccount.getBackId(),utiAccount.getBackKey(),
+                            utiAccount.getAccountState(),utiAccount.getAccountMemo(),
+                            utiAccount.getAppRsaPubkey(),utiAccount.getAppRsaPrikey(),
+                            utiAccount.getMerRsaPubkey(),utiAccount.getMerRsaPrikey()));
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+
+    /**
+     * 创建产生密钥对
+     * */
+    @RequestMapping(value = "/utiAccountGenKeys")
+    @ResponseBody
+    public Object utiAccountGenKeys(HttpServletRequest request, @Nullable @RequestBody JsonNode json) {
+        try {
+            Map<String, Object> secKeys = RSAUtils.genKeyPair(1024);
+            JsonNode jsonNode = JsonUtil.newJsonNode();
+            ((ObjectNode) jsonNode).put("RSAPublicKey",RSAUtils.getPublicKey(secKeys));
+            ((ObjectNode) jsonNode).put("RSAPrivateKey",RSAUtils.getPrivateKey(secKeys));
+            return success("创建产生密钥对成功",jsonNode);
+        }catch (Exception e) {
+            return onException(e);
+        }
+    }
 }

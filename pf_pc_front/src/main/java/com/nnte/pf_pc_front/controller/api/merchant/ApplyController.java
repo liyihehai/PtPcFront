@@ -36,11 +36,6 @@ import java.util.Map;
 public class ApplyController extends BaseController {
     @Autowired
     private PlateformMerchanApplyComponent plateformMerchanApplyComponent;
-    @Autowired
-    private PlateformMerchanComponent plateformMerchanComponent;
-    @Autowired
-    private PFBasicComponent pfBasicComponent;
-
 
     private Map<String, Object> getListParam(RequestApply queryApply) throws BusiException{
         //----------------------------------------------
@@ -93,32 +88,6 @@ public class ApplyController extends BaseController {
             return onException(e);
         }
     }
-
-    /**
-     * 邮件验证
-     */
-    @RequestMapping(value = "/applyVerify")
-    public ModelAndView applyVerify(HttpServletRequest request, ModelAndView modelAndView) {
-        Map<String, Object> param = new HashMap<>();
-        try {
-            String vContent = StringUtils.defaultString(BaseController.getRequestParam(request, null, "v"));
-            if (StringUtils.isEmpty(vContent))
-                throw new BusiException("验证信息为空");
-            Map<String, Object> ret = plateformMerchanApplyComponent.applyVerify(vContent);
-            if (BaseNnte.getRetSuc(ret)) {
-                param.put("msg", ret.get("msg"));
-                param.put("apply", ret.get("apply"));
-                modelAndView.addObject("map", param);
-                modelAndView.setViewName("front/merchant/apply/applyEmailVerifySuc");
-            }
-        } catch (BusiException be) {
-            param.put("msg", be.getMessage());
-            modelAndView.addObject("map", param);
-            modelAndView.setViewName("front/merchant/apply/applyEmailVerifyFailed");
-        }
-        return modelAndView;
-    }
-
     /**
      * 保存商户申请信息
      */
@@ -203,88 +172,6 @@ public class ApplyController extends BaseController {
         }
     }
     /**
-     * 通过编码查询特定操作员信息
-     */
-    @RequestMapping(value = "/queryMerchantApply")
-    @ResponseBody
-    public Map<String, Object> queryMerchantApply(HttpServletRequest request, @RequestBody JsonNode json) {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
-        try {
-            RequestApply rApply = JsonUtil.jsonToBean(json.toString(), RequestApply.class);
-            if (rApply == null || rApply.getId() == null || rApply.getId() <= 0)
-                throw new BusiException("未取得商户申请编号信息");
-            PlateformMerchanApply apply = plateformMerchanApplyComponent.getMerchantApplyById(rApply.getId());
-            if (apply == null)
-                throw new BusiException("未取得商户申请信息");
-            ret.put("apply", apply);
-            BaseNnte.setRetTrue(ret, "取得商户申请信息成功");
-        } catch (BusiException be) {
-            BaseNnte.setRetFalse(ret, 1002, be.getMessage());
-            return ret;
-        }
-        return ret;
-    }
-    /**
-     * 发送商户申请的验证邮件
-     */
-    @RequestMapping(value = "/sendApplyVerifyEmail")
-    @ResponseBody
-    public Map<String, Object> sendApplyVerifyEmail(HttpServletRequest request, @RequestBody JsonNode json) {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
-        try {
-            RequestApply rApply = JsonUtil.jsonToBean(json.toString(), RequestApply.class);
-            if (rApply == null || rApply.getId() == null || rApply.getId() <= 0)
-                throw new BusiException("未取得商户申请编号信息");
-            PlateformMerchanApply apply = plateformMerchanApplyComponent.getMerchantApplyById(rApply.getId());
-            if (apply == null)
-                throw new BusiException("未取得商户申请信息");
-            setParamMapDataEnv(request, ret);
-            Map<String, Object> envData = (Map) ret.get("envData");
-            envData.get("");
-            plateformMerchanApplyComponent.sendConfirmEmail(apply, envData);
-            BaseNnte.setRetTrue(ret, "发送商户申请邮件成功");
-        } catch (BusiException be) {
-            BaseNnte.setRetFalse(ret, 1002, be.getMessage());
-            return ret;
-        }
-        return ret;
-    }
-    @RequestMapping(value = "/cropperLogo")
-    public ModelAndView cropperLogo(HttpServletRequest request, ModelAndView modelAndView) {
-        Map<String, Object> map = new HashMap<>();
-        setParamMapDataEnv(request, map);
-        map.put("ratio_w", 1);
-        map.put("ratio_h", 1);
-        modelAndView.addObject("map", map);
-        modelAndView.setViewName("front/cropper/cropperForWeb");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/cropperPmImg")
-    public ModelAndView cropperPmImg(HttpServletRequest request, ModelAndView modelAndView) {
-        Map<String, Object> map = new HashMap<>();
-        setParamMapDataEnv(request, map);
-        map.put("ratio_w", 1.618);
-        map.put("ratio_h", 1);
-        modelAndView.addObject("map", map);
-        modelAndView.setViewName("front/cropper/cropperForWeb");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/cropperPmCertificatePic")
-    public ModelAndView cropperPmCertificatePic(HttpServletRequest request, ModelAndView modelAndView) {
-        Map<String, Object> map = new HashMap<>();
-        setParamMapDataEnv(request, map);
-        map.put("ratio_w", 0.85);
-        map.put("ratio_h", 1);
-        modelAndView.addObject("map", map);
-        modelAndView.setViewName("front/cropper/cropperForWeb");
-        return modelAndView;
-    }
-    /**
-     * ---------------------------------------------------------
-     * */
-    /**
      * 返回商户申请审核列表数据
      */
     @ModuleEnter(path = "/merchant/applyCheckList", name = "商户申请分配及审核", desc = "平台商户申请管理，业务管理员功能",
@@ -365,38 +252,6 @@ public class ApplyController extends BaseController {
         } catch (Exception be) {
             return onException(be);
         }
-    }
-
-    /**
-     * 显示商户审核通过对话框
-     */
-    @RequestMapping(value = "/applyPassDialog")
-    @ResponseBody
-    public Map<String, Object> applyPassDialog(HttpServletRequest request, @RequestBody JsonNode json) {
-        Map<String, Object> ret = BaseNnte.newMapRetObj();
-        try {
-            JsonUtil.JNode node = JsonUtil.createJNode(json);
-            Integer applyId = node.getInteger("id");
-            if (applyId == null || applyId <= 0)
-                throw new BusiException("没有找到要通过的商户申请");
-            PlateformMerchanApply apply = plateformMerchanApplyComponent.getMerchantApplyById(applyId);
-            if (apply == null || apply.getId() == null || apply.getId() <= 0)
-                throw new BusiException("没有找到要通过的商户申请(1)");
-            if (apply.getApplyState() == null || !apply.getApplyState().equals(PlateformMerchanApplyComponent.apply_state_waitcheck))
-                throw new BusiException("商户状态不为待审核，不能执行通过操作");
-            apply.setPmCode(plateformMerchanComponent.getCheckPassMerchantCode());
-            Map<String, Object> map = new HashMap<>();
-            setParamMapDataEnv(request, map);
-            map.put("apply", apply);
-            String htmlBody = FreeMarkertUtil.getFreemarkerFtl(request, request.getServletContext(),
-                    FreeMarkertUtil.pathType.cls, map, "/templates/front/merchant/apply/applyPass.ftl");
-            ret.put("htmlBody", htmlBody);
-            BaseNnte.setRetTrue(ret, "取得商户通过对话框内容成功");
-        } catch (Exception be) {
-            BaseNnte.setRetFalse(ret, 1002, be.getMessage());
-            return ret;
-        }
-        return ret;
     }
 
     /**

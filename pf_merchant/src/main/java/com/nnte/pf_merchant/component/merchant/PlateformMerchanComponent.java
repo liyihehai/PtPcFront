@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -130,6 +131,14 @@ public class PlateformMerchanComponent extends BaseComponent {
 
     public PlateformMerchant getMerchantById(Integer id) {
         return plateformMerchantService.findModelByKey(id);
+    }
+    public PlateformMerchant getMerchantByCode(String code) {
+        PlateformMerchant dto = new PlateformMerchant();
+        dto.setPmCode(code);
+        List<PlateformMerchant> list = plateformMerchantService.findModelList(dto);
+        if (list !=null && list.size()>0)
+            return list.get(0);
+        return null;
     }
 
     public PlateformMerchantExpand getMerchantExpandByCode(String code) {
