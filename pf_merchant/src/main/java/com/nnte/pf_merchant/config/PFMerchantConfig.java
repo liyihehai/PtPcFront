@@ -25,31 +25,6 @@ public class PFMerchantConfig extends BaseComponent implements ModuleInterface {
 
     @Override
     public void initModule() {
-        //--初始短信MQ-------------
-        SMMQComponent smmq= SpringContextHolder.getBean(SMMQComponent.class);
-        if (smmq!=null){
-            try {
-                smmq.initProducer();
-                outLogInfo("SMMQComponent initProducer suc");
-                smmq.initConsumer();
-                outLogInfo("SMMQComponent initConsumer suc");
-            }catch (BusiException be){
-                outLogInfo("SMMQComponent init err:"+be.getMessage());
-            }
-        }
-        //------------------------
-        //--初始邮件MQ-------------
-        EmailMQComponent emailapplymq=SpringContextHolder.getBean(EmailMQComponent.class);
-        if (emailapplymq!=null){
-            try {
-                emailapplymq.initProducer();
-                outLogInfo("EmailMQComponent initProducer suc");
-                emailapplymq.initConsumer();
-                outLogInfo("EmailMQComponent initConsumer suc");
-            }catch (BusiException be){
-                outLogInfo("EmailMQComponent init err:"+be.getMessage());
-            }
-        }
     }
 
     @Override
