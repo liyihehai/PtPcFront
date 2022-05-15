@@ -7,12 +7,6 @@
         <result column="pm_code" property="pmCode"/>
         <result column="account_code" property="accountCode"/>
         <result column="account_pws" property="accountPws"/>
-        <result column="account_token" property="accountToken"/>
-        <result column="token_create_time" property="tokenCreateTime"/>
-        <result column="token_expire_time" property="tokenExpireTime"/>
-        <result column="old_token" property="oldToken"/>
-        <result column="old_token_create_time" property="oldTokenCreateTime"/>
-        <result column="oldtoken_expire_time" property="oldtokenExpireTime"/>
         <result column="sec_type" property="secType"/>
         <result column="interface_version" property="interfaceVersion"/>
         <result column="app_rsa_pubkey" property="appRsaPubkey"/>
@@ -33,8 +27,8 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_merchant.mapper.workdb.merchantUtiAccount.PlateformMerchantUtiAccount">
-        insert into plateform_merchant_uti_account (pm_code ,account_code ,account_pws ,account_token ,token_create_time ,token_expire_time ,old_token ,old_token_create_time ,oldtoken_expire_time ,sec_type ,interface_version ,app_rsa_pubkey ,app_rsa_prikey ,mer_rsa_pubkey ,mer_rsa_prikey ,def_back_url ,valid_ip_list ,back_id ,back_key ,account_memo ,account_state ,busi_open_time ,busi_expire_time ,create_by ,create_time ,update_by ,update_time )
-        values (#{pmCode} ,#{accountCode} ,#{accountPws} ,#{accountToken} ,#{tokenCreateTime} ,#{tokenExpireTime} ,#{oldToken} ,#{oldTokenCreateTime} ,#{oldtokenExpireTime} ,#{secType} ,#{interfaceVersion} ,#{appRsaPubkey} ,#{appRsaPrikey} ,#{merRsaPubkey} ,#{merRsaPrikey} ,#{defBackUrl} ,#{validIpList} ,#{backId} ,#{backKey} ,#{accountMemo} ,#{accountState} ,#{busiOpenTime} ,#{busiExpireTime} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateTime} )
+        insert into plateform_merchant_uti_account (pm_code ,account_code ,account_pws ,sec_type ,interface_version ,app_rsa_pubkey ,app_rsa_prikey ,mer_rsa_pubkey ,mer_rsa_prikey ,def_back_url ,valid_ip_list ,back_id ,back_key ,account_memo ,account_state ,busi_open_time ,busi_expire_time ,create_by ,create_time ,update_by ,update_time )
+        values (#{pmCode} ,#{accountCode} ,#{accountPws} ,#{secType} ,#{interfaceVersion} ,#{appRsaPubkey} ,#{appRsaPrikey} ,#{merRsaPubkey} ,#{merRsaPrikey} ,#{defBackUrl} ,#{validIpList} ,#{backId} ,#{backKey} ,#{accountMemo} ,#{accountState} ,#{busiOpenTime} ,#{busiExpireTime} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateTime} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMerchantUtiAccountResult" parameterType="java.lang.Integer">
         select * from plateform_merchant_uti_account where id=#{id}
@@ -49,12 +43,6 @@
         <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
         <if test="accountCode!= null"><![CDATA[account_code=#{accountCode},]]></if>
         <if test="accountPws!= null"><![CDATA[account_pws=#{accountPws},]]></if>
-        <if test="accountToken!= null"><![CDATA[account_token=#{accountToken},]]></if>
-        <if test="tokenCreateTime!= null"><![CDATA[token_create_time=#{tokenCreateTime},]]></if>
-        <if test="tokenExpireTime!= null"><![CDATA[token_expire_time=#{tokenExpireTime},]]></if>
-        <if test="oldToken!= null"><![CDATA[old_token=#{oldToken},]]></if>
-        <if test="oldTokenCreateTime!= null"><![CDATA[old_token_create_time=#{oldTokenCreateTime},]]></if>
-        <if test="oldtokenExpireTime!= null"><![CDATA[oldtoken_expire_time=#{oldtokenExpireTime},]]></if>
         <if test="secType!= null"><![CDATA[sec_type=#{secType},]]></if>
         <if test="interfaceVersion!= null"><![CDATA[interface_version=#{interfaceVersion},]]></if>
         <if test="appRsaPubkey!= null"><![CDATA[app_rsa_pubkey=#{appRsaPubkey},]]></if>
@@ -95,12 +83,6 @@
                 <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
                 <if test="accountCode!= null"><![CDATA[and t.account_code = #{accountCode}]]></if>
                 <if test="accountPws!= null"><![CDATA[and t.account_pws = #{accountPws}]]></if>
-                <if test="accountToken!= null"><![CDATA[and t.account_token = #{accountToken}]]></if>
-                <if test="tokenCreateTime!= null"><![CDATA[and t.token_create_time = #{tokenCreateTime}]]></if>
-                <if test="tokenExpireTime!= null"><![CDATA[and t.token_expire_time = #{tokenExpireTime}]]></if>
-                <if test="oldToken!= null"><![CDATA[and t.old_token = #{oldToken}]]></if>
-                <if test="oldTokenCreateTime!= null"><![CDATA[and t.old_token_create_time = #{oldTokenCreateTime}]]></if>
-                <if test="oldtokenExpireTime!= null"><![CDATA[and t.oldtoken_expire_time = #{oldtokenExpireTime}]]></if>
                 <if test="secType!= null"><![CDATA[and t.sec_type = #{secType}]]></if>
                 <if test="interfaceVersion!= null"><![CDATA[and t.interface_version = #{interfaceVersion}]]></if>
                 <if test="appRsaPubkey!= null"><![CDATA[and t.app_rsa_pubkey = #{appRsaPubkey}]]></if>

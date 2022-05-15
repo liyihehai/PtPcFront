@@ -4,19 +4,13 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-11 10:01:59>
+ * auto code,do not modify <2022-05-15 12:05:28>
  */
 public class PlateformMerchantUtiAccount extends BaseModel {
     @DBPKColum private Integer id; //KEY id
     private String pmCode; //商户代码
     private String accountCode; //账户代码
     private String accountPws; //账户密码
-    private String accountToken; //Token
-    private Date tokenCreateTime; //Token创建时间
-    private Date tokenExpireTime; //Token过期时间
-    private String oldToken; //老token
-    private Date oldTokenCreateTime; //老token创建时间
-    private Date oldtokenExpireTime; //老token过期时间
     private String secType; //加密类型
     private String interfaceVersion; //接口版本
     private String appRsaPubkey; //APP RSA公钥
@@ -46,18 +40,6 @@ public class PlateformMerchantUtiAccount extends BaseModel {
     public void setAccountCode(String  accountCode){ this.accountCode = accountCode;}
     public String  getAccountPws(){ return accountPws;}
     public void setAccountPws(String  accountPws){ this.accountPws = accountPws;}
-    public String  getAccountToken(){ return accountToken;}
-    public void setAccountToken(String  accountToken){ this.accountToken = accountToken;}
-    public Date  getTokenCreateTime(){ return tokenCreateTime;}
-    public void setTokenCreateTime(Date  tokenCreateTime){ this.tokenCreateTime = tokenCreateTime;}
-    public Date  getTokenExpireTime(){ return tokenExpireTime;}
-    public void setTokenExpireTime(Date  tokenExpireTime){ this.tokenExpireTime = tokenExpireTime;}
-    public String  getOldToken(){ return oldToken;}
-    public void setOldToken(String  oldToken){ this.oldToken = oldToken;}
-    public Date  getOldTokenCreateTime(){ return oldTokenCreateTime;}
-    public void setOldTokenCreateTime(Date  oldTokenCreateTime){ this.oldTokenCreateTime = oldTokenCreateTime;}
-    public Date  getOldtokenExpireTime(){ return oldtokenExpireTime;}
-    public void setOldtokenExpireTime(Date  oldtokenExpireTime){ this.oldtokenExpireTime = oldtokenExpireTime;}
     public String  getSecType(){ return secType;}
     public void setSecType(String  secType){ this.secType = secType;}
     public String  getInterfaceVersion(){ return interfaceVersion;}
