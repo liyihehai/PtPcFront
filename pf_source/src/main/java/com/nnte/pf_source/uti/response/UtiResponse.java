@@ -1,16 +1,8 @@
 package com.nnte.pf_source.uti.response;
 
 public class UtiResponse {
-    private String respText;
+    private String body;
     private String sign;
-
-    public String getRespText() {
-        return respText;
-    }
-
-    public void setRespText(String respText) {
-        this.respText = respText;
-    }
 
     public String getSign() {
         return sign;
@@ -18,5 +10,13 @@ public class UtiResponse {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 }

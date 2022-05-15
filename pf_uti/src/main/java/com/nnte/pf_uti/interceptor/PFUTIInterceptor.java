@@ -32,6 +32,7 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
         resResult.setResultCode(9999);
         resResult.setResultMessage("未知错误");
         resResult.setRequestTime((new Date()).getTime());
+        pfUTIComponent.setThreadResResult(resResult);
         String name = request.getDispatcherType().name();
         String loginIp = BaseController.getIpAddr(request);
         try {
@@ -46,10 +47,10 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
             request.setAttribute("UTIData", ret);
             return true;
         }catch (BusiException be) {
-            BaseController.printJsonObject(response, BaseController.error(be.getExpCode().toString(), be.getMessage()));
+            responseException(response,be);
             return false;
         }catch (Exception e){
-            BaseController.printJsonObject(response, BaseController.error(e.getMessage()));
+            responseException(response,e);
             return false;
         }
     }
@@ -62,20 +63,31 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         if (ex!=null) {
-            Map<String, Object> utiData = (Map<String, Object>) request.getAttribute("UTIData");
-            ResResult resResult = (ResResult) utiData.get("resResult");
-            PlateformMerchantUtiAccount pmua = (PlateformMerchantUtiAccount)utiData.get("content_pmua");
+            responseException(response,ex);
+        }
+    }
+
+    private void responseException(HttpServletResponse response,Exception ex){
+        try {
+            ResResult resResult = pfUTIComponent.getThreadResResult();
+            if (resResult == null)
+                return;
+            PlateformMerchantUtiAccount pmua = pfUTIComponent.getThreadUtiAccount();
+            if (pmua == null)
+                return;
             resResult.setSuccess(false);
             resResult.setResult(null);
-            if (ex instanceof BusiException){
+            if (ex instanceof BusiException) {
                 BusiException bex = (BusiException) ex;
                 resResult.setResultCode(bex.getExpCode());
-            }else
+            } else
                 resResult.setResultCode(9999);
             resResult.setResultMessage(ex.getMessage());
             resResult.setResponseTime((new Date()).getTime());
-            String respString = pfUTIComponent.getRespSignString(pmua,null,resResult);
+            String respString = pfUTIComponent.getRespSignString(pmua, null, resResult);
             BaseController.printJsonObject(response, respString);
+        }catch (Exception e){
+            outLogExp(e);
         }
     }
 }

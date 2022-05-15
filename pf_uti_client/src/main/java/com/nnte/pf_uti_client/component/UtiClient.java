@@ -38,7 +38,7 @@ public class UtiClient {
             throw new Exception("解密失败，未取得待验签文本");
         UtiResponse response=JsonUtil.jsonToBean(noSecData,UtiResponse.class);
         String signStr = response.getSign();
-        String waitSign = response.getRespText();
+        String waitSign = response.getBody();
         if (!RSAUtils.verify(waitSign.getBytes("UTF-8"), config.getAppPubKey(), signStr))
             throw new Exception("验签失败，交易文本可能被篡改");
         return JsonUtil.jsonToBean(waitSign,ResResult.class);

@@ -31,6 +31,13 @@ public class PFUTIComponent extends BaseComponent {
     @Autowired
     private PlateformUtiAccountComponent plateformUtiAccountComponent;
 
+    private ThreadLocal<PlateformMerchantUtiAccount> thread_UtiAccount = new ThreadLocal<>();
+    private ThreadLocal<ResResult> thread_ResResult = new ThreadLocal<>();
+
+    public PlateformMerchantUtiAccount getThreadUtiAccount(){return thread_UtiAccount.get();}
+    public ResResult getThreadResResult(){return thread_ResResult.get();}
+    public void setThreadResResult(ResResult resResult){thread_ResResult.set(resResult);}
+
     //检查商户业务账户是否可以执行业务 李毅 2018/11/28
     public PlateformMerchant isPBAValid(PlateformMerchantUtiAccount pmua) throws Exception {
         if (pmua == null || pmua.getId() == null || pmua.getId() <= 0)
@@ -59,6 +66,7 @@ public class PFUTIComponent extends BaseComponent {
         PlateformMerchantUtiAccount pmua = plateformUtiAccountComponent.getUtiAccountByAccountCode(mid);
         if (pmua == null)
             throw new BusiException(1001, "UTI商户账号不合法");
+        thread_UtiAccount.set(pmua);
         if (StringUtils.isNotEmpty(pmua.getValidIpList()) && IpUtil.isPermited(ip, pmua.getValidIpList()))
             throw new BusiException("Ip地址不合法");
         PlateformMerchant merchant = isPBAValid(pmua);
@@ -93,8 +101,8 @@ public class PFUTIComponent extends BaseComponent {
             resResult.setResultMessage("");
         }
         UtiResponse response = new UtiResponse();
-        response.setRespText(JsonUtil.beanToJson(resResult));
-        String sign = RSAUtils.sign(response.getRespText().getBytes("UTF-8"), pmua.getAppRsaPrikey());
+        response.setBody(JsonUtil.beanToJson(resResult));
+        String sign = RSAUtils.sign(response.getBody().getBytes("UTF-8"), pmua.getAppRsaPrikey());
         response.setSign(sign);
         String responseJson=JsonUtil.beanToJson(response);
         byte[] data = RSAUtils.encryptByPublicKey(responseJson.getBytes("UTF-8"), pmua.getMerRsaPubkey());
