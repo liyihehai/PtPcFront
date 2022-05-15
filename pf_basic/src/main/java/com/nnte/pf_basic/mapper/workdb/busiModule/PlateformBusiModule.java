@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-07 11:43:58>
+ * auto code,do not modify <2022-05-15 18:08:31>
  */
 public class PlateformBusiModule extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -17,6 +17,7 @@ public class PlateformBusiModule extends BaseModel {
     private Date createDate; //创建时间
     private String updateBy; //更改人
     private Date updateDate; //更改时间
+    private Integer moduleType; //模块类型:1框架模块，2普通模块
 
     public PlateformBusiModule(){}
 
@@ -40,4 +41,6 @@ public class PlateformBusiModule extends BaseModel {
     public void setUpdateBy(String  updateBy){ this.updateBy = updateBy;}
     public Date  getUpdateDate(){ return updateDate;}
     public void setUpdateDate(Date  updateDate){ this.updateDate = updateDate;}
+    public Integer  getModuleType(){ return moduleType;}
+    public void setModuleType(Integer  moduleType){ this.moduleType = moduleType;}
 }

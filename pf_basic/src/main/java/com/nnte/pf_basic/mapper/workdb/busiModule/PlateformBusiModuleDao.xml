@@ -13,10 +13,11 @@
         <result column="create_date" property="createDate"/>
         <result column="update_by" property="updateBy"/>
         <result column="update_date" property="updateDate"/>
+        <result column="module_type" property="moduleType"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.busiModule.PlateformBusiModule">
-        insert into plateform_busi_module (module_code ,module_name ,module_desc ,current_version ,module_status ,create_by ,create_date ,update_by ,update_date )
-        values (#{moduleCode} ,#{moduleName} ,#{moduleDesc} ,#{currentVersion} ,#{moduleStatus} ,#{createBy} ,#{createDate} ,#{updateBy} ,#{updateDate} )
+        insert into plateform_busi_module (module_code ,module_name ,module_desc ,current_version ,module_status ,create_by ,create_date ,update_by ,update_date ,module_type )
+        values (#{moduleCode} ,#{moduleName} ,#{moduleDesc} ,#{currentVersion} ,#{moduleStatus} ,#{createBy} ,#{createDate} ,#{updateBy} ,#{updateDate} ,#{moduleType} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformBusiModuleResult" parameterType="java.lang.Integer">
         select * from plateform_busi_module where id=#{id}
@@ -37,6 +38,7 @@
         <if test="createDate!= null"><![CDATA[create_date=#{createDate},]]></if>
         <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
         <if test="updateDate!= null"><![CDATA[update_date=#{updateDate},]]></if>
+        <if test="moduleType!= null"><![CDATA[module_type=#{moduleType},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -65,6 +67,7 @@
                 <if test="createDate!= null"><![CDATA[and t.create_date = #{createDate}]]></if>
                 <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>
                 <if test="updateDate!= null"><![CDATA[and t.update_date = #{updateDate}]]></if>
+                <if test="moduleType!= null"><![CDATA[and t.module_type = #{moduleType}]]></if>
             <include refid="appendWheres" />
         </where>
     </sql>
