@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModuleDao">
+    <resultMap id="PlateformReportModuleResult" type="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule">
+        <result column="id" property="id"/>
+        <result column="pm_code" property="pmCode"/>
+        <result column="app_code" property="appCode"/>
+        <result column="app_name" property="appName"/>
+        <result column="module_code" property="moduleCode"/>
+        <result column="module_name" property="moduleName"/>
+        <result column="module_version" property="moduleVersion"/>
+        <result column="report_terminal" property="reportTerminal"/>
+        <result column="report_ip" property="reportIp"/>
+        <result column="refresh_time" property="refreshTime"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule">
+        insert into plateform_report_module (pm_code ,app_code ,app_name ,module_code ,module_name ,module_version ,report_terminal ,report_ip ,refresh_time )
+        values (#{pmCode} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} ,#{moduleVersion} ,#{reportTerminal} ,#{reportIp} ,#{refreshTime} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformReportModuleResult" parameterType="java.lang.Integer">
+        select * from plateform_report_module where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_report_module where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule">
+        update plateform_report_module
+        <set>
+            <trim suffixOverrides=",">
+        <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
+        <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
+        <if test="appName!= null"><![CDATA[app_name=#{appName},]]></if>
+        <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
+        <if test="moduleName!= null"><![CDATA[module_name=#{moduleName},]]></if>
+        <if test="moduleVersion!= null"><![CDATA[module_version=#{moduleVersion},]]></if>
+        <if test="reportTerminal!= null"><![CDATA[report_terminal=#{reportTerminal},]]></if>
+        <if test="reportIp!= null"><![CDATA[report_ip=#{reportIp},]]></if>
+        <if test="refreshTime!= null"><![CDATA[refresh_time=#{refreshTime},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
+                <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
+                <if test="appName!= null"><![CDATA[and t.app_name = #{appName}]]></if>
+                <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
+                <if test="moduleName!= null"><![CDATA[and t.module_name = #{moduleName}]]></if>
+                <if test="moduleVersion!= null"><![CDATA[and t.module_version = #{moduleVersion}]]></if>
+                <if test="reportTerminal!= null"><![CDATA[and t.report_terminal = #{reportTerminal}]]></if>
+                <if test="reportIp!= null"><![CDATA[and t.report_ip = #{reportIp}]]></if>
+                <if test="refreshTime!= null"><![CDATA[and t.refresh_time = #{refreshTime}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformReportModuleListSql">
+        select * from plateform_report_module t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule" resultMap="PlateformReportModuleResult">
+        <include refid="findPlateformReportModuleListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformReportModuleListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule" resultMap="PlateformReportModuleResult">
+        <include refid="findPlateformReportModuleListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformReportModuleResult">
+        select * from plateform_report_module t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformReportModuleResult">
+        select * from plateform_report_module
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>
