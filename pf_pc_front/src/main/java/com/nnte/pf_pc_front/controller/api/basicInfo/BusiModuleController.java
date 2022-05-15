@@ -53,9 +53,10 @@ public class BusiModuleController extends BaseController {
             Integer pageNo = NumberDefUtil.getDefInteger(data.get("current"));
             Integer pageSize = NumberDefUtil.getDefInteger(data.get("pageSize"));
             //----------------------------------------------
-            if (moduleItem.getModuleStatus() != null) {
+            if (moduleItem.getModuleStatus() != null)
                 paramMap.put("moduleStatus", moduleItem.getModuleStatus());
-            }
+            if (moduleItem.getModuleType()!=null)
+                paramMap.put("moduleType", moduleItem.getModuleType());
             List<AppendWhere> appendWhereList = new ArrayList<>();
             AppendWhere.addLikeStringToWhereList(moduleItem.getModuleCode(),"t.module_code",appendWhereList);
             AppendWhere.addLikeStringToWhereList(moduleItem.getModuleName(),"t.module_name",appendWhereList);
@@ -87,6 +88,7 @@ public class BusiModuleController extends BaseController {
             module.setModuleCode(moduleItem.getModuleCode());
             module.setModuleName(moduleItem.getModuleName());
             module.setModuleDesc(moduleItem.getModuleDesc());
+            module.setModuleType(moduleItem.getModuleType());
             module.setCurrentVersion(moduleItem.getCurrentVersion());
             PlateformBusiModule retModule=pfBusiModuleComponent.saveBusinessModule(module,oi.getOperatorName());
             return success("保存业务模块定义成功",retModule);

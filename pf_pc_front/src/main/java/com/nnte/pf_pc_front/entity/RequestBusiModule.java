@@ -16,6 +16,7 @@ public class RequestBusiModule {
     private String moduleDesc;
     @StringCheck(colName = "最新版本",maxLen = 50)
     private String currentVersion;
-
+    @IntegerCheck(colName = "模块类型",inVals = {1,2},nullValid=false)
+    private Integer moduleType; //模块类型:1框架模块，2普通模块
     private Integer moduleStatus;
 }

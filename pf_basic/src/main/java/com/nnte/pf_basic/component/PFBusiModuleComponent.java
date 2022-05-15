@@ -56,6 +56,7 @@ public class PFBusiModuleComponent extends BaseComponent {
             update.setModuleName(pbm.getModuleName());
             update.setModuleDesc(pbm.getModuleDesc());
             update.setCurrentVersion(pbm.getCurrentVersion());
+            update.setModuleType(pbm.getModuleType());
             update.setUpdateBy(opeName);
             update.setUpdateDate(new Date());
             return plateformBusiModuleService.save(update,true);
@@ -67,6 +68,7 @@ public class PFBusiModuleComponent extends BaseComponent {
             newModule.setModuleCode(pbm.getModuleCode());
             newModule.setModuleName(pbm.getModuleName());
             newModule.setCurrentVersion(pbm.getCurrentVersion());
+            newModule.setModuleType(pbm.getModuleType());
             newModule.setModuleDesc(pbm.getModuleDesc());
             newModule.setModuleStatus(0);
             newModule.setCreateBy(opeName);
