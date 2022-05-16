@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicenseDao">
+    <resultMap id="PlateformAppLicenseResult" type="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
+        <result column="id" property="id"/>
+        <result column="pm_code" property="pmCode"/>
+        <result column="app_code" property="appCode"/>
+        <result column="module_code" property="moduleCode"/>
+        <result column="module_version" property="moduleVersion"/>
+        <result column="license_state" property="licenseState"/>
+        <result column="copy_count" property="copyCount"/>
+        <result column="terminals" property="terminals"/>
+        <result column="staredate" property="staredate"/>
+        <result column="enddate" property="enddate"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="exe_date" property="exeDate"/>
+        <result column="remainder_days" property="remainderDays"/>
+        <result column="license_amount" property="licenseAmount"/>
+        <result column="exe_amount" property="exeAmount"/>
+        <result column="remainder_amount" property="remainderAmount"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
+        insert into plateform_app_license (pm_code ,app_code ,module_code ,module_version ,license_state ,copy_count ,terminals ,staredate ,enddate ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
+        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{moduleVersion} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{staredate} ,#{enddate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformAppLicenseResult" parameterType="java.lang.Integer">
+        select * from plateform_app_license where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_app_license where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
+        update plateform_app_license
+        <set>
+            <trim suffixOverrides=",">
+        <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
+        <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
+        <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
+        <if test="moduleVersion!= null"><![CDATA[module_version=#{moduleVersion},]]></if>
+        <if test="licenseState!= null"><![CDATA[license_state=#{licenseState},]]></if>
+        <if test="copyCount!= null"><![CDATA[copy_count=#{copyCount},]]></if>
+        <if test="terminals!= null"><![CDATA[terminals=#{terminals},]]></if>
+        <if test="staredate!= null"><![CDATA[staredate=#{staredate},]]></if>
+        <if test="enddate!= null"><![CDATA[enddate=#{enddate},]]></if>
+        <if test="orderNo!= null"><![CDATA[order_no=#{orderNo},]]></if>
+        <if test="exeDate!= null"><![CDATA[exe_date=#{exeDate},]]></if>
+        <if test="remainderDays!= null"><![CDATA[remainder_days=#{remainderDays},]]></if>
+        <if test="licenseAmount!= null"><![CDATA[license_amount=#{licenseAmount},]]></if>
+        <if test="exeAmount!= null"><![CDATA[exe_amount=#{exeAmount},]]></if>
+        <if test="remainderAmount!= null"><![CDATA[remainder_amount=#{remainderAmount},]]></if>
+        <if test="createBy!= null"><![CDATA[create_by=#{createBy},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
+        <if test="updateDate!= null"><![CDATA[update_date=#{updateDate},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
+                <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
+                <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
+                <if test="moduleVersion!= null"><![CDATA[and t.module_version = #{moduleVersion}]]></if>
+                <if test="licenseState!= null"><![CDATA[and t.license_state = #{licenseState}]]></if>
+                <if test="copyCount!= null"><![CDATA[and t.copy_count = #{copyCount}]]></if>
+                <if test="terminals!= null"><![CDATA[and t.terminals = #{terminals}]]></if>
+                <if test="staredate!= null"><![CDATA[and t.staredate = #{staredate}]]></if>
+                <if test="enddate!= null"><![CDATA[and t.enddate = #{enddate}]]></if>
+                <if test="orderNo!= null"><![CDATA[and t.order_no = #{orderNo}]]></if>
+                <if test="exeDate!= null"><![CDATA[and t.exe_date = #{exeDate}]]></if>
+                <if test="remainderDays!= null"><![CDATA[and t.remainder_days = #{remainderDays}]]></if>
+                <if test="licenseAmount!= null"><![CDATA[and t.license_amount = #{licenseAmount}]]></if>
+                <if test="exeAmount!= null"><![CDATA[and t.exe_amount = #{exeAmount}]]></if>
+                <if test="remainderAmount!= null"><![CDATA[and t.remainder_amount = #{remainderAmount}]]></if>
+                <if test="createBy!= null"><![CDATA[and t.create_by = #{createBy}]]></if>
+                <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+                <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>
+                <if test="updateDate!= null"><![CDATA[and t.update_date = #{updateDate}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformAppLicenseListSql">
+        select * from plateform_app_license t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense" resultMap="PlateformAppLicenseResult">
+        <include refid="findPlateformAppLicenseListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformAppLicenseListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense" resultMap="PlateformAppLicenseResult">
+        <include refid="findPlateformAppLicenseListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformAppLicenseResult">
+        select * from plateform_app_license t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformAppLicenseResult">
+        select * from plateform_app_license
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>
