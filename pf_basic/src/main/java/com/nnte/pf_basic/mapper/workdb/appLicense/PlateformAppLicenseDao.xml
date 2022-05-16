@@ -11,8 +11,8 @@
         <result column="license_state" property="licenseState"/>
         <result column="copy_count" property="copyCount"/>
         <result column="terminals" property="terminals"/>
-        <result column="staredate" property="staredate"/>
-        <result column="enddate" property="enddate"/>
+        <result column="stare_date" property="stareDate"/>
+        <result column="end_date" property="endDate"/>
         <result column="order_no" property="orderNo"/>
         <result column="exe_date" property="exeDate"/>
         <result column="remainder_days" property="remainderDays"/>
@@ -25,8 +25,8 @@
         <result column="update_date" property="updateDate"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
-        insert into plateform_app_license (pm_code ,app_code ,module_code ,module_version ,license_state ,copy_count ,terminals ,staredate ,enddate ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
-        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{moduleVersion} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{staredate} ,#{enddate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
+        insert into plateform_app_license (pm_code ,app_code ,module_code ,module_version ,license_state ,copy_count ,terminals ,stare_date ,end_date ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
+        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{moduleVersion} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{stareDate} ,#{endDate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformAppLicenseResult" parameterType="java.lang.Integer">
         select * from plateform_app_license where id=#{id}
@@ -45,8 +45,8 @@
         <if test="licenseState!= null"><![CDATA[license_state=#{licenseState},]]></if>
         <if test="copyCount!= null"><![CDATA[copy_count=#{copyCount},]]></if>
         <if test="terminals!= null"><![CDATA[terminals=#{terminals},]]></if>
-        <if test="staredate!= null"><![CDATA[staredate=#{staredate},]]></if>
-        <if test="enddate!= null"><![CDATA[enddate=#{enddate},]]></if>
+        <if test="stareDate!= null"><![CDATA[stare_date=#{stareDate},]]></if>
+        <if test="endDate!= null"><![CDATA[end_date=#{endDate},]]></if>
         <if test="orderNo!= null"><![CDATA[order_no=#{orderNo},]]></if>
         <if test="exeDate!= null"><![CDATA[exe_date=#{exeDate},]]></if>
         <if test="remainderDays!= null"><![CDATA[remainder_days=#{remainderDays},]]></if>
@@ -83,8 +83,8 @@
                 <if test="licenseState!= null"><![CDATA[and t.license_state = #{licenseState}]]></if>
                 <if test="copyCount!= null"><![CDATA[and t.copy_count = #{copyCount}]]></if>
                 <if test="terminals!= null"><![CDATA[and t.terminals = #{terminals}]]></if>
-                <if test="staredate!= null"><![CDATA[and t.staredate = #{staredate}]]></if>
-                <if test="enddate!= null"><![CDATA[and t.enddate = #{enddate}]]></if>
+                <if test="stareDate!= null"><![CDATA[and t.stare_date = #{stareDate}]]></if>
+                <if test="endDate!= null"><![CDATA[and t.end_date = #{endDate}]]></if>
                 <if test="orderNo!= null"><![CDATA[and t.order_no = #{orderNo}]]></if>
                 <if test="exeDate!= null"><![CDATA[and t.exe_date = #{exeDate}]]></if>
                 <if test="remainderDays!= null"><![CDATA[and t.remainder_days = #{remainderDays}]]></if>
