@@ -6,4 +6,13 @@ public abstract class UtiRequest {
     public String getVer() {
         return ver;
     }
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

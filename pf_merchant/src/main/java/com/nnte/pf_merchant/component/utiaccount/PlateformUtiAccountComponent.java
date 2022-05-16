@@ -5,11 +5,11 @@ import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.utils.DateUtils;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccountService;
 import com.nnte.pf_merchant.component.merchant.PlateformMerchanComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant;
-import com.nnte.pf_merchant.mapper.workdb.merchantUtiAccount.PlateformMerchantUtiAccount;
-import com.nnte.pf_merchant.mapper.workdb.merchantUtiAccount.PlateformMerchantUtiAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,9 @@
 package com.nnte.pf_source.uti.request;
 
-@UtiURL(url = "/uti/basic/merchantToken")
+@UtiURL(url = RequestToken.requestURL)
 public class RequestToken extends UtiRequest {
+
+    public static final String requestURL = "/uti/basic/merchantToken";
 
     private String mid;
     private String account;

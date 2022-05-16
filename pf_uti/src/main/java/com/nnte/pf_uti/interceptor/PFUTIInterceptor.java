@@ -4,7 +4,9 @@ import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.BaseController;
 import com.nnte.basebusi.excption.BusiException;
-import com.nnte.pf_merchant.mapper.workdb.merchantUtiAccount.PlateformMerchantUtiAccount;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount;
+import com.nnte.pf_source.uti.request.RequestToken;
+import com.nnte.pf_source.uti.request.UtiRequest;
 import com.nnte.pf_source.uti.response.ResResult;
 import com.nnte.pf_uti.component.PFUTIComponent;
 import com.nnte.pf_uti.config.PFUTIConfig;
@@ -16,12 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.Map;
 
 @Component
 @BusiLogAttr(PFUTIConfig.loggerName)
 public class PFUTIInterceptor extends BaseComponent implements HandlerInterceptor {
 
+    @Autowired
+    private PFUTIConfig pfUTIConfig;
     @Autowired
     private PFUTIComponent pfUTIComponent;
     @Override
@@ -33,18 +36,30 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
         resResult.setResultMessage("未知错误");
         resResult.setRequestTime((new Date()).getTime());
         pfUTIComponent.setThreadResResult(resResult);
-        String name = request.getDispatcherType().name();
+        String name = request.getServletPath();
         String loginIp = BaseController.getIpAddr(request);
         try {
+            Class<? extends UtiRequest> clazz=pfUTIConfig.getClassByUrl(name);
+            if (clazz==null)
+                throw new BusiException(1001,"没找到对应的解析包");
             String req_data = request.getParameter("req_data");
+            if (req_data == null)
+                throw new BusiException(1002,"待解析报文为空");
             outLogDebug("IP=" + loginIp + ",name=" + name + ",req_data=" + req_data);
-            String mid = request.getParameter("mid");
-            if (mid == null || req_data == null)
-                throw new BusiException("");
+            if (name.equals(RequestToken.requestURL)) {
+                //只有查询token时没有输入token
+                String mid = request.getParameter("mid");
+                if (mid == null)
+                    throw new BusiException(1003, "商户账号为空");
                 //解密验签
-            Map<String, Object> ret=pfUTIComponent.checkReqSignValid(mid, req_data,loginIp);
-            ret.put("resResult",resResult);
-            request.setAttribute("UTIData", ret);
+                pfUTIComponent.checkReqSignValid(mid, req_data, loginIp, clazz);
+            }else {
+                String token = request.getParameter("token");
+                if (token == null)
+                    throw new BusiException(1004, "token为空");
+                String utiAccount=pfUTIComponent.getPMUAByToken(token);
+                pfUTIComponent.checkReqSignValid(utiAccount, req_data, loginIp, clazz);
+            }
             return true;
         }catch (BusiException be) {
             responseException(response,be);
@@ -84,7 +99,7 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
                 resResult.setResultCode(9999);
             resResult.setResultMessage(ex.getMessage());
             resResult.setResponseTime((new Date()).getTime());
-            String respString = pfUTIComponent.getRespSignString(pmua, null, resResult);
+            String respString = pfUTIComponent.getRespSignString(pmua, null);
             BaseController.printJsonObject(response, respString);
         }catch (Exception e){
             outLogExp(e);

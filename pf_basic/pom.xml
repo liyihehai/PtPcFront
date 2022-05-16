@@ -44,6 +44,11 @@
             <artifactId>communicate-data</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.nnte.plateform</groupId>
+            <artifactId>pf_source</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

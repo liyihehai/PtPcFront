@@ -1,6 +1,6 @@
-package com.nnte.pf_source.uti.response;
+package com.nnte.pf_source.uti;
 
-public class UtiResponse {
+public class UtiBodySign {
     private String body;
     private String sign;
 

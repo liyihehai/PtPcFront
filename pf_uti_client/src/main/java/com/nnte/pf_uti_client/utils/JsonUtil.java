@@ -237,22 +237,8 @@ public class JsonUtil {
      * 通过JsonNode生成ObjectNode
      */
     public static ObjectNode getObjectNodefromBean(Object bean) throws Exception {
-        if (bean == null)
-            return null;
-        ObjectNode node = newJsonNode();
-        Field[] fields = bean.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true); // 设置属性是可以访问的
-            String fName = field.getName();
-            Object val = field.get(bean);
-            if (val != null) {
-                if (val instanceof Date) {
-                    DateUtils.dateToString((Date) val, DateUtils.DF_YMDHMS);
-                } else
-                    node.put(fName, val.toString());
-            }
-        }
-        return node;
+        JsonNode jsonNode = beanToJsonNode(bean);
+        return jsonNode2ObjectNode(jsonNode);
     }
 
     public static ObjectNode jsonNode2ObjectNode(JsonNode jsonNode) throws Exception{
