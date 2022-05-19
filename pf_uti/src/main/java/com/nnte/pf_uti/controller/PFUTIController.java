@@ -29,6 +29,6 @@ public class PFUTIController extends BaseController {
     @RequestMapping(value = "/reportModule", method = RequestMethod.POST)
     @ResponseBody
     public Object reportModule(HttpServletRequest request) throws Exception {
-        return pfUTIComponent.reportModule();
+        return pfUTIComponent.reportModule(BaseController.getIpAddr(request));
     }
 }

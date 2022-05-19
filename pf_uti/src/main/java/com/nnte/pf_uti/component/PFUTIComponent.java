@@ -147,10 +147,14 @@ public class PFUTIComponent extends BaseComponent {
             throw new BusiException(1105, "取商户信息失败(密码不符)");
     }
 
-    public String reportModule() throws Exception{
+    public String reportModule(String ip) throws Exception{
         RequestReportModule requestReportModule = (RequestReportModule)getThreadUtiRequest();
+        if (requestReportModule==null || requestReportModule.getModuleItemList()==null ||
+                requestReportModule.getModuleItemList().size()<=0)
+            throw new BusiException(1106,"没有收到任何报告的模块");
         PlateformMerchantUtiAccount puma = thread_UtiAccount.get();
-        ResponseReportModule responseReportModule = reportModuleComponent.reportModule(requestReportModule.getModuleItemList(),puma);
+        ResponseReportModule responseReportModule = reportModuleComponent.reportModule(requestReportModule.getModuleItemList(),
+                puma,requestReportModule.getReportTerminal(),ip);
         ObjectNode objectNode=JsonUtil.getObjectNodefromBean(responseReportModule);
         return getRespSignString(puma,objectNode);
     }

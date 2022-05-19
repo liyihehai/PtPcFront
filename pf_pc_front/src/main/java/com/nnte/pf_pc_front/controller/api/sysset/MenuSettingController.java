@@ -12,6 +12,7 @@ import com.nnte.framework.utils.BeanUtils;
 import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.NumberDefUtil;
 import com.nnte.framework.utils.StringUtils;
+import com.nnte.pf_basic.config.AppBasicSysRole;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_business.component.menus.PlateformFunctionComponent;
 import com.nnte.pf_business.component.operator.PlateformOperatorComponent;
@@ -169,5 +170,19 @@ public class MenuSettingController extends BaseController {
         } catch (Exception e) {
             return onException(e);
         }
+    }
+
+    /**
+     * 任务管理入口定义
+     */
+    @ModuleEnter(path = "/sysset/taskJobMain", name = "任务设置页面",
+            desc = "平台系统自动任务设置，系统超级管理员功能",
+            sysRole = AppBasicSysRole.SYS_MANAGER,
+            roleRuler = "pf-taskJob",
+            moduleCode = PFBusinessConfig.MODULE_SYSTEM_SETTING)
+    @RequestMapping(value = "/taskJobMain")
+    @ResponseBody
+    public Object taskJobMain(@Nullable @RequestBody JsonNode json) {
+        return null;
     }
 }
