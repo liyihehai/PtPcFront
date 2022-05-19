@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperatorDao">
+    <resultMap id="PlateformOperatorResult" type="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator">
+        <result column="id" property="id"/>
+        <result column="ope_type" property="opeType"/>
+        <result column="ope_code" property="opeCode"/>
+        <result column="ope_name" property="opeName"/>
+        <result column="ope_password" property="opePassword"/>
+        <result column="ope_mobile" property="opeMobile"/>
+        <result column="ope_state" property="opeState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="tmp_key" property="tmpKey"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator">
+        insert into plateform_operator (ope_type ,ope_code ,ope_name ,ope_password ,ope_mobile ,ope_state ,create_time ,tmp_key )
+        values (#{opeType} ,#{opeCode} ,#{opeName} ,#{opePassword} ,#{opeMobile} ,#{opeState} ,#{createTime} ,#{tmpKey} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformOperatorResult" parameterType="java.lang.Integer">
+        select * from plateform_operator where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_operator where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator">
+        update plateform_operator
+        <set>
+            <trim suffixOverrides=",">
+        <if test="opeType!= null"><![CDATA[ope_type=#{opeType},]]></if>
+        <if test="opeCode!= null"><![CDATA[ope_code=#{opeCode},]]></if>
+        <if test="opeName!= null"><![CDATA[ope_name=#{opeName},]]></if>
+        <if test="opePassword!= null"><![CDATA[ope_password=#{opePassword},]]></if>
+        <if test="opeMobile!= null"><![CDATA[ope_mobile=#{opeMobile},]]></if>
+        <if test="opeState!= null"><![CDATA[ope_state=#{opeState},]]></if>
+        <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
+        <if test="tmpKey!= null"><![CDATA[tmp_key=#{tmpKey},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="opeType!= null"><![CDATA[and t.ope_type = #{opeType}]]></if>
+                <if test="opeCode!= null"><![CDATA[and t.ope_code = #{opeCode}]]></if>
+                <if test="opeName!= null"><![CDATA[and t.ope_name = #{opeName}]]></if>
+                <if test="opePassword!= null"><![CDATA[and t.ope_password = #{opePassword}]]></if>
+                <if test="opeMobile!= null"><![CDATA[and t.ope_mobile = #{opeMobile}]]></if>
+                <if test="opeState!= null"><![CDATA[and t.ope_state = #{opeState}]]></if>
+                <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
+                <if test="tmpKey!= null"><![CDATA[and t.tmp_key = #{tmpKey}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformOperatorListSql">
+        select * from plateform_operator t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator" resultMap="PlateformOperatorResult">
+        <include refid="findPlateformOperatorListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformOperatorListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator" resultMap="PlateformOperatorResult">
+        <include refid="findPlateformOperatorListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformOperatorResult">
+        select * from plateform_operator t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformOperatorResult">
+        select * from plateform_operator
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>
