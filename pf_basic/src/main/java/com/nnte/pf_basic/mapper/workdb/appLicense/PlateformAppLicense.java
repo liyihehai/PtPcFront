@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-16 15:02:47>
+ * auto code,do not modify <2022-05-19 22:18:39>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -19,7 +19,7 @@ public class PlateformAppLicense extends BaseModel {
     private Date endDate; //结束日期
     private String orderNo; //订单号
     private Date exeDate; //执行日期
-    private Long remainderDays; //剩余天数
+    private Integer remainderDays; //剩余天数
     private Double licenseAmount; //License金额
     private Double exeAmount; //已执行金额
     private Double remainderAmount; //剩余金额
@@ -54,8 +54,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setOrderNo(String  orderNo){ this.orderNo = orderNo;}
     public Date  getExeDate(){ return exeDate;}
     public void setExeDate(Date  exeDate){ this.exeDate = exeDate;}
-    public Long  getRemainderDays(){ return remainderDays;}
-    public void setRemainderDays(Long  remainderDays){ this.remainderDays = remainderDays;}
+    public Integer  getRemainderDays(){ return remainderDays;}
+    public void setRemainderDays(Integer  remainderDays){ this.remainderDays = remainderDays;}
     public Double  getLicenseAmount(){ return licenseAmount;}
     public void setLicenseAmount(Double  licenseAmount){ this.licenseAmount = licenseAmount;}
     public Double  getExeAmount(){ return exeAmount;}
