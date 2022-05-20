@@ -16,6 +16,7 @@ public class AppBasicConfig implements ModuleInterface {
     public final static String JarLoggerName = "PfBasic";
     public final static String jarName = "pf_basic.jar";
     public final static String Module_Code = "systemBasicInfo"; //基础信息
+    public final static String auto_task_operator = "3001";
     static {
         AppRegistry.setAppModuleName(Module_Code,"基础信息");
     }

@@ -16,7 +16,7 @@
         select #{opeCode} as ope_code,fun_code from plateform_functions where fun_code in(${functions});
     </insert>
 
-    <select id="findFunctionsByOpeCode" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
+    <select id="findFunctionsByOpeCode" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
         select * from plateform_functions
         where fun_code in (select fun_code from plateform_ope_function
                            where ope_code = #{opeCode})
@@ -42,7 +42,7 @@
                            where sys_role_code in (${_parameter}))
     </select>
 
-    <select id="findFunctionsByOpeRoles" parameterType="com.nnte.pf_business.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
+    <select id="findFunctionsByOpeRoles" parameterType="com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator" resultMap="PlateformFunctionsResult">
         select * from plateform_functions
         where fun_code in (
           select fun_code from plateform_role_function

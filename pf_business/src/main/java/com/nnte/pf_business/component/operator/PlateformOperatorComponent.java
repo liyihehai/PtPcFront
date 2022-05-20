@@ -8,10 +8,11 @@ import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.KeyValue;
 import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.*;
+import com.nnte.pf_basic.component.BasicGlobalComponent;
+import com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator;
+import com.nnte.pf_basic.mapper.workdb.operator.PlateformOperatorService;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctions;
 import com.nnte.pf_business.mapper.workdb.functions.PlateformFunctionsService;
-import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
-import com.nnte.pf_business.mapper.workdb.operator.PlateformOperatorService;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRole;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleEx;
 import com.nnte.pf_business.mapper.workdb.operole.PlateformOpeRoleService;
@@ -41,6 +42,8 @@ public class PlateformOperatorComponent extends BaseComponent {
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
     private PlateformRoleService plateformRoleService;
+    @Autowired
+    private BasicGlobalComponent basicGlobalComponent;
     /**
      * 操作员状态
      * */

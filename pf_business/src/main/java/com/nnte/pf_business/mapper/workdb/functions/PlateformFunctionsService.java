@@ -1,8 +1,7 @@
 package com.nnte.pf_business.mapper.workdb.functions;
 
 import com.nnte.framework.base.BaseService;
-import com.nnte.framework.utils.LogUtil;
-import com.nnte.pf_business.mapper.workdb.operator.PlateformOperator;
+import com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator;
 import com.nnte.pf_business.mapper.workdb.role.PlateformRole;
 import org.springframework.stereotype.Component;
 
