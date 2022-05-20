@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-20 17:46:59>
+ * auto code,do not modify <2022-05-20 22:35:49>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -18,6 +18,7 @@ public class PlateformAppLicense extends BaseModel {
     private Integer copyCount; //拷贝数1<= x <=50
     private String terminals; //终端序列
     private Date stareDate; //开始日期
+    private Integer monthCount; //月数
     private Date endDate; //结束日期
     private String orderNo; //订单号
     private Date exeDate; //执行日期
@@ -54,6 +55,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setTerminals(String  terminals){ this.terminals = terminals;}
     public Date  getStareDate(){ return stareDate;}
     public void setStareDate(Date  stareDate){ this.stareDate = stareDate;}
+    public Integer  getMonthCount(){ return monthCount;}
+    public void setMonthCount(Integer  monthCount){ this.monthCount = monthCount;}
     public Date  getEndDate(){ return endDate;}
     public void setEndDate(Date  endDate){ this.endDate = endDate;}
     public String  getOrderNo(){ return orderNo;}
