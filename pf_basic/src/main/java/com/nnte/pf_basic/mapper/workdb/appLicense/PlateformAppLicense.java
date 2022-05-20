@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-19 22:18:39>
+ * auto code,do not modify <2022-05-20 09:19:15>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -12,6 +12,7 @@ public class PlateformAppLicense extends BaseModel {
     private String appCode; //应用代码
     private String moduleCode; //模块代码
     private String moduleVersion; //模块版本
+    private Integer feeType; //收费类型:1收费，2试用
     private Integer licenseState; //License状态:0编辑，1待执行，2执行中，3执行结束，4已终止，-1已删除
     private Integer copyCount; //拷贝数1<= x <=50
     private String terminals; //终端序列
@@ -19,7 +20,7 @@ public class PlateformAppLicense extends BaseModel {
     private Date endDate; //结束日期
     private String orderNo; //订单号
     private Date exeDate; //执行日期
-    private Integer remainderDays; //剩余天数
+    private Long remainderDays; //剩余天数
     private Double licenseAmount; //License金额
     private Double exeAmount; //已执行金额
     private Double remainderAmount; //剩余金额
@@ -40,6 +41,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setModuleCode(String  moduleCode){ this.moduleCode = moduleCode;}
     public String  getModuleVersion(){ return moduleVersion;}
     public void setModuleVersion(String  moduleVersion){ this.moduleVersion = moduleVersion;}
+    public Integer  getFeeType(){ return feeType;}
+    public void setFeeType(Integer  feeType){ this.feeType = feeType;}
     public Integer  getLicenseState(){ return licenseState;}
     public void setLicenseState(Integer  licenseState){ this.licenseState = licenseState;}
     public Integer  getCopyCount(){ return copyCount;}
@@ -54,8 +57,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setOrderNo(String  orderNo){ this.orderNo = orderNo;}
     public Date  getExeDate(){ return exeDate;}
     public void setExeDate(Date  exeDate){ this.exeDate = exeDate;}
-    public Integer  getRemainderDays(){ return remainderDays;}
-    public void setRemainderDays(Integer  remainderDays){ this.remainderDays = remainderDays;}
+    public Long  getRemainderDays(){ return remainderDays;}
+    public void setRemainderDays(Long  remainderDays){ this.remainderDays = remainderDays;}
     public Double  getLicenseAmount(){ return licenseAmount;}
     public void setLicenseAmount(Double  licenseAmount){ this.licenseAmount = licenseAmount;}
     public Double  getExeAmount(){ return exeAmount;}
