@@ -4,13 +4,14 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-20 09:19:15>
+ * auto code,do not modify <2022-05-20 10:27:40>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
     private String pmCode; //商户代码
     private String appCode; //应用代码
     private String moduleCode; //模块代码
+    private Integer mamNo; //MAM序号:商户代码+应用代码+模块代码+序号（每次+1）
     private String moduleVersion; //模块版本
     private Integer feeType; //收费类型:1收费，2试用
     private Integer licenseState; //License状态:0编辑，1待执行，2执行中，3执行结束，4已终止，-1已删除
@@ -39,6 +40,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setAppCode(String  appCode){ this.appCode = appCode;}
     public String  getModuleCode(){ return moduleCode;}
     public void setModuleCode(String  moduleCode){ this.moduleCode = moduleCode;}
+    public Integer  getMamNo(){ return mamNo;}
+    public void setMamNo(Integer  mamNo){ this.mamNo = mamNo;}
     public String  getModuleVersion(){ return moduleVersion;}
     public void setModuleVersion(String  moduleVersion){ this.moduleVersion = moduleVersion;}
     public Integer  getFeeType(){ return feeType;}

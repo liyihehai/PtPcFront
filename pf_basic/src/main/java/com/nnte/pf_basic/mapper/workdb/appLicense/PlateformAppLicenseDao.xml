@@ -7,6 +7,7 @@
         <result column="pm_code" property="pmCode"/>
         <result column="app_code" property="appCode"/>
         <result column="module_code" property="moduleCode"/>
+        <result column="mam_no" property="mamNo"/>
         <result column="module_version" property="moduleVersion"/>
         <result column="fee_type" property="feeType"/>
         <result column="license_state" property="licenseState"/>
@@ -26,8 +27,8 @@
         <result column="update_date" property="updateDate"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
-        insert into plateform_app_license (pm_code ,app_code ,module_code ,module_version ,fee_type ,license_state ,copy_count ,terminals ,stare_date ,end_date ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
-        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{moduleVersion} ,#{feeType} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{stareDate} ,#{endDate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
+        insert into plateform_app_license (pm_code ,app_code ,module_code ,mam_no ,module_version ,fee_type ,license_state ,copy_count ,terminals ,stare_date ,end_date ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
+        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{mamNo} ,#{moduleVersion} ,#{feeType} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{stareDate} ,#{endDate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformAppLicenseResult" parameterType="java.lang.Integer">
         select * from plateform_app_license where id=#{id}
@@ -42,6 +43,7 @@
         <if test="pmCode!= null"><![CDATA[pm_code=#{pmCode},]]></if>
         <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
         <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
+        <if test="mamNo!= null"><![CDATA[mam_no=#{mamNo},]]></if>
         <if test="moduleVersion!= null"><![CDATA[module_version=#{moduleVersion},]]></if>
         <if test="feeType!= null"><![CDATA[fee_type=#{feeType},]]></if>
         <if test="licenseState!= null"><![CDATA[license_state=#{licenseState},]]></if>
@@ -81,6 +83,7 @@
                 <if test="pmCode!= null"><![CDATA[and t.pm_code = #{pmCode}]]></if>
                 <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
                 <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
+                <if test="mamNo!= null"><![CDATA[and t.mam_no = #{mamNo}]]></if>
                 <if test="moduleVersion!= null"><![CDATA[and t.module_version = #{moduleVersion}]]></if>
                 <if test="feeType!= null"><![CDATA[and t.fee_type = #{feeType}]]></if>
                 <if test="licenseState!= null"><![CDATA[and t.license_state = #{licenseState}]]></if>
