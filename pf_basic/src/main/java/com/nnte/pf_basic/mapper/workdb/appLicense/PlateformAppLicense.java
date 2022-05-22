@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-22 08:15:38>
+ * auto code,do not modify <2022-05-22 14:18:22>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -17,10 +17,10 @@ public class PlateformAppLicense extends BaseModel {
     private Integer licenseState; //License状态:0编辑，1待执行，2执行中，3执行结束，4已终止，-1已删除
     private Integer copyCount; //拷贝数1<= x <=50
     private String terminals; //终端序列
-    private Date stareDate; //开始日期
+    private Date startDate; //开始日期
     private Integer monthCount; //月数
     private Date endDate; //结束日期
-    private String orderNo; //订单号
+    private String orderNo; //订单号(销售订单)
     private Date exeDate; //执行日期
     private Integer remainderDays; //剩余天数
     private Double licenseAmount; //License金额
@@ -54,8 +54,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setCopyCount(Integer  copyCount){ this.copyCount = copyCount;}
     public String  getTerminals(){ return terminals;}
     public void setTerminals(String  terminals){ this.terminals = terminals;}
-    public Date  getStareDate(){ return stareDate;}
-    public void setStareDate(Date  stareDate){ this.stareDate = stareDate;}
+    public Date  getStartDate(){ return startDate;}
+    public void setStartDate(Date  startDate){ this.startDate = startDate;}
     public Integer  getMonthCount(){ return monthCount;}
     public void setMonthCount(Integer  monthCount){ this.monthCount = monthCount;}
     public Date  getEndDate(){ return endDate;}
