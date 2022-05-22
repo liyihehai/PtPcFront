@@ -112,4 +112,16 @@ public class BusiModuleController extends BaseController {
             return onException(e);
         }
     }
+    /**
+     * 查询有效商业模块的Key-Value序列
+     * */
+    @RequestMapping(value = "/getValidBusiModuleKVList", method = RequestMethod.POST)
+    @ResponseBody
+    public Object getValidBusiModuleKVList(){
+        try {
+            return success("设置业务模块状态成功",pfBusiModuleComponent.getValidBusiModuleKVList());
+        }catch (Exception e) {
+            return onException(e);
+        }
+    }
 }

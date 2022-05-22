@@ -3,6 +3,7 @@ package com.nnte.pf_merchant.component.merchant;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.DBSrcTranc;
 import com.nnte.basebusi.base.BaseComponent;
+import com.nnte.basebusi.entity.AppendWhere;
 import com.nnte.basebusi.entity.OperatorInfo;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.WorkDBAspect;
@@ -26,9 +27,7 @@ import com.nnte.pf_merchant.request.RequestMerchantExpand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @WorkDBAspect
@@ -37,7 +36,7 @@ import java.util.Map;
  * 日志打印位置：MerchantManager 商户管理
  * */
 @BusiLogAttr(PFMerchantConfig.loggerName)
-public class PlateformMerchanComponent extends BaseComponent {
+public class PlateformMerchanComponent extends BaseComponent{
     @Autowired
     private PlateformMerchantService plateformMerchantService;
     @Autowired
@@ -236,4 +235,16 @@ public class PlateformMerchanComponent extends BaseComponent {
         cruxOpeMQComponent.sendCruxOperate(oi.getOperatorName(),"0001-6", "商户下架", srcMerchant, null);
     }
 
+    public Map<Object, PlateformMerchant> getMerchantByCodeList(Set<Object> codeSet) throws Exception{
+        Map<String,Object> paramMap = new HashMap<>();
+        AppendWhere.addInToWhereMap("t.pm_code",paramMap,codeSet);
+        List<PlateformMerchant> list=plateformMerchantService.findModelListByMap(paramMap);
+        Map<Object, PlateformMerchant> retMap = new HashMap<>();
+        if (list!=null && list.size()>0) {
+            for (PlateformMerchant merchant : list) {
+                retMap.put(merchant.getPmCode(),merchant);
+            }
+        }
+        return retMap;
+    }
 }

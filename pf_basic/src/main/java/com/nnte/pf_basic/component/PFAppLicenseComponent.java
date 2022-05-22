@@ -11,6 +11,7 @@ import com.nnte.pf_basic.entertity.LicenseState;
 import com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense;
 import com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicenseService;
 import com.nnte.pf_basic.mapper.workdb.operator.PlateformOperator;
+import com.nnte.pf_basic.proxy.LicenseLockExtendProxy;
 import com.nnte.pf_source.uti.MerchantLicense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,8 @@ public class PFAppLicenseComponent extends BaseComponent {
     private PlateformAppLicenseService plateformAppLicenseService;
     @Autowired
     private BasicGlobalComponent basicGlobalComponent;
+    @Autowired
+    private JedisComponent jedisComponent;
 
     public boolean isTerminalInLicense(PlateformAppLicense license,String terminal){
         if (license.getTerminals()!=null && license.getTerminals().length()>0 &&(license.getTerminals().equals(terminal)||
@@ -31,6 +34,25 @@ public class PFAppLicenseComponent extends BaseComponent {
             return true;
         return false;
     }
+
+    public String makeLicenseCreateLock(String pmCode,String appCode,String moduleCode) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(pmCode)
+                .append("-").append(appCode)
+                .append("-").append(moduleCode);
+        return sb.toString();
+    }
+
+    public String makeLicenseUpdateLock(PlateformAppLicense license) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(license.getPmCode())
+                .append("-").append(license.getAppCode())
+                .append("-").append(license.getModuleCode())
+                .append("-").append(license.getMamNo())
+                .append("-").append(license.getId());
+        return sb.toString();
+    }
+
     public MerchantLicense getLicense(String pmCode, String appCode, String moduleCode,
                                       String terminal){
         PlateformAppLicense dto = new PlateformAppLicense();
@@ -50,13 +72,13 @@ public class PFAppLicenseComponent extends BaseComponent {
                 if (laterStartDate!=null){
                     if (DateUtils.addDay(license.getEndDate(),1).before(laterStartDate)){
                         endDate = license.getEndDate();
-                        laterStartDate = license.getStareDate();
+                        laterStartDate = license.getStartDate();
                         continue;
                     }
                 }
                 if (endDate==null || license.getEndDate().after(endDate)) {
                     endDate = license.getEndDate();
-                    laterStartDate = license.getStareDate();
+                    laterStartDate = license.getStartDate();
                 }
             }
         }
@@ -70,16 +92,26 @@ public class PFAppLicenseComponent extends BaseComponent {
         return license;
     }
 
+    /**
+     * 增强型调用自动许可状态更新,更新状态时先加锁
+     * */
+    private void autoLicenseStateUpdateExtend(PlateformAppLicense license,Long nowDate,
+                                                PlateformOperator operator) throws Exception{
+        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this,jedisComponent,
+                this);
+        proxy.licenseUpdateLockExtendInvoke("autoLicenseStateUpdate",license,nowDate,operator);
+    }
+
     private void autoLicenseStateUpdate(PlateformAppLicense license,Long nowDate,
                                         PlateformOperator operator){
         try {
-            Long startDate = license.getStareDate().getTime();
+            Long startDate = license.getStartDate().getTime();
             Integer state = 1;
             Date exeDate = new Date(nowDate);
             if (startDate <= nowDate) {
                 state = 2;
             }
-            Long endDate = license.getStareDate().getTime();
+            Long endDate = license.getStartDate().getTime();
             if (endDate < nowDate) {
                 state = 3;
                 exeDate = new Date(endDate);
@@ -96,7 +128,7 @@ public class PFAppLicenseComponent extends BaseComponent {
                     updateLicense.setExeAmount(license.getLicenseAmount());
                     updateLicense.setRemainderAmount(0d);
                 }else{
-                    int totalDays=DateUtils.getDaysBetween(license.getStareDate(),license.getEndDate());
+                    int totalDays=DateUtils.getDaysBetween(license.getStartDate(),license.getEndDate());
                     updateLicense.setExeAmount(NumberUtil.getScaleValue4Money(license.getLicenseAmount() * (totalDays - remainderDays) / totalDays));
                     updateLicense.setRemainderAmount(NumberUtil.getScaleValue4Money(license.getLicenseAmount() - updateLicense.getExeAmount()));
                 }
@@ -127,7 +159,7 @@ public class PFAppLicenseComponent extends BaseComponent {
         Long nowDate = DateUtils.dateToDate(new Date(),DateUtils.DF_YMD).getTime();
         PlateformOperator operator = basicGlobalComponent.getOperatorByCode(AppBasicConfig.auto_task_operator);
         for(PlateformAppLicense license:list){
-            autoLicenseStateUpdate(license,nowDate,operator);
+            autoLicenseStateUpdateExtend(license,nowDate,operator);
         }
     }
 }

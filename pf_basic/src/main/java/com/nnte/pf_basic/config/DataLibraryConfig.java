@@ -32,4 +32,7 @@ public class DataLibraryConfig {
         for(LibType libType:libTypeList)
             libTypeMap.put(libType.typeCode,libType);
     }
+    public static LibType getLibTypeByCode(String libTypeCode){
+        return libTypeMap.get(libTypeCode);
+    }
 }
