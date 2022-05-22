@@ -22,14 +22,15 @@
         <result column="license_amount" property="licenseAmount"/>
         <result column="exe_amount" property="exeAmount"/>
         <result column="remainder_amount" property="remainderAmount"/>
+        <result column="create_channel" property="createChannel"/>
         <result column="create_by" property="createBy"/>
         <result column="create_time" property="createTime"/>
         <result column="update_by" property="updateBy"/>
         <result column="update_date" property="updateDate"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense">
-        insert into plateform_app_license (pm_code ,app_code ,module_code ,mam_no ,module_version ,fee_type ,license_state ,copy_count ,terminals ,stare_date ,month_count ,end_date ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_by ,create_time ,update_by ,update_date )
-        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{mamNo} ,#{moduleVersion} ,#{feeType} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{stareDate} ,#{monthCount} ,#{endDate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
+        insert into plateform_app_license (pm_code ,app_code ,module_code ,mam_no ,module_version ,fee_type ,license_state ,copy_count ,terminals ,stare_date ,month_count ,end_date ,order_no ,exe_date ,remainder_days ,license_amount ,exe_amount ,remainder_amount ,create_channel ,create_by ,create_time ,update_by ,update_date )
+        values (#{pmCode} ,#{appCode} ,#{moduleCode} ,#{mamNo} ,#{moduleVersion} ,#{feeType} ,#{licenseState} ,#{copyCount} ,#{terminals} ,#{stareDate} ,#{monthCount} ,#{endDate} ,#{orderNo} ,#{exeDate} ,#{remainderDays} ,#{licenseAmount} ,#{exeAmount} ,#{remainderAmount} ,#{createChannel} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateDate} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformAppLicenseResult" parameterType="java.lang.Integer">
         select * from plateform_app_license where id=#{id}
@@ -59,6 +60,7 @@
         <if test="licenseAmount!= null"><![CDATA[license_amount=#{licenseAmount},]]></if>
         <if test="exeAmount!= null"><![CDATA[exe_amount=#{exeAmount},]]></if>
         <if test="remainderAmount!= null"><![CDATA[remainder_amount=#{remainderAmount},]]></if>
+        <if test="createChannel!= null"><![CDATA[create_channel=#{createChannel},]]></if>
         <if test="createBy!= null"><![CDATA[create_by=#{createBy},]]></if>
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
         <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
@@ -100,6 +102,7 @@
                 <if test="licenseAmount!= null"><![CDATA[and t.license_amount = #{licenseAmount}]]></if>
                 <if test="exeAmount!= null"><![CDATA[and t.exe_amount = #{exeAmount}]]></if>
                 <if test="remainderAmount!= null"><![CDATA[and t.remainder_amount = #{remainderAmount}]]></if>
+                <if test="createChannel!= null"><![CDATA[and t.create_channel = #{createChannel}]]></if>
                 <if test="createBy!= null"><![CDATA[and t.create_by = #{createBy}]]></if>
                 <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
                 <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>

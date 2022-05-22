@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-20 22:35:49>
+ * auto code,do not modify <2022-05-22 08:15:38>
  */
 public class PlateformAppLicense extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -26,6 +26,7 @@ public class PlateformAppLicense extends BaseModel {
     private Double licenseAmount; //License金额
     private Double exeAmount; //已执行金额
     private Double remainderAmount; //剩余金额
+    private Integer createChannel; //创建渠道:1平台管理，2：用户自助
     private String createBy; //创建人
     private Date createTime; //创建时间
     private String updateBy; //更改人
@@ -71,6 +72,8 @@ public class PlateformAppLicense extends BaseModel {
     public void setExeAmount(Double  exeAmount){ this.exeAmount = exeAmount;}
     public Double  getRemainderAmount(){ return remainderAmount;}
     public void setRemainderAmount(Double  remainderAmount){ this.remainderAmount = remainderAmount;}
+    public Integer  getCreateChannel(){ return createChannel;}
+    public void setCreateChannel(Integer  createChannel){ this.createChannel = createChannel;}
     public String  getCreateBy(){ return createBy;}
     public void setCreateBy(String  createBy){ this.createBy = createBy;}
     public Date  getCreateTime(){ return createTime;}
