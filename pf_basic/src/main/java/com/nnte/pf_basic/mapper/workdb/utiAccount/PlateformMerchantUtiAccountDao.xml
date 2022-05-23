@@ -25,10 +25,11 @@
         <result column="create_time" property="createTime"/>
         <result column="update_by" property="updateBy"/>
         <result column="update_time" property="updateTime"/>
+        <result column="terminals" property="terminals"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount">
-        insert into plateform_merchant_uti_account (pm_code ,account_code ,account_pws ,sec_type ,interface_version ,app_rsa_pubkey ,app_rsa_prikey ,mer_rsa_pubkey ,mer_rsa_prikey ,def_back_url ,valid_ip_list ,back_id ,back_key ,account_memo ,account_state ,busi_open_time ,busi_expire_time ,create_by ,create_time ,update_by ,update_time )
-        values (#{pmCode} ,#{accountCode} ,#{accountPws} ,#{secType} ,#{interfaceVersion} ,#{appRsaPubkey} ,#{appRsaPrikey} ,#{merRsaPubkey} ,#{merRsaPrikey} ,#{defBackUrl} ,#{validIpList} ,#{backId} ,#{backKey} ,#{accountMemo} ,#{accountState} ,#{busiOpenTime} ,#{busiExpireTime} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateTime} )
+        insert into plateform_merchant_uti_account (pm_code ,account_code ,account_pws ,sec_type ,interface_version ,app_rsa_pubkey ,app_rsa_prikey ,mer_rsa_pubkey ,mer_rsa_prikey ,def_back_url ,valid_ip_list ,back_id ,back_key ,account_memo ,account_state ,busi_open_time ,busi_expire_time ,create_by ,create_time ,update_by ,update_time ,terminals )
+        values (#{pmCode} ,#{accountCode} ,#{accountPws} ,#{secType} ,#{interfaceVersion} ,#{appRsaPubkey} ,#{appRsaPrikey} ,#{merRsaPubkey} ,#{merRsaPrikey} ,#{defBackUrl} ,#{validIpList} ,#{backId} ,#{backKey} ,#{accountMemo} ,#{accountState} ,#{busiOpenTime} ,#{busiExpireTime} ,#{createBy} ,#{createTime} ,#{updateBy} ,#{updateTime} ,#{terminals} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMerchantUtiAccountResult" parameterType="java.lang.Integer">
         select * from plateform_merchant_uti_account where id=#{id}
@@ -61,6 +62,7 @@
         <if test="createTime!= null"><![CDATA[create_time=#{createTime},]]></if>
         <if test="updateBy!= null"><![CDATA[update_by=#{updateBy},]]></if>
         <if test="updateTime!= null"><![CDATA[update_time=#{updateTime},]]></if>
+        <if test="terminals!= null"><![CDATA[terminals=#{terminals},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -101,6 +103,7 @@
                 <if test="createTime!= null"><![CDATA[and t.create_time = #{createTime}]]></if>
                 <if test="updateBy!= null"><![CDATA[and t.update_by = #{updateBy}]]></if>
                 <if test="updateTime!= null"><![CDATA[and t.update_time = #{updateTime}]]></if>
+                <if test="terminals!= null"><![CDATA[and t.terminals = #{terminals}]]></if>
             <include refid="appendWheres" />
         </where>
     </sql>

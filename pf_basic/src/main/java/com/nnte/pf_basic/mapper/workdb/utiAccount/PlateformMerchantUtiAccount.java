@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-16 13:44:48>
+ * auto code,do not modify <2022-05-23 10:09:53>
  */
 public class PlateformMerchantUtiAccount extends BaseModel {
     @DBPKColum private Integer id; //KEY id
@@ -29,6 +29,7 @@ public class PlateformMerchantUtiAccount extends BaseModel {
     private Date createTime; //创建时间
     private String updateBy; //更改人
     private Date updateTime; //最后更改时间
+    private String terminals; //终端:[{term:xxx,ip:xxx,name:xxx},{term:xxx}...]
 
     public PlateformMerchantUtiAccount(){}
 
@@ -76,4 +77,6 @@ public class PlateformMerchantUtiAccount extends BaseModel {
     public void setUpdateBy(String  updateBy){ this.updateBy = updateBy;}
     public Date  getUpdateTime(){ return updateTime;}
     public void setUpdateTime(Date  updateTime){ this.updateTime = updateTime;}
+    public String  getTerminals(){ return terminals;}
+    public void setTerminals(String  terminals){ this.terminals = terminals;}
 }
