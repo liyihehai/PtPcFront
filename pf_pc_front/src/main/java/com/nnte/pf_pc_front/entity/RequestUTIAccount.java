@@ -38,4 +38,6 @@ public class RequestUTIAccount {
     private String accountMemo; //账户备注
     @IntegerCheck(colName = "账户状态",nullValid=false)
     private Integer accountState; //账户状态:0新建,1开通,2暂停,3注销
+    @StringCheck(colName = "商户终端",nullValid=false)
+    private String terminals; //商户终端
 }

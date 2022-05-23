@@ -7,6 +7,7 @@ public class RequestToken extends UtiRequest {
 
     private String mid;
     private String account;
+    private String terminal;
     private String seckey;
     private Long timeStamp;
 
@@ -40,5 +41,13 @@ public class RequestToken extends UtiRequest {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
     }
 }

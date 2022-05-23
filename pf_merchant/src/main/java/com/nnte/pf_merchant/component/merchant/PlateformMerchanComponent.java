@@ -15,6 +15,8 @@ import com.nnte.framework.utils.JsonUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.CruxOpeMQComponent;
 import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccountService;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchant;
 import com.nnte.pf_merchant.mapper.workdb.merchant.PlateformMerchantService;
@@ -43,6 +45,8 @@ public class PlateformMerchanComponent extends BaseComponent{
     private PlateformMerchantExpandService plateformMerchantExpandService;
     @Autowired
     private PlateformMerchanApplyService plateformMerchanApplyService;
+    @Autowired
+    private PlateformMerchantUtiAccountService plateformMerchantUtiAccountService;
     @Autowired
     private CruxOpeMQComponent cruxOpeMQComponent;
     /**
@@ -243,6 +247,19 @@ public class PlateformMerchanComponent extends BaseComponent{
         if (list!=null && list.size()>0) {
             for (PlateformMerchant merchant : list) {
                 retMap.put(merchant.getPmCode(),merchant);
+            }
+        }
+        return retMap;
+    }
+
+    public Map<Object, PlateformMerchantUtiAccount> getUtiAccountByCodeList(Set<Object> codeSet) throws Exception{
+        Map<String,Object> paramMap = new HashMap<>();
+        AppendWhere.addInToWhereMap("t.pm_code",paramMap,codeSet);
+        List<PlateformMerchantUtiAccount> list=plateformMerchantUtiAccountService.findModelListByMap(paramMap);
+        Map<Object, PlateformMerchantUtiAccount> retMap = new HashMap<>();
+        if (list!=null && list.size()>0) {
+            for (PlateformMerchantUtiAccount utiAccount : list) {
+                retMap.put(utiAccount.getPmCode(),utiAccount);
             }
         }
         return retMap;

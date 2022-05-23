@@ -47,6 +47,7 @@ public class UtiJwtUtils {
         utiTokenDTO.setExpirationDate(new Date(now.getTime()+EXPIRED_TIME));
         String token = Jwts.builder().setSubject(utiTokenDTO.getUtiAccount())
                 .claim("merchantCode", utiTokenDTO.getMerchantCode())
+                .claim("terminal",utiTokenDTO.getTerminal())
                 .claim("loginIp", utiTokenDTO.getLoginIp())
                 .claim("timeStamp",utiTokenDTO.getTimeStamp())
                 .setExpiration(utiTokenDTO.getExpirationDate())
@@ -60,11 +61,13 @@ public class UtiJwtUtils {
             Claims claims = Jwts.parser().setSigningKey(getSecretKey()).parseClaimsJws(token).getBody();
             String utiAccount = claims.getSubject();
             String merchantCode = (String) claims.get("merchantCode");
+            String terminal = (String) claims.get("terminal");
             String loginIp = (String) claims.get("loginIp");
             Long timeStamp = (Long)claims.get("timeStamp");
             Date expirationDate = claims.getExpiration();
             utiTokenDTO = new UtiTokenDTO();
             utiTokenDTO.setUtiAccount(utiAccount);
+            utiTokenDTO.setTerminal(terminal);
             utiTokenDTO.setMerchantCode(merchantCode);
             utiTokenDTO.setLoginIp(loginIp);
             utiTokenDTO.setTimeStamp(timeStamp);

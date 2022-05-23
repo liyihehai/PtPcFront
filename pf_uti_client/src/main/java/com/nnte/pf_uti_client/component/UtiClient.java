@@ -16,11 +16,12 @@ public class UtiClient {
     private ResponseToken tokenObject;
 
     public void initUtiClient(String merchantId,
-                              String accountCode, String accountPws,
+                              String accountCode,String terminal, String accountPws,
                               String merchantPriKey, String merchantPubKey,
                               String appPubKey, String utiServer) {
         config.setMerchantId(merchantId);
         config.setAccountCode(accountCode);
+        config.setTerminal(terminal);
         config.setAccountPws(accountPws);
         config.setMerchantPriKey(merchantPriKey);
         config.setMerchantPubKey(merchantPubKey);
@@ -87,6 +88,7 @@ public class UtiClient {
         RequestToken requestToken = new RequestToken();
         requestToken.setMid(config.getMerchantId());
         requestToken.setAccount(config.getAccountCode());
+        requestToken.setTerminal(config.getTerminal());
         requestToken.setSeckey(MD5Util.md5Hex(config.getAccountPws()));
         requestToken.setTimeStamp((new Date()).getTime());
         ResponseToken resResult = postTrade(requestToken,null, ResponseToken.class);
@@ -121,12 +123,13 @@ public class UtiClient {
 
         try {
             UtiClient client = new UtiClient();
+            String terminal = "term:RlkFRQ9AAl";
             String appPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1sHFlrTGVQFKdgKbFCHRlxiqsbGsY2JiSAO4GR1f/ZGK2bfnuyYjgAI1fbrpfXUrmlAfJi80d4cMiZwCAX17uFSbXVyXyuCZqgulopSoVcbpG+P3QNpPCLSOhIXLisFzev1OMrrtasBbbYNgL6PElccavYOq+jZpdykD8RJG9kQIDAQAB";
             String merPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXfkBFwsR6SPc7wBHqerlL7Y+goao8U1qtzcvldzeAI4NZf/GzboNZplc9jH54EMqf5uVc5SmuTHeQeawErnT+n4u5A8V8JspPht41GyY+fVEEqirCceK1q8JllKdmq0uER9QodM0+iBzYKnPd9FgKITw0X6/1B6WWjwwmbjHJxwIDAQAB";
                               //MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXfkBFwsR6SPc7wBHqerlL7Y+goao8U1qtzcvldzeAI4NZf/GzboNZplc9jH54EMqf5uVc5SmuTHeQeawErnT+n4u5A8V8JspPht41GyY+fVEEqirCceK1q8JllKdmq0uER9QodM0+iBzYKnPd9FgKITw0X6/1B6WWjwwmbjHJxwIDAQAB
             String merPriKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJd+QEXCxHpI9zvAEep6uUvtj6ChqjxTWq3Ny+V3N4Ajg1l/8bNug1mmVz2MfngQyp/m5VzlKa5Md5B5rASudP6fi7kDxXwmyk+G3jUbJj59UQSqKsJx4rWrwmWUp2arS4RH1Ch0zT6IHNgqc930WAohPDRfr/UHpZaPDCZuMcnHAgMBAAECgYEAhRozBFf84ugq+P9nfln3ZgPClsKT3M7rtBtF00XsqJQLOt6UES+/Dkx9CCHhmEJAlT98NCNQfMjIoFKW1cImHZYZ/AxLiWz54QGVf7vfQDq5JdSr20VXkqUOSTolto1ZRqQkNmODDRyg2m3xvq8wp4yshY3nDj5Wvsqr1FXiu/kCQQDpl+ju/gu4ZqUEKiylURnv/bObEcY5dxm0SpWugRcHyCtE3o/gLgLOofDr7KX/4D5It8btWKydLMS0gMfZ6u1tAkEApgZMWh6MlbrWTPxKgK0dpKoxFJFFBXP/rUCzB6CsO8J2PvrUuLvze/5IvnVg+AFhbnJJhZSECKhS30bLskuXgwJAev8t+4lxCmuhwAuk7ndBvQhNJf257lA0DKapIfV+9u4DOoQmJdiUSdEjVlaJIa4lnYyHBjqGyUvlV1Xn5Wq6EQJBAIQO5HKWdBqxN76auyQpDzgoS8vhVTZmM0v696ysh/Ms1eN4nvWmQqEw/WnJce0zI+23KHYBURiV0v1YkbPrXsMCQC8UAFbElitGj50zUGXD7DKDR4hpgz6gjMJTbGoZEk4o8kFUcMQu623EMKPLkMlj+KsmgFb3sz8zAr6aqLQcEeY=";
                               //MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJd+QEXCxHpI9zvAEep6uUvtj6ChqjxTWq3Ny+V3N4Ajg1l/8bNug1mmVz2MfngQyp/m5VzlKa5Md5B5rASudP6fi7kDxXwmyk+G3jUbJj59UQSqKsJx4rWrwmWUp2arS4RH1Ch0zT6IHNgqc930WAohPDRfr/UHpZaPDCZuMcnHAgMBAAECgYEAhRozBFf84ugq+P9nfln3ZgPClsKT3M7rtBtF00XsqJQLOt6UES+/Dkx9CCHhmEJAlT98NCNQfMjIoFKW1cImHZYZ/AxLiWz54QGVf7vfQDq5JdSr20VXkqUOSTolto1ZRqQkNmODDRyg2m3xvq8wp4yshY3nDj5Wvsqr1FXiu/kCQQDpl+ju/gu4ZqUEKiylURnv/bObEcY5dxm0SpWugRcHyCtE3o/gLgLOofDr7KX/4D5It8btWKydLMS0gMfZ6u1tAkEApgZMWh6MlbrWTPxKgK0dpKoxFJFFBXP/rUCzB6CsO8J2PvrUuLvze/5IvnVg+AFhbnJJhZSECKhS30bLskuXgwJAev8t+4lxCmuhwAuk7ndBvQhNJf257lA0DKapIfV+9u4DOoQmJdiUSdEjVlaJIa4lnYyHBjqGyUvlV1Xn5Wq6EQJBAIQO5HKWdBqxN76auyQpDzgoS8vhVTZmM0v696ysh/Ms1eN4nvWmQqEw/WnJce0zI+23KHYBURiV0v1YkbPrXsMCQC8UAFbElitGj50zUGXD7DKDR4hpgz6gjMJTbGoZEk4o8kFUcMQu623EMKPLkMlj+KsmgFb3sz8zAr6aqLQcEeY=
-            client.initUtiClient("0001", "8pDKtfdvnXYgaEzGeC6m", "mA5xuft6oBskk1KVVTXP",
+            client.initUtiClient("0001", "8pDKtfdvnXYgaEzGeC6m", terminal,"mA5xuft6oBskk1KVVTXP",
                     merPriKey, merPubKey, appPubKey, "http://localhost:9002/pfservice");
             client.reportModule(null,"terminal");
             /*

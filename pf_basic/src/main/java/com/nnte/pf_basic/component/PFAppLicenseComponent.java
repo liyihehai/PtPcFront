@@ -111,7 +111,7 @@ public class PFAppLicenseComponent extends BaseComponent {
             if (startDate <= nowDate) {
                 state = 2;
             }
-            Long endDate = license.getStartDate().getTime();
+            Long endDate = license.getEndDate().getTime();
             if (endDate < nowDate) {
                 state = 3;
                 exeDate = new Date(endDate);
@@ -129,8 +129,9 @@ public class PFAppLicenseComponent extends BaseComponent {
                     updateLicense.setRemainderAmount(0d);
                 }else{
                     int totalDays=DateUtils.getDaysBetween(license.getStartDate(),license.getEndDate());
-                    updateLicense.setExeAmount(NumberUtil.getScaleValue4Money(license.getLicenseAmount() * (totalDays - remainderDays) / totalDays));
-                    updateLicense.setRemainderAmount(NumberUtil.getScaleValue4Money(license.getLicenseAmount() - updateLicense.getExeAmount()));
+                    double amount = NumberUtil.getDefaultDouble(license.getLicenseAmount());
+                    updateLicense.setExeAmount(NumberUtil.getScaleValue4Money(amount * (totalDays - remainderDays) / totalDays));
+                    updateLicense.setRemainderAmount(NumberUtil.getScaleValue4Money(amount - updateLicense.getExeAmount()));
                 }
                 if (operator!=null)
                     updateLicense.setUpdateBy(operator.getOpeName());

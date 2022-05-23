@@ -102,7 +102,8 @@ public class PlateformUtiAccountComponent extends BaseComponent {
                                                                String backId,String backKey,
                                                                Integer accountState,String accountMemo,
                                                                String appRsaPubkey,String appRsaPrikey,
-                                                               String merRsaPubkey,String merRsaPrikey) throws Exception {
+                                                               String merRsaPubkey,String merRsaPrikey,
+                                                               String terminals) throws Exception {
         PlateformMerchantUtiAccount pmua = getUtiAccountByMerchantCode(mcode);
         if (pmua == null || pmua.getId() == null || pmua.getId() <= 0)
             throw new BusiException(1102, "账户对象不合法");
@@ -123,6 +124,7 @@ public class PlateformUtiAccountComponent extends BaseComponent {
         updatePmua.setAppRsaPrikey(StringUtils.defaultString(appRsaPrikey));
         updatePmua.setMerRsaPubkey(StringUtils.defaultString(merRsaPubkey));
         updatePmua.setMerRsaPrikey(StringUtils.defaultString(merRsaPrikey));
+        updatePmua.setTerminals(terminals);
         updatePmua.setBusiExpireTime(expDate);
         updatePmua.setUpdateBy(opeName);
         updatePmua.setUpdateTime(curDate);

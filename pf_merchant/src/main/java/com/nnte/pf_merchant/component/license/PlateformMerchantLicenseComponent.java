@@ -14,6 +14,7 @@ import com.nnte.pf_basic.entertity.LicenseState;
 import com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense;
 import com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicenseService;
 import com.nnte.pf_basic.mapper.workdb.busiModule.PlateformBusiModule;
+import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount;
 import com.nnte.pf_basic.proxy.LicenseLockExtendProxy;
 import com.nnte.pf_merchant.component.merchant.PlateformMerchanComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
@@ -56,6 +57,7 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
             Map<String, PlateformBusiModule> moduleMap = pfBusiModuleComponent.getValidBusiModuleMap();
             Set<Object> codeSet = BeanUtils.getCollectionFieldValueSet(pageData.getData(), "pmCode");
             Map<Object, PlateformMerchant> merchantMap = plateformMerchanComponent.getMerchantByCodeList(codeSet);
+            Map<Object, PlateformMerchantUtiAccount> utiAccountMap = plateformMerchanComponent.getUtiAccountByCodeList(codeSet);
             for (PlateformAppLicense srcLicense : pageData.getData()) {
                 AppLicenseItem item = new AppLicenseItem();
                 BeanUtils.copyFromSrc(srcLicense, item);
@@ -66,6 +68,8 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
                 PlateformMerchant merchant = merchantMap.get(srcLicense.getPmCode());
                 item.setPmName(merchant != null ? merchant.getPmName() : null);
                 item.setPmShortName(merchant != null ? merchant.getPmShortName() : null);
+                PlateformMerchantUtiAccount utiAccount = utiAccountMap.get(srcLicense.getPmCode());
+                item.setMerchantTerminals(utiAccount != null ? utiAccount.getTerminals() : null);
                 list.add(item);
             }
         }
@@ -84,7 +88,7 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
         }
     }
 
-    private List<PlateformAppLicense> getRefLicense(PlateformAppLicense license){
+    private List<PlateformAppLicense> getRefLicense(PlateformAppLicense license) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("pmCode", license.getPmCode());
         paramMap.put("appCode", license.getAppCode());
@@ -93,6 +97,7 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
         paramMap.put("dir", "desc");
         return plateformAppLicenseService.findModelListByMap(paramMap);
     }
+
     private PlateformAppLicense createMerchantLicense(PlateformAppLicense license, LicenseCreateChannel channel,
                                                       String opeName) throws Exception {
         PlateformAppLicense addLicense = new PlateformAppLicense();
@@ -123,15 +128,17 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
             jedisComponent.releaseRedisLock(lock);
         }
     }
+
     /**
      * 更改许可基本配置增强型调用
-     * */
+     */
     public PlateformAppLicense updateMerchantLicenseExtend(PlateformAppLicense license,
-                                                           String opeName) throws Exception{
-        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this,jedisComponent,
+                                                           String opeName) throws Exception {
+        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this, jedisComponent,
                 pfAppLicenseComponent);
-        return (PlateformAppLicense)proxy.licenseUpdateLockExtendInvoke("updateMerchantLicense",license,opeName);
+        return (PlateformAppLicense) proxy.licenseUpdateLockExtendInvoke("updateMerchantLicense", license, opeName);
     }
+
     /**
      * 更改许可基本配置
      */
@@ -153,38 +160,39 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
         updateLicense.setUpdateDate(new Date());
         return plateformAppLicenseService.save(updateLicense, true);
     }
+
     /**
      * 确认许可状态
-     * */
-    public void confirmMerchantLicenseExtend(Integer id,String opeName) throws Exception{
+     */
+    public void confirmMerchantLicenseExtend(Integer id, String opeName) throws Exception {
         PlateformAppLicense src = plateformAppLicenseService.findModelByKey(id);
         if (src == null)
             throw new BusiException("没找到指定的许可");
-        confirmMerchantLicenseExtend(src,opeName);
+        confirmMerchantLicenseExtend(src, opeName);
     }
 
-    private void confirmMerchantLicenseExtend(PlateformAppLicense src,String opeName) throws Exception{
-        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this,jedisComponent,
+    private void confirmMerchantLicenseExtend(PlateformAppLicense src, String opeName) throws Exception {
+        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this, jedisComponent,
                 pfAppLicenseComponent);
-        proxy.licenseUpdateLockExtendInvoke("confirmMerchantLicense",src,opeName);
+        proxy.licenseUpdateLockExtendInvoke("confirmMerchantLicense", src, opeName);
     }
 
-    private void confirmMerchantLicense(PlateformAppLicense src,String opeName) throws Exception{
+    private void confirmMerchantLicense(PlateformAppLicense src, String opeName) throws Exception {
         if (!src.getLicenseState().equals(LicenseState.Modify.getValue()))
             throw new BusiException("指定的许可不处于可编辑状态");
         List<PlateformAppLicense> list = getRefLicense(src);
-        if (list!=null && list.size()>0){
-            for(PlateformAppLicense refLicense:list){
-                if (refLicense.getLicenseState().equals(LicenseState.Confirmed.getValue())||
-                        refLicense.getLicenseState().equals(LicenseState.ExecIng.getValue())||
-                        refLicense.getLicenseState().equals(LicenseState.Over.getValue())||
-                        refLicense.getLicenseState().equals(LicenseState.Stopped.getValue())){
-                    if (src.getStartDate().getTime()>=refLicense.getStartDate().getTime() &&
-                            src.getStartDate().getTime()<=refLicense.getEndDate().getTime())
-                        throw new BusiException("当前许可开始时间在许可[MAMNO="+refLicense.getMamNo()+"]时间范围内");
-                    if (src.getEndDate().getTime()>=refLicense.getStartDate().getTime() &&
-                            src.getEndDate().getTime()<=refLicense.getEndDate().getTime())
-                        throw new BusiException("当前许可结束时间在许可[MAMNO="+refLicense.getMamNo()+"]时间范围内");
+        if (list != null && list.size() > 0) {
+            for (PlateformAppLicense refLicense : list) {
+                if (refLicense.getLicenseState().equals(LicenseState.Confirmed.getValue()) ||
+                        refLicense.getLicenseState().equals(LicenseState.ExecIng.getValue()) ||
+                        refLicense.getLicenseState().equals(LicenseState.Over.getValue()) ||
+                        refLicense.getLicenseState().equals(LicenseState.Stopped.getValue())) {
+                    if (src.getStartDate().getTime() >= refLicense.getStartDate().getTime() &&
+                            src.getStartDate().getTime() <= refLicense.getEndDate().getTime())
+                        throw new BusiException("当前许可开始时间在许可[MAMNO=" + refLicense.getMamNo() + "]时间范围内");
+                    if (src.getEndDate().getTime() >= refLicense.getStartDate().getTime() &&
+                            src.getEndDate().getTime() <= refLicense.getEndDate().getTime())
+                        throw new BusiException("当前许可结束时间在许可[MAMNO=" + refLicense.getMamNo() + "]时间范围内");
                 }
             }
         }
@@ -196,20 +204,20 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
         plateformAppLicenseService.save(updateLicense, false);
     }
 
-    public void deleteMerchantLicenseExtend(Integer id,String opeName) throws Exception{
+    public void deleteMerchantLicenseExtend(Integer id, String opeName) throws Exception {
         PlateformAppLicense src = plateformAppLicenseService.findModelByKey(id);
         if (src == null)
             throw new BusiException("没找到指定的许可");
-        deleteMerchantLicenseExtend(src,opeName);
+        deleteMerchantLicenseExtend(src, opeName);
     }
 
-    public void deleteMerchantLicenseExtend(PlateformAppLicense src,String opeName) throws Exception{
-        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this,jedisComponent,
+    public void deleteMerchantLicenseExtend(PlateformAppLicense src, String opeName) throws Exception {
+        LicenseLockExtendProxy proxy = new LicenseLockExtendProxy(this, jedisComponent,
                 pfAppLicenseComponent);
-        proxy.licenseUpdateLockExtendInvoke("deleteMerchantLicense",src,opeName);
+        proxy.licenseUpdateLockExtendInvoke("deleteMerchantLicense", src, opeName);
     }
 
-    public void deleteMerchantLicense(PlateformAppLicense src,String opeName)throws Exception{
+    public void deleteMerchantLicense(PlateformAppLicense src, String opeName) throws Exception {
         if (!src.getLicenseState().equals(LicenseState.Modify.getValue()))
             throw new BusiException("指定的许可不处于可编辑状态");
         plateformAppLicenseService.deleteModel(src.getId());

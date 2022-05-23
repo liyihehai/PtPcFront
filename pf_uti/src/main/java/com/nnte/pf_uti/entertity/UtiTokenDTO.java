@@ -5,6 +5,7 @@ import java.util.Date;
 public class UtiTokenDTO {
     private String utiAccount;
     private String merchantCode;
+    private String terminal;
     private String loginIp;
     private Date expirationDate;
     private Date createTime;
@@ -56,5 +57,13 @@ public class UtiTokenDTO {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
     }
 }

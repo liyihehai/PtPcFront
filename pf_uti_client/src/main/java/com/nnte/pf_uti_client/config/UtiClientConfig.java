@@ -3,6 +3,7 @@ package com.nnte.pf_uti_client.config;
 public class UtiClientConfig {
     private String merchantId;
     private String accountCode;
+    private String terminal;
     private String accountPws;
     private String merchantPriKey;
     private String merchantPubKey;
@@ -63,5 +64,13 @@ public class UtiClientConfig {
 
     public void setUtiServer(String utiServer) {
         this.utiServer = utiServer;
+    }
+
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
     }
 }
