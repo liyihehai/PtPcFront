@@ -5,7 +5,7 @@ import com.nnte.pf_source.uti.MerchantLicense;
 
 import java.util.List;
 
-public class ResponseReportModule {
+public class ResponseReportModule extends UtiResponse{
     @JsonDeserialize(as=List.class,contentAs = MerchantLicense.class)
     private List<MerchantLicense> licenseItemList;
 

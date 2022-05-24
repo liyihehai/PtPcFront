@@ -9,7 +9,6 @@ public class RequestToken extends UtiRequest {
     private String account;
     private String terminal;
     private String seckey;
-    private Long timeStamp;
 
     public String getMid() {
         return mid;
@@ -25,14 +24,6 @@ public class RequestToken extends UtiRequest {
 
     public void setSeckey(String seckey) {
         this.seckey = seckey;
-    }
-
-    public Long getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(Long timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     public String getAccount() {

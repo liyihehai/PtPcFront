@@ -39,8 +39,7 @@ public class ReportModuleComponent extends BaseComponent {
      * 记录模块报告，返回报告模块的license
      * */
     public ResponseReportModule reportModule(List<ReportModuleItem> reportModuleItemList,
-                                             PlateformMerchantUtiAccount puma,
-                                             String terminal,String IP) throws Exception{
+                                             PlateformMerchantUtiAccount puma,String terminal,String IP) throws Exception{
         PlateformReportModule dto = new PlateformReportModule();
         dto.setPmCode(puma.getPmCode());
         List<PlateformReportModule> list=plateformReportModuleService.findModelList(dto);

@@ -1,6 +1,6 @@
 package com.nnte.pf_source.uti.response;
 
-public class ResponseToken {
+public class ResponseToken extends UtiResponse{
     private String token;
     private Long createTime;
     private Long expireTime;

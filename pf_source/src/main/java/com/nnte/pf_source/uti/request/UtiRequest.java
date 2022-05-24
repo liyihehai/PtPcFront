@@ -6,13 +6,13 @@ public abstract class UtiRequest {
     public String getVer() {
         return ver;
     }
-    private String token;
+    private Long timeStamp;
 
-    public String getToken() {
-        return token;
+    public Long getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }
