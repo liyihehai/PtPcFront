@@ -10,6 +10,7 @@ import com.nnte.pf_source.uti.request.UtiRequest;
 import com.nnte.pf_source.uti.response.ResResult;
 import com.nnte.pf_uti.component.PFUTIComponent;
 import com.nnte.pf_uti.config.PFUTIConfig;
+import com.nnte.pf_uti.entertity.UtiTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -52,13 +53,13 @@ public class PFUTIInterceptor extends BaseComponent implements HandlerIntercepto
                 if (mid == null)
                     throw new BusiException(1003, "商户账号为空");
                 //解密验签
-                pfUTIComponent.checkReqSignValid(mid, req_data, loginIp, clazz);
+                pfUTIComponent.checkReqSignValid(mid,req_data, loginIp, clazz);
             }else {
                 String token = request.getParameter("token");
                 if (token == null)
                     throw new BusiException(1004, "token为空");
-                String utiAccount=pfUTIComponent.getPMUAByToken(token);
-                pfUTIComponent.checkReqSignValid(utiAccount, req_data, loginIp, clazz);
+                UtiTokenDTO dto = pfUTIComponent.getPMUAByToken(token);
+                pfUTIComponent.checkReqSignValid(dto, req_data, loginIp, clazz);
             }
             return true;
         }catch (BusiException be) {

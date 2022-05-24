@@ -1,11 +1,13 @@
 package com.nnte.pf_uti.component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.utils.*;
 import com.nnte.pf_basic.component.ReportModuleComponent;
+import com.nnte.pf_basic.entertity.LicenseTerminal;
 import com.nnte.pf_basic.mapper.workdb.utiAccount.PlateformMerchantUtiAccount;
 import com.nnte.pf_merchant.component.merchant.PlateformMerchanComponent;
 import com.nnte.pf_merchant.component.utiaccount.PlateformUtiAccountComponent;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 @BusiLogAttr(PFUTIConfig.loggerName)
@@ -73,6 +76,35 @@ public class PFUTIComponent extends BaseComponent {
         PlateformMerchantUtiAccount pmua = plateformUtiAccountComponent.getUtiAccountByAccountCode(mid);
         if (pmua == null)
             throw new BusiException(1001, "UTI商户账号不合法");
+        checkReqSignValid(pmua,data,ip,clazz);
+    }
+
+    private void checkTerminal(String terminals,String terminal,String ip)throws Exception{
+        if (StringUtils.isEmpty(terminals))
+            throw new BusiException(1002, "商户UTI账号没设置终端");
+        List<JsonNode> terminalList = JsonUtil.jsonToNodeArray(terminals);
+        LicenseTerminal terminalObj = null;
+        for(JsonNode t:terminalList){
+            LicenseTerminal lt = JsonUtil.jsonToBean(t.toString(),LicenseTerminal.class);
+            if (lt!=null && lt.getTerm()!=null && lt.getTerm().equals(terminal)
+                    && lt.getIp()!=null && IpUtil.isPermited(ip, lt.getIp())){
+                terminalObj = lt;
+                break;
+            }
+        }
+        if (terminalObj==null)
+            throw new BusiException(1002, "商户UTI账号没设置IP相应的终端");
+    }
+
+    public void checkReqSignValid(UtiTokenDTO dto, String data, String ip,Class<? extends UtiRequest> clazz) throws Exception {
+        PlateformMerchantUtiAccount pmua = plateformUtiAccountComponent.getUtiAccountByAccountCode(dto.getUtiAccount());
+        if (pmua == null)
+            throw new BusiException(1001, "UTI商户账号不合法");
+        checkTerminal(pmua.getTerminals(),dto.getTerminal(),ip);
+        checkReqSignValid(pmua,data,ip,clazz);
+    }
+
+    private void checkReqSignValid(PlateformMerchantUtiAccount pmua,String data,String ip,Class<? extends UtiRequest> clazz)throws Exception{
         thread_UtiAccount.set(pmua);
         if (StringUtils.isNotEmpty(pmua.getValidIpList()) && IpUtil.isPermited(ip, pmua.getValidIpList()))
             throw new BusiException("Ip地址不合法");
@@ -89,6 +121,10 @@ public class PFUTIComponent extends BaseComponent {
         UtiRequest request = JsonUtil.jsonToBean(bodySign.getBody(),clazz);
         if (request==null)
             throw new BusiException(1006, "不能解析报文数据");
+        if (request instanceof RequestToken){
+            RequestToken requestToken = (RequestToken)request;
+            checkTerminal(pmua.getTerminals(),requestToken.getTerminal(),ip);
+        }
         setThreadUtiRequest(request);
     }
 
@@ -113,10 +149,10 @@ public class PFUTIComponent extends BaseComponent {
     }
 
     //通过Token查询唯一的合作商UTI账号  李毅 2022/05/12
-    public String getPMUAByToken(String token) throws Exception {
+    public UtiTokenDTO getPMUAByToken(String token) throws Exception {
         try {
             UtiTokenDTO tokenDTO = UtiJwtUtils.parseAndValidate(token);
-            return tokenDTO.getUtiAccount();
+            return tokenDTO;
         }catch (Exception e) {
             throw new BusiException(1006, "通过token无法获取合作商UTI账号:"+e.getMessage());
         }
