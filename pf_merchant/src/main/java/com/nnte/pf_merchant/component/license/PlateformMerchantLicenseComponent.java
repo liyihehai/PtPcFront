@@ -5,6 +5,7 @@ import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.entity.PageData;
 import com.nnte.framework.utils.BeanUtils;
+import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.component.BasicGlobalComponent;
 import com.nnte.pf_basic.component.JedisComponent;
 import com.nnte.pf_basic.component.PFAppLicenseComponent;
@@ -221,5 +222,27 @@ public class PlateformMerchantLicenseComponent extends BaseComponent {
         if (!src.getLicenseState().equals(LicenseState.Modify.getValue()))
             throw new BusiException("指定的许可不处于可编辑状态");
         plateformAppLicenseService.deleteModel(src.getId());
+    }
+
+    /**
+     * 商户UTI账户重置终端
+     * */
+    public void resetLicenseTerminal(Integer id,String terminals,String opeName) throws Exception{
+        PlateformAppLicense src = plateformAppLicenseService.findModelByKey(id);
+        if (src == null)
+            throw new BusiException("没找到指定的许可");
+        String t=StringUtils.defaultString(terminals);
+        Integer c = 0;
+        if (StringUtils.isNotEmpty(t)){
+            String[] s=t.split(",");
+            c = s.length;
+        }
+        PlateformAppLicense update = new PlateformAppLicense();
+        update.setId(src.getId());
+        update.setTerminals(t);
+        update.setCopyCount(c);
+        update.setUpdateBy(opeName);
+        update.setUpdateDate(new Date());
+        plateformAppLicenseService.save(update,false);
     }
 }

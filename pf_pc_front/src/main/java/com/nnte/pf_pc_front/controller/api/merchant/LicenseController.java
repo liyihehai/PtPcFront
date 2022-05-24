@@ -19,6 +19,7 @@ import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.config.PFMerchantSysRole;
 import com.nnte.pf_merchant.entertity.AppLicenseItem;
 import com.nnte.pf_merchant.request.RequestLicense;
+import com.nnte.pf_pc_front.entity.RequestUTIAccount;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -137,6 +138,25 @@ public class LicenseController extends BaseController {
                 throw new BusiException("未取商户许可信息");
             plateformMerchantLicenseComponent.deleteMerchantLicenseExtend(licenseItem.getId(),oi.getOperatorName());
             return success("确认商户许可成功");
+        } catch (Exception e) {
+            return onException(e);
+        }
+    }
+
+    /**
+     * 商户UTI账户重置终端
+     */
+    @RequestMapping(value = "/resetLicenseTerminal")
+    @ResponseBody
+    public Object resetLicenseTerminal(HttpServletRequest request, @RequestBody JsonNode json) {
+        try {
+            OperatorInfo oi = (OperatorInfo) request.getAttribute("OperatorInfo");
+            RequestLicense licenseItem = JsonUtil.jsonToBean(json.toString(), RequestLicense.class);
+            if (licenseItem==null || licenseItem.getId()==null || licenseItem.getId()<=0)
+                throw new BusiException("未取商户许可信息");
+            plateformMerchantLicenseComponent.resetLicenseTerminal(licenseItem.getId(),
+                    licenseItem.getTerminals(),oi.getOperatorName());
+            return success("商户UTI账户重置终端成功");
         } catch (Exception e) {
             return onException(e);
         }

@@ -123,19 +123,19 @@ public class UtiClient {
 
         try {
             UtiClient client = new UtiClient();
-            String terminal = "term:RlkFRQ9AAl";
-            String appPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1sHFlrTGVQFKdgKbFCHRlxiqsbGsY2JiSAO4GR1f/ZGK2bfnuyYjgAI1fbrpfXUrmlAfJi80d4cMiZwCAX17uFSbXVyXyuCZqgulopSoVcbpG+P3QNpPCLSOhIXLisFzev1OMrrtasBbbYNgL6PElccavYOq+jZpdykD8RJG9kQIDAQAB";
-            String merPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXfkBFwsR6SPc7wBHqerlL7Y+goao8U1qtzcvldzeAI4NZf/GzboNZplc9jH54EMqf5uVc5SmuTHeQeawErnT+n4u5A8V8JspPht41GyY+fVEEqirCceK1q8JllKdmq0uER9QodM0+iBzYKnPd9FgKITw0X6/1B6WWjwwmbjHJxwIDAQAB";
+            String terminal = "term:HvG2uarCSo";
+            String appPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqAU9C6YtSKUSWMAb+Pa4D/4TLRCuBRYJ+tP0TZXrz466tBWtw2jeVPwEduJbzNh9y0+1vSqbodzy5l4kbTAEtBL48vmlHbsd3ATsTAy3Lby3/BGt5rxj21Q4Tym29S88SI2HffSl/HC6xWS+rj97eh2rreESVigPbmt3mrHzHTwIDAQAB";
+            String merPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD2gkvHEae5VCFw8Xc45spbbp8ZJwHPRoD+yWBercYLHupwyTH6OkEBwYYr2hIiSpgY85eRBlJfiObZEGd5VWSRnt9bJZ/qOu29hAIqKmfjnbwrYQrE6jHSZgmD479BXEBc8yETAam+c29PrLiEcRl0Lrn85f+vchkM65ulY/ZnCwIDAQAB";
                               //MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXfkBFwsR6SPc7wBHqerlL7Y+goao8U1qtzcvldzeAI4NZf/GzboNZplc9jH54EMqf5uVc5SmuTHeQeawErnT+n4u5A8V8JspPht41GyY+fVEEqirCceK1q8JllKdmq0uER9QodM0+iBzYKnPd9FgKITw0X6/1B6WWjwwmbjHJxwIDAQAB
-            String merPriKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJd+QEXCxHpI9zvAEep6uUvtj6ChqjxTWq3Ny+V3N4Ajg1l/8bNug1mmVz2MfngQyp/m5VzlKa5Md5B5rASudP6fi7kDxXwmyk+G3jUbJj59UQSqKsJx4rWrwmWUp2arS4RH1Ch0zT6IHNgqc930WAohPDRfr/UHpZaPDCZuMcnHAgMBAAECgYEAhRozBFf84ugq+P9nfln3ZgPClsKT3M7rtBtF00XsqJQLOt6UES+/Dkx9CCHhmEJAlT98NCNQfMjIoFKW1cImHZYZ/AxLiWz54QGVf7vfQDq5JdSr20VXkqUOSTolto1ZRqQkNmODDRyg2m3xvq8wp4yshY3nDj5Wvsqr1FXiu/kCQQDpl+ju/gu4ZqUEKiylURnv/bObEcY5dxm0SpWugRcHyCtE3o/gLgLOofDr7KX/4D5It8btWKydLMS0gMfZ6u1tAkEApgZMWh6MlbrWTPxKgK0dpKoxFJFFBXP/rUCzB6CsO8J2PvrUuLvze/5IvnVg+AFhbnJJhZSECKhS30bLskuXgwJAev8t+4lxCmuhwAuk7ndBvQhNJf257lA0DKapIfV+9u4DOoQmJdiUSdEjVlaJIa4lnYyHBjqGyUvlV1Xn5Wq6EQJBAIQO5HKWdBqxN76auyQpDzgoS8vhVTZmM0v696ysh/Ms1eN4nvWmQqEw/WnJce0zI+23KHYBURiV0v1YkbPrXsMCQC8UAFbElitGj50zUGXD7DKDR4hpgz6gjMJTbGoZEk4o8kFUcMQu623EMKPLkMlj+KsmgFb3sz8zAr6aqLQcEeY=";
+            String merPriKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAPaCS8cRp7lUIXDxdzjmyltunxknAc9GgP7JYF6txgse6nDJMfo6QQHBhivaEiJKmBjzl5EGUl+I5tkQZ3lVZJGe31sln+o67b2EAioqZ+OdvCthCsTqMdJmCYPjv0FcQFzzIRMBqb5zb0+suIRxGXQuufzl/69yGQzrm6Vj9mcLAgMBAAECgYBt35edDD6A+YHKUKY+Q4gwhrb9RAindZprdiCxMq1SKZ5/VP4ktTBicvq1swZgKHVwsap95p5ynJegapJkX25qJb6mHDcStQwnaJ67DM5kztEibfiKK+91Ut77Mx+aqp9k4iZkJoew4DYVZq+fNPENie+uwoiuIruWSBBvauHYmQJBAP0ca+Q04j2aAsgDUHP+XUHIuKJEwVVDBzKpX0WcLk5sW97jo0t+6dpEwxwUuBF+vT/c8UD+Wv+OmE/05rvk49cCQQD5UpVrNg35ZLEziGbJsFBI2KnwV4k3lXP9L6k0ZPrvGgXQxg/ND076J+Enyg2os3xWlxGsEuDAqfqVZ7zHPS/tAkBkay8+9eBAkmbCFdaIfoVfQRRHhMGzYwlrBxl+U41nncQBNQ0nOa3r49YIwQuaHU9WFAE/SOqvc1JofoBAUXo3AkEAvtXSXqySR6kl5U7rdkdJPGjysm8eLXhsvofjmKIOXENr3iAr6gZkqh8qPN1wVQeFDXY2ZaJRe8bfccpkeZBBBQJAGFOJfkggKyHmZsmJekRbuv09jLgOGW9SdOGDXLVlribOnjXlaJQhrfTyoSlxjLtzq4a/gErewu1p9Z/kGCLPKg==";
                               //MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJd+QEXCxHpI9zvAEep6uUvtj6ChqjxTWq3Ny+V3N4Ajg1l/8bNug1mmVz2MfngQyp/m5VzlKa5Md5B5rASudP6fi7kDxXwmyk+G3jUbJj59UQSqKsJx4rWrwmWUp2arS4RH1Ch0zT6IHNgqc930WAohPDRfr/UHpZaPDCZuMcnHAgMBAAECgYEAhRozBFf84ugq+P9nfln3ZgPClsKT3M7rtBtF00XsqJQLOt6UES+/Dkx9CCHhmEJAlT98NCNQfMjIoFKW1cImHZYZ/AxLiWz54QGVf7vfQDq5JdSr20VXkqUOSTolto1ZRqQkNmODDRyg2m3xvq8wp4yshY3nDj5Wvsqr1FXiu/kCQQDpl+ju/gu4ZqUEKiylURnv/bObEcY5dxm0SpWugRcHyCtE3o/gLgLOofDr7KX/4D5It8btWKydLMS0gMfZ6u1tAkEApgZMWh6MlbrWTPxKgK0dpKoxFJFFBXP/rUCzB6CsO8J2PvrUuLvze/5IvnVg+AFhbnJJhZSECKhS30bLskuXgwJAev8t+4lxCmuhwAuk7ndBvQhNJf257lA0DKapIfV+9u4DOoQmJdiUSdEjVlaJIa4lnYyHBjqGyUvlV1Xn5Wq6EQJBAIQO5HKWdBqxN76auyQpDzgoS8vhVTZmM0v696ysh/Ms1eN4nvWmQqEw/WnJce0zI+23KHYBURiV0v1YkbPrXsMCQC8UAFbElitGj50zUGXD7DKDR4hpgz6gjMJTbGoZEk4o8kFUcMQu623EMKPLkMlj+KsmgFb3sz8zAr6aqLQcEeY=
-            client.initUtiClient("0001", "8pDKtfdvnXYgaEzGeC6m", terminal,"mA5xuft6oBskk1KVVTXP",
-                    merPriKey, merPubKey, appPubKey, "http://localhost:9002/pfservice");
-            client.reportModule(null,"terminal");
-            /*
+            client.initUtiClient("0001", "Brc0r3W81ULSRgjFc1hq", terminal,"m1b3zaW3KiSM3s55A3q2",
+                    merPriKey, merPubKey, appPubKey, "http://39.99.191.134:9002/pfservice");
+            //client.reportModule(null,"terminal");
+
             String token = client.getToken();
             System.out.println("token=" + token);
-            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
