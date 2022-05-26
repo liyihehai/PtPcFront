@@ -23,7 +23,7 @@ import java.util.*;
 /**
  * 平台系统参数组件
  * */
-@WatchAttr(value = 1)
+@WatchAttr(value = "LoadAllSysParams",cron="0 0/5 0-23 * * ? ")//加载系统参数，每5分钟执行一次
 @BusiLogAttr(AppBasicConfig.JarLoggerName)
 public class PlateformSysParamComponent implements WatchInterface {
 

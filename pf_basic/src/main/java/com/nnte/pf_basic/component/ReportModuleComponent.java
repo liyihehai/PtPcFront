@@ -2,6 +2,7 @@ package com.nnte.pf_basic.component;
 
 import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseComponent;
+import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.config.AppBasicConfig;
 import com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule;
 import com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModuleService;
@@ -25,6 +26,8 @@ public class ReportModuleComponent extends BaseComponent {
     private PlateformReportModuleService plateformReportModuleService;
     @Autowired
     private PFAppLicenseComponent pfAppLicenseComponent;
+    @Autowired
+    private BasicGlobalComponent basicGlobalComponent;
 
     public String makeReportModule(PlateformReportModule module){
         String key = module.getPmCode()+"-"+module.getAppCode()+"-"+module.getModuleCode()+"-"+module.getReportTerminal();
@@ -47,6 +50,7 @@ public class ReportModuleComponent extends BaseComponent {
         for(PlateformReportModule module:list){
             prmMap.put(makeReportModule(module),module);
         }
+        Map<String, Object> appMap=basicGlobalComponent.getBusiAppNameMap();
         ResponseReportModule responseReportModule = new ResponseReportModule();
         List<MerchantLicense> licenseItemList = new ArrayList<>();
         for(ReportModuleItem moduleItem:reportModuleItemList){
@@ -54,20 +58,25 @@ public class ReportModuleComponent extends BaseComponent {
             PlateformReportModule module = prmMap.get(key);
             MerchantLicense license=pfAppLicenseComponent.getLicense(puma.getPmCode(),moduleItem.getAppCode(),
                     moduleItem.getModuleCode(),terminal);
-            licenseItemList.add(license);
             if (license!=null) {
+                licenseItemList.add(license);
                 if (module == null) {
                     PlateformReportModule addReportModule = new PlateformReportModule();
                     addReportModule.setPmCode(puma.getPmCode());
                     addReportModule.setAppCode(moduleItem.getAppCode());
+                    addReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
                     addReportModule.setModuleCode(moduleItem.getModuleCode());
+                    addReportModule.setModuleName(moduleItem.getModuleName());
                     addReportModule.setModuleVersion(moduleItem.getModuleVersion());
                     addReportModule.setReportIp(IP);
                     addReportModule.setReportTerminal(terminal);
                     addReportModule.setRefreshTime(new Date());
+                    plateformReportModuleService.addModel(addReportModule);
                 } else {//如果已经有该终端的模块记录,刷新时间，生成license
                     PlateformReportModule updateReportModule = new PlateformReportModule();
                     updateReportModule.setId(module.getId());
+                    updateReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
+                    updateReportModule.setModuleName(moduleItem.getModuleName());
                     updateReportModule.setModuleVersion(module.getModuleVersion());
                     updateReportModule.setReportIp(IP);
                     updateReportModule.setRefreshTime(new Date());

@@ -1,7 +1,5 @@
 package com.nnte.pf_business.component.menus;
 
-import com.nnte.basebusi.annotation.WatchAttr;
-import com.nnte.basebusi.annotation.WatchInterface;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.framework.base.BaseNnte;
@@ -13,14 +11,12 @@ import com.nnte.pf_business.mapper.workdb.menus.PlateformMenusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Component
-@WatchAttr(value = 101,execTimes = 1)
-public class PlateformFunctionComponent extends BaseComponent implements WatchInterface {
+public class PlateformFunctionComponent extends BaseComponent{
     @Autowired
     private PlateformFunctionsService plateformFunctionsService;
     @Autowired
@@ -368,17 +364,5 @@ public class PlateformFunctionComponent extends BaseComponent implements WatchIn
         if (list==null || list.size()<=0)
             return null;
         return list;
-    }
-
-    @Override
-    public void runWatch() {
-        List<Object> ids = new ArrayList<>();
-        ids.add(1L);
-        ids.add(2L);
-        /*
-        Map<Object,PlateformFunctions> resultList=plateformFunctionsService.getEntityMapByIdList(ids);
-        if (resultList!=null && resultList.size()>0){
-            BaseNnte.outConsoleLog("get function count="+resultList.size());
-        }*/
     }
 }

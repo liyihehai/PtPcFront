@@ -6,6 +6,7 @@ import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.entity.OperatorInfo;
+import com.nnte.basebusi.entity.SysModule;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.BaseNnte;
 import com.nnte.framework.entity.AuthTokenDetailsDTO;
@@ -405,7 +406,7 @@ public class PfBusinessComponent extends BaseComponent {
     /**
      * 在系统中注册功能模块信息
      */
-    public void registerFunctions(String appCode, String appName, Map<String, String> moduleMap,
+    public void registerFunctions(String appCode, String appName, Map<String, SysModule> moduleMap,
                                   List<MEnter> functionModuleList) {
         try {
             if (functionModuleList != null && functionModuleList.size() > 0) {
@@ -421,7 +422,7 @@ public class PfBusinessComponent extends BaseComponent {
                     dto.setAppName(appName);
                     dto.setModuleCode(me.getModuleCode());
                     if (moduleMap!=null)
-                        dto.setModuleName(moduleMap.get(me.getModuleCode()));
+                        dto.setModuleName(moduleMap.get(me.getModuleCode()).getModuleName());
                     dto.setModuleVersion(me.getModuleVersion());
                     //----------------------
                     if (srcFRec==null){

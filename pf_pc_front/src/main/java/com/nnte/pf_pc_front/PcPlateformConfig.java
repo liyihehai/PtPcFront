@@ -2,9 +2,10 @@ package com.nnte.pf_pc_front;
 
 import com.nnte.basebusi.annotation.AppInitInterface;
 import com.nnte.basebusi.base.BaseComponent;
-import com.nnte.basebusi.base.WatchComponent;
+import com.nnte.basebusi.base.LocalTaskComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
+import com.nnte.basebusi.entity.SysModule;
 import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.base.DBSchemaPostgreSQL;
 import com.nnte.framework.base.DynamicDatabaseSourceHolder;
@@ -36,7 +37,7 @@ public class PcPlateformConfig extends BaseComponent
     @Autowired
     PfBusinessComponent pfBusinessComponent;
     @Autowired
-    WatchComponent watchComponent;
+    LocalTaskComponent localTaskComponent;
     @Autowired
     private AppRootConfig appRootConfig;
     @Autowired
@@ -106,12 +107,12 @@ public class PcPlateformConfig extends BaseComponent
         }
         //------------------------
         //--启动程序守护线程，注册组件（系统参数）
-        watchComponent.startWatch();
+        localTaskComponent.startWatchMonitor(2,10);
         //-------------------------------------
     }
 
     @Override
-    public void onRegisterFunctions(String appCode, String appName, Map<String, String> moduleMap, List<MEnter> functionModuleList) {
+    public void onRegisterFunctions(String appCode, String appName, Map<String, SysModule> moduleMap, List<MEnter> functionModuleList) {
         pfBusinessComponent.registerFunctions(appCode,appName,moduleMap,functionModuleList);
     }
 }

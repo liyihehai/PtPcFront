@@ -59,7 +59,7 @@ public class PFAppLicenseComponent extends BaseComponent {
         dto.setPmCode(pmCode);
         dto.setAppCode(appCode);
         dto.setModuleCode(moduleCode);
-        dto.setSort("t.end_date");
+        dto.setSort("end_date");
         dto.setDir("desc");
         List<PlateformAppLicense> list=plateformAppLicenseService.findModelList(dto);
         Date endDate=null;
@@ -82,8 +82,10 @@ public class PFAppLicenseComponent extends BaseComponent {
                 }
             }
         }
+        if (endDate==null)
+            return null;
         Date nowDate = DateUtils.dateToDate(new Date(),DateUtils.DF_YMD);
-        if (nowDate.before(endDate))//表示已过期
+        if (nowDate.after(endDate))//表示已过期
             return null;
         MerchantLicense license = new MerchantLicense();
         license.setAppCode(appCode);
@@ -117,8 +119,9 @@ public class PFAppLicenseComponent extends BaseComponent {
                 exeDate = new Date(endDate);
             }
             Integer remainderDays = DateUtils.getDaysBetween(exeDate,license.getEndDate());
-            if (!license.getLicenseState().equals(state)) {
-                //如果状态发生了变化，需要重新设置状态
+            if (!license.getLicenseState().equals(state) ||
+                    license.getLicenseState().equals(LicenseState.ExecIng.getValue())) {
+                //如果状态发生了变化，或者当前状态为执行中状态，需要重新设置状态
                 PlateformAppLicense updateLicense = new PlateformAppLicense();
                 updateLicense.setId(license.getId());
                 updateLicense.setLicenseState(state);

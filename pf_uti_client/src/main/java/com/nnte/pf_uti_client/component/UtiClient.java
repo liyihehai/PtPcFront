@@ -78,8 +78,8 @@ public class UtiClient {
             throw new Exception("不能解析返回报文");
         if (!resResult.isSuccess())
             throw new Exception(resResult.getResultMessage());
-        Long times = resResult.getResponseTime()-resResult.getRequestTime();
-        System.out.println("times=" + times);
+//        Long times = resResult.getResponseTime()-resResult.getRequestTime();
+//        System.out.println(url+" ==> times=" + times);
         return JsonUtil.jsonToBean(resResult.getResult(), clazz);
     }
 
@@ -113,7 +113,7 @@ public class UtiClient {
     /*
      * 报告模块并获取许可:https://[domain]/uti/basic/reportModule
      */
-    private ResponseReportModule reportModule(List<ReportModuleItem> moduleItemList) throws Exception {
+    public ResponseReportModule reportModule(List<ReportModuleItem> moduleItemList) throws Exception {
         RequestReportModule requestReportModule = new RequestReportModule();
         requestReportModule.setModuleItemList(moduleItemList);
         requestReportModule.setTimeStamp((new Date()).getTime());

@@ -3,6 +3,7 @@ package com.nnte.pf_source.uti.request;
 public class ReportModuleItem {
     private String appCode; //应用代码
     private String moduleCode; //模块代码
+    private String moduleName;  //模块名称
     private String moduleVersion; //模块版本
 
     public String getAppCode() {
@@ -27,5 +28,13 @@ public class ReportModuleItem {
 
     public void setModuleVersion(String moduleVersion) {
         this.moduleVersion = moduleVersion;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 }
