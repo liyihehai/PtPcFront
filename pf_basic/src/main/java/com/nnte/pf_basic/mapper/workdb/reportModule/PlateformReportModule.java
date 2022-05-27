@@ -4,7 +4,7 @@ import com.nnte.framework.annotation.DBPKColum;
 
 import java.util.Date;
 /**
- * auto code,do not modify <2022-05-15 21:15:52>
+ * auto code,do not modify <2022-05-27 08:04:21>
  */
 public class PlateformReportModule extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -14,6 +14,7 @@ public class PlateformReportModule extends BaseModel {
     private String moduleCode; //模块代码
     private String moduleName; //模块名称
     private String moduleVersion; //最新版本
+    private Integer frameModule; //框架模块:1框架模块，非1商业模块
     private String reportTerminal; //报告终端
     private String reportIp; //报告IP
     private Date refreshTime; //刷新时间
@@ -34,6 +35,8 @@ public class PlateformReportModule extends BaseModel {
     public void setModuleName(String  moduleName){ this.moduleName = moduleName;}
     public String  getModuleVersion(){ return moduleVersion;}
     public void setModuleVersion(String  moduleVersion){ this.moduleVersion = moduleVersion;}
+    public Integer  getFrameModule(){ return frameModule;}
+    public void setFrameModule(Integer  frameModule){ this.frameModule = frameModule;}
     public String  getReportTerminal(){ return reportTerminal;}
     public void setReportTerminal(String  reportTerminal){ this.reportTerminal = reportTerminal;}
     public String  getReportIp(){ return reportIp;}

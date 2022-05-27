@@ -10,13 +10,14 @@
         <result column="module_code" property="moduleCode"/>
         <result column="module_name" property="moduleName"/>
         <result column="module_version" property="moduleVersion"/>
+        <result column="frame_module" property="frameModule"/>
         <result column="report_terminal" property="reportTerminal"/>
         <result column="report_ip" property="reportIp"/>
         <result column="refresh_time" property="refreshTime"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModule">
-        insert into plateform_report_module (pm_code ,app_code ,app_name ,module_code ,module_name ,module_version ,report_terminal ,report_ip ,refresh_time )
-        values (#{pmCode} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} ,#{moduleVersion} ,#{reportTerminal} ,#{reportIp} ,#{refreshTime} )
+        insert into plateform_report_module (pm_code ,app_code ,app_name ,module_code ,module_name ,module_version ,frame_module ,report_terminal ,report_ip ,refresh_time )
+        values (#{pmCode} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} ,#{moduleVersion} ,#{frameModule} ,#{reportTerminal} ,#{reportIp} ,#{refreshTime} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformReportModuleResult" parameterType="java.lang.Integer">
         select * from plateform_report_module where id=#{id}
@@ -34,6 +35,7 @@
         <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
         <if test="moduleName!= null"><![CDATA[module_name=#{moduleName},]]></if>
         <if test="moduleVersion!= null"><![CDATA[module_version=#{moduleVersion},]]></if>
+        <if test="frameModule!= null"><![CDATA[frame_module=#{frameModule},]]></if>
         <if test="reportTerminal!= null"><![CDATA[report_terminal=#{reportTerminal},]]></if>
         <if test="reportIp!= null"><![CDATA[report_ip=#{reportIp},]]></if>
         <if test="refreshTime!= null"><![CDATA[refresh_time=#{refreshTime},]]></if>
@@ -62,6 +64,7 @@
                 <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
                 <if test="moduleName!= null"><![CDATA[and t.module_name = #{moduleName}]]></if>
                 <if test="moduleVersion!= null"><![CDATA[and t.module_version = #{moduleVersion}]]></if>
+                <if test="frameModule!= null"><![CDATA[and t.frame_module = #{frameModule}]]></if>
                 <if test="reportTerminal!= null"><![CDATA[and t.report_terminal = #{reportTerminal}]]></if>
                 <if test="reportIp!= null"><![CDATA[and t.report_ip = #{reportIp}]]></if>
                 <if test="refreshTime!= null"><![CDATA[and t.refresh_time = #{refreshTime}]]></if>
