@@ -2,9 +2,9 @@ package com.nnte.pf_basic.mapper.workdb.merchantEnter;
 import com.nnte.framework.base.BaseModel;
 import com.nnte.framework.annotation.DBPKColum;
 
-
+import java.util.Date;
 /**
- * auto code,do not modify <2022-05-27 12:03:29>
+ * auto code,do not modify <2022-05-27 14:37:46>
  */
 public class PlateformMerchantEnter extends BaseModel {
     @DBPKColum private Integer id; //主键ID
@@ -15,6 +15,7 @@ public class PlateformMerchantEnter extends BaseModel {
     private String appName; //应用名称
     private String moduleCode; //模块代码
     private String moduleName; //模块名称
+    private Date freshTime; //刷新时间
 
     public PlateformMerchantEnter(){}
 
@@ -34,4 +35,6 @@ public class PlateformMerchantEnter extends BaseModel {
     public void setModuleCode(String  moduleCode){ this.moduleCode = moduleCode;}
     public String  getModuleName(){ return moduleName;}
     public void setModuleName(String  moduleName){ this.moduleName = moduleName;}
+    public Date  getFreshTime(){ return freshTime;}
+    public void setFreshTime(Date  freshTime){ this.freshTime = freshTime;}
 }

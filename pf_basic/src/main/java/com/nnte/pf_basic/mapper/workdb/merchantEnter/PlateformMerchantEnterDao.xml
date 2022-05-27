@@ -11,10 +11,11 @@
         <result column="app_name" property="appName"/>
         <result column="module_code" property="moduleCode"/>
         <result column="module_name" property="moduleName"/>
+        <result column="fresh_time" property="freshTime"/>
     </resultMap>
     <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter">
-        insert into plateform_merchant_enter (fun_code ,fun_path ,fun_name ,app_code ,app_name ,module_code ,module_name )
-        values (#{funCode} ,#{funPath} ,#{funName} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} )
+        insert into plateform_merchant_enter (fun_code ,fun_path ,fun_name ,app_code ,app_name ,module_code ,module_name ,fresh_time )
+        values (#{funCode} ,#{funPath} ,#{funName} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} ,#{freshTime} )
     </insert>
     <select id="findModelByKey" resultMap="PlateformMerchantEnterResult" parameterType="java.lang.Integer">
         select * from plateform_merchant_enter where id=#{id}
@@ -33,6 +34,7 @@
         <if test="appName!= null"><![CDATA[app_name=#{appName},]]></if>
         <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
         <if test="moduleName!= null"><![CDATA[module_name=#{moduleName},]]></if>
+        <if test="freshTime!= null"><![CDATA[fresh_time=#{freshTime},]]></if>
             </trim>
         </set>
         where id=#{id}
@@ -59,6 +61,7 @@
                 <if test="appName!= null"><![CDATA[and t.app_name = #{appName}]]></if>
                 <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
                 <if test="moduleName!= null"><![CDATA[and t.module_name = #{moduleName}]]></if>
+                <if test="freshTime!= null"><![CDATA[and t.fresh_time = #{freshTime}]]></if>
             <include refid="appendWheres" />
         </where>
     </sql>
