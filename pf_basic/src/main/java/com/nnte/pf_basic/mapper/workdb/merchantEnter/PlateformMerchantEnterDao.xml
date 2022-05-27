@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnterDao">
+    <resultMap id="PlateformMerchantEnterResult" type="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter">
+        <result column="id" property="id"/>
+        <result column="fun_code" property="funCode"/>
+        <result column="fun_path" property="funPath"/>
+        <result column="fun_name" property="funName"/>
+        <result column="app_code" property="appCode"/>
+        <result column="app_name" property="appName"/>
+        <result column="module_code" property="moduleCode"/>
+        <result column="module_name" property="moduleName"/>
+    </resultMap>
+    <insert id="addModel" keyProperty="id" useGeneratedKeys="true" parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter">
+        insert into plateform_merchant_enter (fun_code ,fun_path ,fun_name ,app_code ,app_name ,module_code ,module_name )
+        values (#{funCode} ,#{funPath} ,#{funName} ,#{appCode} ,#{appName} ,#{moduleCode} ,#{moduleName} )
+    </insert>
+    <select id="findModelByKey" resultMap="PlateformMerchantEnterResult" parameterType="java.lang.Integer">
+        select * from plateform_merchant_enter where id=#{id}
+    </select>
+    <delete id="deleteModel" parameterType="java.lang.Integer">
+        delete from plateform_merchant_enter where id=#{id}
+    </delete>
+    <update id="updateModel" parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter">
+        update plateform_merchant_enter
+        <set>
+            <trim suffixOverrides=",">
+        <if test="funCode!= null"><![CDATA[fun_code=#{funCode},]]></if>
+        <if test="funPath!= null"><![CDATA[fun_path=#{funPath},]]></if>
+        <if test="funName!= null"><![CDATA[fun_name=#{funName},]]></if>
+        <if test="appCode!= null"><![CDATA[app_code=#{appCode},]]></if>
+        <if test="appName!= null"><![CDATA[app_name=#{appName},]]></if>
+        <if test="moduleCode!= null"><![CDATA[module_code=#{moduleCode},]]></if>
+        <if test="moduleName!= null"><![CDATA[module_name=#{moduleName},]]></if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+    <sql id="appendWheres">
+        <if test="appendWhereList!=null">
+            <foreach collection="appendWhereList" item="item">
+                <if test="item!=null and item.whereType=='direct'">
+                    <![CDATA[ and ${item.whereTxt}]]>
+                </if>
+                <if test="item!=null and item.whereType=='like'">
+                    <![CDATA[ and ${item.colName} like '%${item.whereVal}%']]>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="wheres">
+        <where>
+                <if test="id!= null"><![CDATA[and t.id = #{id}]]></if>
+                <if test="funCode!= null"><![CDATA[and t.fun_code = #{funCode}]]></if>
+                <if test="funPath!= null"><![CDATA[and t.fun_path = #{funPath}]]></if>
+                <if test="funName!= null"><![CDATA[and t.fun_name = #{funName}]]></if>
+                <if test="appCode!= null"><![CDATA[and t.app_code = #{appCode}]]></if>
+                <if test="appName!= null"><![CDATA[and t.app_name = #{appName}]]></if>
+                <if test="moduleCode!= null"><![CDATA[and t.module_code = #{moduleCode}]]></if>
+                <if test="moduleName!= null"><![CDATA[and t.module_name = #{moduleName}]]></if>
+            <include refid="appendWheres" />
+        </where>
+    </sql>
+    <sql id="findPlateformMerchantEnterListSql">
+        select * from plateform_merchant_enter t
+        <include refid="wheres" />
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </sql>
+    <select id="findModelList" parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter" resultMap="PlateformMerchantEnterResult">
+        <include refid="findPlateformMerchantEnterListSql"/>
+    </select>
+    <select id="findModelCount"  parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter" resultType="java.lang.Integer">
+        SELECT count(1) PG_TOTALCOUNT FROM (
+        <include refid="findPlateformMerchantEnterListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        ) m
+    </select>
+    <select id="findModelWithPg" parameterType="com.nnte.pf_basic.mapper.workdb.merchantEnter.PlateformMerchantEnter" resultMap="PlateformMerchantEnterResult">
+        <include refid="findPlateformMerchantEnterListSql" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+    </select>
+    <select id="findModelListByMap" parameterType="Map" resultMap="PlateformMerchantEnterResult">
+        select * from plateform_merchant_enter t
+        <include refid="wheres" />
+        <if test="start!= null">  LIMIT #{limit} OFFSET #{start} </if>
+        <if test="sort!=null">order by t.${sort} ${dir}</if>
+    </select>
+    <select id="findModelListByIds" parameterType="java.util.List" resultMap="PlateformMerchantEnterResult">
+        select * from plateform_merchant_enter
+        where id in (
+        <foreach collection="list" item="item" separator="," >
+            (<trim suffixOverrides=",">
+                #{item},
+            </trim>)</foreach>)
+    </select>
+</mapper>
