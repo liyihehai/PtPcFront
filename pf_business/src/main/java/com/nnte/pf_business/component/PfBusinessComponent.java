@@ -411,6 +411,7 @@ public class PfBusinessComponent extends BaseComponent {
         try {
             if (functionModuleList != null && functionModuleList.size() > 0) {
                 for (MEnter me : functionModuleList) {
+                    SysModule module=moduleMap.get(me.getModuleCode());
                     PlateformFunctionRec dto = new PlateformFunctionRec();
                     PlateformFunctionRec srcFRec = getFunctionRecByAuthCode(me.getRoleRuler());
                     //---------------------
@@ -421,9 +422,9 @@ public class PfBusinessComponent extends BaseComponent {
                     dto.setAppCode(appCode);
                     dto.setAppName(appName);
                     dto.setModuleCode(me.getModuleCode());
-                    if (moduleMap!=null)
-                        dto.setModuleName(moduleMap.get(me.getModuleCode()).getModuleName());
-                    dto.setModuleVersion(me.getModuleVersion());
+                    if (module!=null)
+                        dto.setModuleName(module.getModuleName());
+                    dto.setModuleVersion(module.getModuleVersion());
                     //----------------------
                     if (srcFRec==null){
                         dto.setAuthCode(me.getRoleRuler());

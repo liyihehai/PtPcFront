@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.nnte.pf_basic.mapper.workdb.reportModule.PlateformReportModuleDao">
+    <resultMap id="ReportModuleResult" type="com.nnte.pf_basic.entertity.ReportModule">
+        <result column="app_code" property="appCode"/>
+        <result column="module_code" property="moduleCode"/>
+        <result column="module_name" property="moduleName"/>
+    </resultMap>
+    <select id="queryAllReportModule" resultMap="ReportModuleResult">
+        select distinct app_code,module_code,module_name,frame_module
+        from plateform_report_module
+    </select>
+</mapper>

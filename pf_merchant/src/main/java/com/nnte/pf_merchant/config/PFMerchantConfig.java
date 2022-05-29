@@ -4,11 +4,7 @@ import com.nnte.basebusi.annotation.BusiLogAttr;
 import com.nnte.basebusi.annotation.ModuleInterface;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.entity.AppRegistry;
-import com.nnte.basebusi.excption.BusiException;
 import com.nnte.framework.annotation.MybatisXmlMapper;
-import com.nnte.framework.base.SpringContextHolder;
-import com.nnte.pf_merchant.component.mqcomp.EmailMQComponent;
-import com.nnte.pf_merchant.component.mqcomp.SMMQComponent;
 import org.springframework.stereotype.Component;
 
 @Component
