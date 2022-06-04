@@ -64,34 +64,34 @@ public class ReportModuleComponent extends BaseComponent {
         for(ReportModuleItem moduleItem:reportModuleItemList){
             String key=makeReportModule(puma.getPmCode(),moduleItem,terminal);
             PlateformReportModule module = prmMap.get(key);
+            if (module == null) {
+                PlateformReportModule addReportModule = new PlateformReportModule();
+                addReportModule.setPmCode(puma.getPmCode());
+                addReportModule.setAppCode(moduleItem.getAppCode());
+                addReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
+                addReportModule.setModuleCode(moduleItem.getModuleCode());
+                addReportModule.setModuleName(moduleItem.getModuleName());
+                addReportModule.setFrameModule(moduleItem.getFrameModule());
+                addReportModule.setModuleVersion(moduleItem.getModuleVersion());
+                addReportModule.setReportIp(IP);
+                addReportModule.setReportTerminal(terminal);
+                addReportModule.setRefreshTime(new Date());
+                plateformReportModuleService.addModel(addReportModule);
+            } else {//如果已经有该终端的模块记录,刷新时间，生成license
+                PlateformReportModule updateReportModule = new PlateformReportModule();
+                updateReportModule.setId(module.getId());
+                updateReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
+                updateReportModule.setModuleName(moduleItem.getModuleName());
+                updateReportModule.setFrameModule(moduleItem.getFrameModule());
+                updateReportModule.setModuleVersion(module.getModuleVersion());
+                updateReportModule.setReportIp(IP);
+                updateReportModule.setRefreshTime(new Date());
+                plateformReportModuleService.updateModel(updateReportModule);
+            }
             MerchantLicense license=pfAppLicenseComponent.getLicense(puma.getPmCode(),moduleItem.getAppCode(),
                     moduleItem.getModuleCode(),terminal);
             if (license!=null) {
                 licenseItemList.add(license);
-                if (module == null) {
-                    PlateformReportModule addReportModule = new PlateformReportModule();
-                    addReportModule.setPmCode(puma.getPmCode());
-                    addReportModule.setAppCode(moduleItem.getAppCode());
-                    addReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
-                    addReportModule.setModuleCode(moduleItem.getModuleCode());
-                    addReportModule.setModuleName(moduleItem.getModuleName());
-                    addReportModule.setFrameModule(moduleItem.getFrameModule());
-                    addReportModule.setModuleVersion(moduleItem.getModuleVersion());
-                    addReportModule.setReportIp(IP);
-                    addReportModule.setReportTerminal(terminal);
-                    addReportModule.setRefreshTime(new Date());
-                    plateformReportModuleService.addModel(addReportModule);
-                } else {//如果已经有该终端的模块记录,刷新时间，生成license
-                    PlateformReportModule updateReportModule = new PlateformReportModule();
-                    updateReportModule.setId(module.getId());
-                    updateReportModule.setAppName(StringUtils.defaultString(appMap.get(moduleItem.getAppCode())));
-                    updateReportModule.setModuleName(moduleItem.getModuleName());
-                    updateReportModule.setFrameModule(moduleItem.getFrameModule());
-                    updateReportModule.setModuleVersion(module.getModuleVersion());
-                    updateReportModule.setReportIp(IP);
-                    updateReportModule.setRefreshTime(new Date());
-                    plateformReportModuleService.updateModel(updateReportModule);
-                }
             }
         }
         reportModuleFunction(reportFunctionEnterList);

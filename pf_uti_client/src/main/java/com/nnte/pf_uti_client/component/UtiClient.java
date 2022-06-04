@@ -113,9 +113,11 @@ public class UtiClient {
     /*
      * 报告模块并获取许可:https://[domain]/uti/basic/reportModule
      */
-    public ResponseReportModule reportModule(List<ReportModuleItem> moduleItemList) throws Exception {
+    public ResponseReportModule reportModule(List<ReportModuleItem> moduleItemList,
+                                             List<ReportFunctionEnter> functionEnterList) throws Exception {
         RequestReportModule requestReportModule = new RequestReportModule();
         requestReportModule.setModuleItemList(moduleItemList);
+        requestReportModule.setFunctionEnterList(functionEnterList);
         requestReportModule.setTimeStamp((new Date()).getTime());
         ResponseReportModule result = postTrade(requestReportModule,getToken(), ResponseReportModule.class);
         return result;
@@ -140,7 +142,7 @@ public class UtiClient {
             item.setModuleCode("MerGroupBackend");
             item.setModuleVersion("1.0.1");
             list.add(item);
-            ResponseReportModule responseReportModule=client.reportModule(list);
+            ResponseReportModule responseReportModule=client.reportModule(list,null);
             if (responseReportModule!=null){
                 List<MerchantLicense> llist=responseReportModule.getLicenseItemList();
                 if (llist!=null && llist.size()>0){

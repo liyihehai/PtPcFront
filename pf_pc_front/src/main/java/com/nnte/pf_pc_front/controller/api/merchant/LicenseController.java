@@ -14,12 +14,12 @@ import com.nnte.framework.utils.NumberDefUtil;
 import com.nnte.framework.utils.StringUtils;
 import com.nnte.pf_basic.entertity.LicenseCreateChannel;
 import com.nnte.pf_basic.mapper.workdb.appLicense.PlateformAppLicense;
+import com.nnte.pf_basic.other.StaticWhere;
 import com.nnte.pf_merchant.component.license.PlateformMerchantLicenseComponent;
 import com.nnte.pf_merchant.config.PFMerchantConfig;
 import com.nnte.pf_merchant.config.PFMerchantSysRole;
 import com.nnte.pf_merchant.entertity.AppLicenseItem;
 import com.nnte.pf_merchant.request.RequestLicense;
-import com.nnte.pf_pc_front.entity.RequestUTIAccount;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -39,14 +39,7 @@ public class LicenseController extends BaseController {
     @Autowired
     private PlateformMerchantLicenseComponent plateformMerchantLicenseComponent;
 
-    public static void addPmShortNameLikeToMap(String pmShortName,Map<String, Object> paramMap) throws Exception{
-        if (StringUtils.isNotEmpty(pmShortName))
-            AppendWhere.andWhereTxtToWhereMap("pm_code in (select pm_code from plateform_merchant where pm_short_name like '%"+pmShortName+"%')",paramMap);
-    }
-    public static void addAppNameLikeToMap(String appName,Map<String, Object> paramMap) throws Exception{
-        if (StringUtils.isNotEmpty(appName))
-            AppendWhere.andWhereTxtToWhereMap("app_code in (select type_item_code from plateform_library where lib_type_code='Y001' and type_item_name like '%"+appName+"%')",paramMap);
-    }
+
     public static void addModuleNameLikeToMap(String moduleName,Map<String, Object> paramMap) throws Exception{
         if (StringUtils.isNotEmpty(moduleName))
             AppendWhere.andWhereTxtToWhereMap("module_code in (select module_code from plateform_busi_module where module_name like '%"+moduleName+"%')",paramMap);
@@ -74,8 +67,8 @@ public class LicenseController extends BaseController {
             RequestLicense license =  JsonUtil.jsonToBean(data.toString(),RequestLicense.class);
             AppendWhere.addEqualsToWhereMap(license.getLicenseState(),"licenseState",paramMap);
             AppendWhere.addEqualsToWhereMap(license.getMamNo(),"mamNo",paramMap);
-            addPmShortNameLikeToMap(license.getPmShortName(),paramMap);
-            addAppNameLikeToMap(license.getAppName(),paramMap);
+            StaticWhere.addPmShortNameLikeToMap(license.getPmShortName(),paramMap);
+            StaticWhere.addAppNameLikeToMap(license.getAppName(),paramMap);
             addModuleNameLikeToMap(license.getModuleName(),paramMap);
             addModuleVersionLikeToMap(license.getModuleVersion(),paramMap);
             AppendWhere.andDateRangeToWhereMap("t.start_date",license.getStartDate(),
