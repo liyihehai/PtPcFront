@@ -179,4 +179,28 @@ public class PlateformAppMenuComponent extends BaseComponent {
         update.setUpdateDate(new Date());
         plateformMerchantAppMenuService.updateModel(update);
     }
+    /**
+     * 取得商户应用菜单：有限取得应用商户菜单，如果没有，则取应用全局菜单
+     * */
+    public PlateformMerchantAppMenu getValidMerchantAppMenu(String pmCode,String appCode){
+        PlateformMerchantAppMenu menu = null;
+        PlateformMerchantAppMenu dto=new PlateformMerchantAppMenu();
+        dto.setPmCode(pmCode);
+        dto.setAppCode(appCode);
+        dto.setMenuType(2);
+        dto.setMenuStatus(1);
+        List<PlateformMerchantAppMenu> list=plateformMerchantAppMenuService.findModelList(dto);
+        if (list!=null && list.size()==1)
+            menu = list.get(0);
+        if (menu==null){
+            PlateformMerchantAppMenu dto_g=new PlateformMerchantAppMenu();
+            dto_g.setAppCode(appCode);
+            dto_g.setMenuType(1);
+            dto_g.setMenuStatus(1);
+            List<PlateformMerchantAppMenu> list_g=plateformMerchantAppMenuService.findModelList(dto_g);
+            if (list_g!=null && list_g.size()==1)
+                menu = list_g.get(0);
+        }
+        return menu;
+    }
 }

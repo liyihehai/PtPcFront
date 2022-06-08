@@ -4,6 +4,7 @@ import com.nnte.pf_source.uti.MerchantLicense;
 import com.nnte.pf_source.uti.UtiBodySign;
 import com.nnte.pf_source.uti.request.*;
 import com.nnte.pf_source.uti.response.ResResult;
+import com.nnte.pf_source.uti.response.ResponseAppMenu;
 import com.nnte.pf_source.uti.response.ResponseReportModule;
 import com.nnte.pf_source.uti.response.ResponseToken;
 import com.nnte.pf_uti_client.config.UtiClientConfig;
@@ -97,7 +98,7 @@ public class UtiClient {
         return resResult;
     }
 
-    public synchronized String getToken() throws Exception{
+    public synchronized ResponseToken getToken() throws Exception{
         if (tokenObject==null){
             tokenObject = requestToken();
         }
@@ -107,7 +108,14 @@ public class UtiClient {
         if (checkTime.after(expireTime)){
             tokenObject = requestToken();
         }
-        return tokenObject.getToken();
+        return tokenObject;
+    }
+
+    public String getTokenString() throws Exception{
+        ResponseToken token = getToken();
+        if (token!=null)
+            return token.getToken();
+        throw new Exception("未取得有效Token");
     }
 
     /*
@@ -119,8 +127,19 @@ public class UtiClient {
         requestReportModule.setModuleItemList(moduleItemList);
         requestReportModule.setFunctionEnterList(functionEnterList);
         requestReportModule.setTimeStamp((new Date()).getTime());
-        ResponseReportModule result = postTrade(requestReportModule,getToken(), ResponseReportModule.class);
+        ResponseReportModule result = postTrade(requestReportModule,getTokenString(), ResponseReportModule.class);
         return result;
+    }
+
+    /*
+     * 报告模块并获取许可:https://[domain]/uti/basic/reportModule
+     */
+    public String requestAppMenu(String appCode) throws Exception {
+        RequestAppMenu requestAppMenu = new RequestAppMenu();
+        requestAppMenu.setAppCode(appCode);
+        requestAppMenu.setTimeStamp((new Date()).getTime());
+        ResponseAppMenu result = postTrade(requestAppMenu,getTokenString(), ResponseAppMenu.class);
+        return result.getMenuJson();
     }
 
     public static void main(String[] args) {
