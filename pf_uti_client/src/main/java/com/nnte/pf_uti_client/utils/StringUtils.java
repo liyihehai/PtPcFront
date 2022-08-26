@@ -1,8 +1,6 @@
 package com.nnte.pf_uti_client.utils;
 
 import org.apache.commons.codec.binary.Base64;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.lang.Character.UnicodeBlock;
@@ -197,40 +195,6 @@ public class StringUtils {
         if (isEmpty(str))
             return "";
         return URLDecoder.decode(str, "UTF-8");
-    }
-
-    /**
-     * Encode a string using Base64 encoding. Used when storing passwords as
-     * cookies.
-     * <p>
-     * This is weak encoding in that anyone can use the decodeString routine to
-     * reverse the encoding.
-     *
-     * @param str
-     * @return String
-     */
-    public static String encodeString(String str) {
-        if (isEmpty(str))
-            return "";
-        sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-        return new String(encoder.encodeBuffer(str.getBytes())).trim();
-    }
-
-    /**
-     * Decode a string using Base64 encoding.
-     *
-     * @param str
-     * @return String
-     */
-    public static String decodeString(String str) {
-        if (isEmpty(str))
-            return "";
-        sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-        try {
-            return new String(dec.decodeBuffer(str));
-        } catch (Exception io) {
-            return "";
-        }
     }
 
     public static String formatTrim(String str) {
@@ -466,25 +430,6 @@ public class StringUtils {
         if (str.length() < size)
             size = str.length();
         return str.substring(str.length() - size, str.length());
-    }
-
-    // 将 s 进行 BASE64 编码
-    public static String getBASE64(String s) {
-        if (s == null)
-            return null;
-        return (new BASE64Encoder()).encode(s.getBytes());
-    }
-
-    public static String getFromBASE64(String s) {
-        if (s == null)
-            return "";
-        BASE64Decoder decoder = new BASE64Decoder();
-        try {
-            byte[] b = decoder.decodeBuffer(s);
-            return new String(b, "gb2312");
-        } catch (Exception e) {
-            return "";
-        }
     }
 
     // 中文符转unicode
@@ -886,21 +831,6 @@ public class StringUtils {
             paramMap.put(key, value + "");
         }
         return paramMap;
-    }
-
-    // 图片转化成base64字符串
-    public static String GetImageStr() throws Exception {// 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
-        String imgFile = "D:\\upload\\new.png";// 待处理的图片
-        InputStream in = null;
-        byte[] data = null;
-        // 读取图片字节数组
-        in = new FileInputStream(imgFile);
-        data = new byte[in.available()];
-        in.read(data);
-        in.close();
-        // 对字节数组Base64编码
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(data);// 返回Base64编码过的字节数组字符串
     }
 
     /**

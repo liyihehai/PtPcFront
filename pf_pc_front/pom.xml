@@ -9,12 +9,6 @@
     <name>pf_pc_front</name>
     <description>nnte PlateForm pf_pc_front model for Spring Boot</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
     <repositories>
         <repository>
             <id>bd-nexus-snapshots</id>
@@ -160,7 +154,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
-                <version>1.0</version>
+                <version>2.0.2</version>
                 <configuration>
                     <serverId>bd-bcc</serverId>
                     <fromDir>target</fromDir>

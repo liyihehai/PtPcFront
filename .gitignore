@@ -1,0 +1,7 @@
+/*/*.iml
+/*/target/
+/*/logs/
+/.idea/
+*.jar
+/pf_pc_front/config/work-dbsrc-config.properties
+/pf_pc_front/config/redis.properties
