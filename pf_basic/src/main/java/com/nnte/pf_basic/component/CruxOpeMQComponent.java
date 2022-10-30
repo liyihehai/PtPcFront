@@ -84,7 +84,7 @@ public class CruxOpeMQComponent extends PulsarComponent<CruxOpeContent> {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
 
-            createCustmou(true,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
+            createConsumer(true,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
                     CruxOpeContent.TopicName,localIp,"crux",
                     SubscriptionType.Shared ,3,20);
             outLogInfo("CruxOpeMQComponent Consumer=crux,...success");

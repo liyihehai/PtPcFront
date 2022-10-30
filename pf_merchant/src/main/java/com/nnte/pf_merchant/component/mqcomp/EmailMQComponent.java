@@ -92,7 +92,7 @@ public class EmailMQComponent extends PulsarComponent<EmailContent> {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp=IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
-            createCustmou(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
+            createConsumer(false, AppBasicConfig.App_Code,PFMerchantConfig.Module_Code,
                     EmailContent.TopicName,localIp,"email",
                     SubscriptionType.Failover, 3,20);
         } catch (Exception e) {

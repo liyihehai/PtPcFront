@@ -108,7 +108,7 @@ public class PFServiceCommonMQ extends PulsarComponent<CommonContent> {
         try {
             initPulsarClient(mqCommonConfig.getIp(),mqCommonConfig.getPort());
             String localIp= IpUtil.getLocalIp4Address().get().toString().replaceAll("/","");
-            createCustmou(isPersistent,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
+            createConsumer(isPersistent,AppBasicConfig.App_Code,AppBasicConfig.Module_Code,
                     CommonContent.TopicName,localIp,"common",
                     subscriptionType,threadCount,blockSize);
             outLogDebug("PFServiceCommonMQ Consumer=CommonContent,...success");
