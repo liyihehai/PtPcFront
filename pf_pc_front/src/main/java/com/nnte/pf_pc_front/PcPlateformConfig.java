@@ -3,6 +3,7 @@ package com.nnte.pf_pc_front;
 import com.nnte.basebusi.annotation.AppInitInterface;
 import com.nnte.basebusi.base.BaseComponent;
 import com.nnte.basebusi.base.LocalTaskComponent;
+import com.nnte.basebusi.base.PulsarAdminComponent;
 import com.nnte.basebusi.entity.AppRegistry;
 import com.nnte.basebusi.entity.MEnter;
 import com.nnte.basebusi.entity.SysModule;
@@ -16,6 +17,7 @@ import com.nnte.pf_basic.component.JedisComponent;
 import com.nnte.pf_basic.component.PFServiceCommonMQ;
 import com.nnte.pf_basic.component.PlateformSysParamComponent;
 import com.nnte.pf_basic.config.AppBasicConfig;
+import com.nnte.pf_basic.config.MqCommonConfig;
 import com.nnte.pf_business.component.PfBusinessComponent;
 import com.nnte.pf_merchant.component.mqcomp.EmailMQComponent;
 import com.nnte.pf_merchant.component.mqcomp.SMMQComponent;
@@ -46,6 +48,10 @@ public class PcPlateformConfig extends BaseComponent
     private DBSchemaPostgreSQL dbSchemaPostgreSQL;
     @Autowired
     private PlateformSysParamComponent plateformSysParamComponent;
+    @Autowired
+    private PulsarAdminComponent pulsarAdminComponent;
+    @Autowired
+    private MqCommonConfig mqCommonConfig;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -74,6 +80,10 @@ public class PcPlateformConfig extends BaseComponent
         //--------装载系统模块入口--------------
         BaseComponent.loadSystemFuntionEnters();
         //-------------------------------------
+        //---初始化系统需要的租户及namespace---
+        pulsarAdminComponent.setTenantNamespace(AppBasicConfig.App_Code,"systemBasicInfo");
+        pulsarAdminComponent.setTenantNamespace(AppBasicConfig.App_Code,"merchantManage");
+        pulsarAdminComponent.initPulsarTenantNamespace(mqCommonConfig.getServerUrl());
         //--初始化MQ-------------
         CruxOpeMQComponent mqComponent = SpringContextHolder.getBean(CruxOpeMQComponent.class);
         mqComponent.initProducer();

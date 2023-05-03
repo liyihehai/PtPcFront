@@ -103,7 +103,7 @@ public class PfBusinessComponent extends BaseComponent {
             PlateformOperator srcOpe = queryOperator(opeCode);
             String tmpKey = srcOpe.getTmpKey();
             if (StringUtils.isEmpty(tmpKey)) {
-                throw new BusiException(1002, "秘钥校验错误", null);
+                throw new BusiException(1002, "秘钥校验错误");
             }
             PlateformOperator updateOpe = new PlateformOperator();
             updateOpe.setId(srcOpe.getId());
@@ -112,7 +112,7 @@ public class PfBusinessComponent extends BaseComponent {
             String decPassword = AESUtils.decryptECB(password, tmpKey);
             String md5Password = MD5Util.md5For32UpperCase(decPassword);
             if (!srcOpe.getOpePassword().equals(md5Password)) {
-                throw new BusiException(1002, "密码错误", null);
+                throw new BusiException(1002, "密码错误");
             }
             AuthTokenDetailsDTO atd = new AuthTokenDetailsDTO();
             atd.setUserCode(opeCode);

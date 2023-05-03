@@ -17,21 +17,10 @@
     <packaging>jar</packaging>
     <description>nnte plateform pf_source module</description>
 
-	<repositories>
-        <repository>
-            <id>bd-nexus-snapshots</id>
-            <name>maven-snapshots</name>
-            <url>http://120.48.2.149:8999/repository/maven-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <snapshotRepository>
-            <id>bd-nexus-snapshots</id>
-            <url>http://120.48.2.149:8999/repository/maven-snapshots/</url>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2371432-snapshot-SomfJ6/</url>
         </snapshotRepository>
     </distributionManagement>
 

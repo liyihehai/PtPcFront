@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class MqCommonConfig {
     private String ip;
     private String port;
+    private String serverUrl;
 }

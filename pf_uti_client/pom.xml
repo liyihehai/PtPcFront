@@ -14,17 +14,6 @@
         <module>../pf_source</module>
     </modules>
 
-	<repositories>
-        <repository>
-            <id>bd-nexus-snapshots</id>
-            <name>maven-snapshots</name>
-            <url>http://120.48.2.149:8999/repository/maven-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
